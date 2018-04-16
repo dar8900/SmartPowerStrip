@@ -1,0 +1,37 @@
+1 HARDWARE:
+	1.1  Utilizzare tutti e 8 i relè
+	1.2  Utilizzo di nodeMCU
+	1.3  Utilizzo di Arduino Nano per gestione tasti (DA TESTARE PRIMA)
+	1.4  Utilizzo RTC
+	1.5  Utilizzo display 20x4
+	1.6  Utilizzo 4 tasti sotto il display (Up, Down, Left, Ok)
+	1.7  Un alimentatore 5V (da cell) e collegarlo alla VIN della nodeMCU
+	1.8  Utilizzare cavi elettrici marroni verdi e blu
+	1.9  Nella ciabatta mettere almeno due tedesche
+	1.10 Dovrò utilizzare il dremel: buchi per display, tasti, porta usb per nodeMCU e arduino nano, led
+	1.11 Inserire sopra le prese un led verde, utilizzare per l'accensione il segnale del relè corrispondente 
+	1.12 Chiedere a Sara di colorare la ciabatta
+	
+2 SOFWARE: (Uso librerie: http://esp8266.github.io/Arduino/versions/2.0.0/doc/libraries.html#i2c-wire-library)
+	2.1  Visualizzazione schermata principale: ora, data, stato relè, connessione WIFI (icona, guardare libreria per display)
+	2.2  Sistema di menù:
+			2.2.1  Selezione manuale attivazione relè
+			2.2.2  Selezione banda oraria per l'accensione della ciabatta
+			2.2.3  Menù di help e info (inserire figure per i relè, vedi punto 2.1)
+			2.2.4  Informazioni anche sulla rete internet (IP, hostname, subnet mask, gateaway)
+			2.2.5  Menu per impostare timer:
+				2.2.5.1  Quali prese (Max 2)
+				2.2.5.2  Impostare il timer (Max 4h)
+	2.3  All'accensione della ciabatta, test di risposta dei relè (accensione uno alla volta con delay di 1s)
+		 e accedere quelli che erano accesi prima in sequenza (uso di EEPROM: https://circuits4you.com/2016/12/16/esp8266-internal-eeprom-arduino/)
+	2.4  Non ci sarà bisogno di spegnere il display (solo nelle ore notturne magari: vedi banda)
+	2.5  Quando un relè è attivo, attivare un contatore per sapere da quanto tempo è acceso; 
+	     servirà una funzione che venga chiamata nel loop principale e che prenda i secondi dall'RTC
+
+3 WEB SERVER: (Esempio: https://www.arduino.cc/en/Tutorial/WiFiWebServer)
+	3.1  Informazioni: Indirizzo IP, relè attivi, se la banda è attiva , orario e data
+	3.2  Scrivere pagina web in html con tabella per i vari relè con: 
+			3.3.1 La label a cui è associato (solo visualizzazione)
+			3.3.2 Lo stato del relè (ON verde bold, OFF rosso bold)
+			3.3.3 Il tempo trascorso da quando è acceso oppure, se c'è un timer attivo indicare il tempo mancante
+			3.3.4 Tasto accensione e spegnimento (Esempio: https://randomnerdtutorials.com/esp8266-web-server-with-arduino-ide/)
