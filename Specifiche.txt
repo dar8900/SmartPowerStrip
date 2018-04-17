@@ -14,7 +14,8 @@
 	1.12 Chiedere a Sara di colorare la ciabatta
 	
 2 SOFWARE: (Uso librerie: http://esp8266.github.io/Arduino/versions/2.0.0/doc/libraries.html#i2c-wire-library)
-	2.1  Visualizzazione schermata principale: ora, data, stato relè, connessione WIFI (icona, guardare libreria per display)
+	2.1  Visualizzazione schermata principale: ora, data, stato relè, connessione WIFI (icona, guardare libreria per display: https://maxpromer.github.io/LCD-Character-Creator/
+		 https://media.readthedocs.org/pdf/arduinoliquidcrystal/latest/arduinoliquidcrystal.pdf)
 	2.2  Sistema di menù:
 			2.2.1  Selezione manuale attivazione relè
 			2.2.2  Selezione banda oraria per l'accensione della ciabatta
@@ -24,7 +25,8 @@
 				2.2.5.1  Quali prese (Max 2)
 				2.2.5.2  Impostare il timer (Max 4h)
 	2.3  All'accensione della ciabatta, test di risposta dei relè (accensione uno alla volta con delay di 1s)
-		 e accedere quelli che erano accesi prima in sequenza (uso di EEPROM: https://circuits4you.com/2016/12/16/esp8266-internal-eeprom-arduino/)
+		 e accedere quelli che erano accesi prima in sequenza (uso di EEPROM: https://circuits4you.com/2016/12/16/esp8266-internal-eeprom-arduino/
+		 https://circuits4you.com/2016/12/14/internal-eeprom-esp8266/ )
 	2.4  Non ci sarà bisogno di spegnere il display (solo nelle ore notturne magari: vedi banda)
 	2.5  Quando un relè è attivo, attivare un contatore per sapere da quanto tempo è acceso; 
 	     servirà una funzione che venga chiamata nel loop principale e che prenda i secondi dall'RTC
