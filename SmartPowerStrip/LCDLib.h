@@ -11,12 +11,13 @@
 
 
 void LCDInit(void);
+void LCDMoveCursor(short row, short col);
 void ClearLCD(void);
 void LcdTimeWrite(int Time2Write);
 void LCDPrintString(short row, short col, String string);
 void LCDPrintValue(short row, short col, short value);
 void LCDPrintLineVoid(short row);
-void LCDCreateIcon(uint8_t Icon[], short IconNum);
+bool LCDCreateIcon(uint8_t Icon[], short IconNum);
 void LCDShowIcon(short IconNum);
 void LCDDisplayOn(void);
 void LCDDisplayOff(void);

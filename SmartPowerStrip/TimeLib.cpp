@@ -9,6 +9,8 @@ DateTime now;
 
 TIME_DATE_FORMAT PresentTime;
 
+extern RELE Rele[];
+
 void RTCInit()
 {
 	if (!RTC.begin()) 

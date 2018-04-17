@@ -15,6 +15,11 @@ void ClearLCD()
     //lcd_main.home();
 }
 
+void LCDMoveCursor(short row, short col)
+{
+	lcd_main.setCursor(col, row);
+}
+
 void LcdTimeWrite(int Time2Write)
 {
   int cnt = Time2Write;
@@ -102,12 +107,19 @@ void LCDPrintValue(short row, short col, short value)
   lcd_main.print(ValStr);
 }
 
-void LCDCreateIcon(uint8_t Icon[], short IconNum)
+bool LCDCreateIcon(uint8_t Icon[], short IconNum)
 {
+	bool Created = false;
 	if(IconNum < 7)
+	{
 		lcd_main.createChar(IconNum, Icon);
+		Created = true;
+	}
 	else
-		return;
+	{
+		Created = false;
+	}
+	return Created;
 }
 
 void LCDShowIcon(short IconNum)

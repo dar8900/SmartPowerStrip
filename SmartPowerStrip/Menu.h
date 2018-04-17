@@ -16,7 +16,7 @@ typedef struct
 
 
 
-
+void SetupInterrupt(void);
 void MainScreen(void);
 void MainMenu(void);
 bool ManualRele(void);
