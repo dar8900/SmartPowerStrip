@@ -3,6 +3,8 @@
 #include "LCDLib.h"
 #include "TimeLib.h"
 #include "SmartPowerStrip.h"
+#include "Web.h"
+#include "Menu.h"
 
 
 
@@ -64,14 +66,14 @@ uint8_t OnRele[]
 
 RELE Rele[]
 {
-	{false, 0, false, 0},  // RELE_1
-	{false, 0, false, 0},  // RELE_2
-	{false, 0, false, 0},  // RELE_3
-	{false, 0, false, 0},  // RELE_4
-	{false, 0, false, 0},  // RELE_5
-	{false, 0, false, 0},  // RELE_6
-	{false, 0, false, 0},  // RELE_7
-	{false, 0, false, 0},  // RELE_8
+	{false, 0, false, 0, RELE_1_ADDR},  // RELE_1
+	{false, 0, false, 0, RELE_2_ADDR},  // RELE_2
+	{false, 0, false, 0, RELE_3_ADDR},  // RELE_3
+	{false, 0, false, 0, RELE_4_ADDR},  // RELE_4
+	{false, 0, false, 0, RELE_5_ADDR},  // RELE_5
+	{false, 0, false, 0, RELE_6_ADDR},  // RELE_6
+	{false, 0, false, 0, RELE_7_ADDR},  // RELE_7
+	{false, 0, false, 0, RELE_8_ADDR},  // RELE_8
 };
 
 FLAGS Flag;
@@ -89,6 +91,7 @@ void setup()
 	EepromInit();
 	LCDInit();
 	RTCInit();
+	WifiInit();
 	
 	pinMode(RELE1, OUTPUT);
 	pinMode(RELE2, OUTPUT);
@@ -101,15 +104,17 @@ void setup()
 	
 	pinMode(LED, OUTPUT);
 	
-	LCDCreateIcon(WifiConnectionOn, WIFI_ON);
-	LCDCreateIcon(WifiConnectionOff, WIFI_OFF);
+	LCDCreateIcon(WifiConnectionOn, WIFI_OK);
+	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
 	TakePresentTime();
+	
+	// Leggere dalla memoria lo stato dei rele e memorizzarlo nella variabile RELE.IsActive TODO!!
 }
 
 void loop() 
 {
-
+	MainScreen();
 
 }

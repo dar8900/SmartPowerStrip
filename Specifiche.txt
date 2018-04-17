@@ -20,7 +20,7 @@
 			2.2.1  Selezione manuale attivazione relè
 			2.2.2  Selezione banda oraria per l'accensione della ciabatta
 			2.2.3  Menù di help e info (inserire figure per i relè, vedi punto 2.1)
-			2.2.4  Informazioni anche sulla rete internet (IP, hostname, subnet mask, gateaway)
+			2.2.4  Informazioni anche sulla rete internet (IP, hostname, client collegato)
 			2.2.5  Menu per impostare timer:
 				2.2.5.1  Quali prese (Max 2)
 				2.2.5.2  Impostare il timer (Max 4h)

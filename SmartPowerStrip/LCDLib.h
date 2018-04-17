@@ -4,8 +4,8 @@
 #define MAX_LCD_ROW    3
 #define MAX_LCD_COL   19
 
-#define CENTER_ALIGN  10
-#define RIGHT_ALIGN    19
+#define CENTER_ALIGN  25
+#define RIGHT_ALIGN   19
 #define LEFT_ALIGN     0
 
 

@@ -4,19 +4,24 @@ typedef enum
 	CHANGE_TIME_BAND,
 	HELP_INFO,
 	WIFI_INFO,
-	ASSIGN_RELE_TIMER
+	ASSIGN_RELE_TIMER,
+	MAX_MENU_ITEM
 }MENU_NUMBER;
 
 typedef struct
 {
-	MENU_NUMBER  MenuNumber;
 	bool (*MenuFunc)(void);
+	String MenuTitle;
 	
 }MENU_VOICES;
 
+enum
+{
+	STATUS_OFF = 0,
+	STATUS_ON
+};
 
-
-void SetupInterrupt(void);
+bool SetupInterrupt(void);
 void MainScreen(void);
 void MainMenu(void);
 bool ManualRele(void);
@@ -24,6 +29,6 @@ bool ChangeTimeBand(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
-bool SetTimer(short Rele)
+bool SetTimer(short Rele);
 bool ReleInit(void);
 void TakeReleTime(short Rele);

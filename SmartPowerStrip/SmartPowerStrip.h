@@ -22,8 +22,8 @@
 
 typedef enum
 {
-	WIFI_ON = 0,
-	WIFI_OFF,
+	WIFI_OK = 0,
+	WIFI_NO,
 	RELE_OFF,
 	RELE_ON
 }ICON_NUMB;
@@ -47,12 +47,15 @@ typedef struct
 	bool IsActive;
 	uint32_t ActiveTime;
 	bool HaveTimer;
-	int TimerTime;		
+	int TimerTime;	
+	short EepromAddr;
 }RELE;
 
 typedef struct
 {
 	bool EnterSetup;
+	bool WifiActive;
+	bool ClientConnected;
 }FLAGS;
 
 

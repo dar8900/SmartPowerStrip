@@ -88,13 +88,8 @@ int WriteMemory(short address, short value)
   {
     numReg = 0;
   }
-
- if(address == START_DELAY_ADDR)
- {
-   EepromUpdate(NUM_REG_ADDR, numReg);
- }
   
- EEPROM.commit();
+  EEPROM.commit();
   return  numReg;
 }
 
@@ -103,29 +98,22 @@ bool ReadMemory(short address, short numReg, short *value)
   short ValueRead = 0;
   short FlagValueBig = 0;
   bool ReadOk = false;
-  if(address == START_DELAY_ADDR)
-  {
-	  FlagValueBig = EEPROM.read(FLAG_VALUE_ADDR);
+  FlagValueBig = EEPROM.read(FLAG_VALUE_ADDR);
 	  
-	  if(!FlagValueBig)
-	  {
-		 ValueRead = EEPROM.read(address);
-		 ReadOk = true;      
-	  }
-	  else
-	  {
-		for(short idx = 0; idx < numReg; idx++)
-		{
-		  ValueRead += EEPROM.read(address + idx);      
-		}
-		ReadOk = true;
-	  }	  
+  if(!FlagValueBig)
+  {
+	 ValueRead = EEPROM.read(address);
+	 ReadOk = true;      
   }
   else
   {
-	ValueRead = EEPROM.read(address);
-	ReadOk = true;   	  
-  }
+	for(short idx = 0; idx < numReg; idx++)
+	{
+	  ValueRead += EEPROM.read(address + idx);      
+	}
+	ReadOk = true;
+  }	  
+ 	  
 
   if(ReadOk)
   {
@@ -137,7 +125,7 @@ bool ReadMemory(short address, short numReg, short *value)
 bool ClearMemory()
 {
 	// Tempo di cancellazione massimo 3.3 s
-	for(short i = 0; i < MAX_EEPROM_DIM; i++)
+	for(short i = 0; i < MAX_EEPROM_DIM_NODEMCU; i++)
 	{
 		EepromUpdate(i, 255);
 	}
@@ -148,7 +136,7 @@ bool IsMemoryEmpty()
 {
 	bool Empty = true;
 	short Value;
-	for(short i = 0; i < MAX_EEPROM_DIM; i++)
+	for(short i = 0; i < MAX_EEPROM_DIM_NODEMCU; i++)
 	{
 		Value = EEPROM.read(i);
 		if(Value != 255)

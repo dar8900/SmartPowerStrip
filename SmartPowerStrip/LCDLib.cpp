@@ -40,7 +40,7 @@ void LcdTimeWrite(int Time2Write)
 // Utilizzano un oggetto di tipo LCD
 void LCDPrintString(short row, short col, String string) 
 {
-  if(col > MAX_LCD_COL || row > MAX_LCD_ROW || string.length() > 20) // ???
+  if(row > MAX_LCD_ROW || string.length() > 20) 
   {
 	lcd_main.clear();
 	if(string.length() > 20)
@@ -79,7 +79,7 @@ void LCDPrintString(short row, short col, String string)
 void LCDPrintValue(short row, short col, short value)
 {
   String ValStr = String(value);
-  if(col > MAX_LCD_COL || row > MAX_LCD_ROW || ValStr.length() > 20)
+  if(row > MAX_LCD_ROW || ValStr.length() > 20)
   {
 	lcd_main.clear();
 	col = CENTER_ALIGN;
