@@ -3,6 +3,7 @@
 #include "LCDLib.h"
 #include "TimeLib.h"
 #include "EEPROM_Ard.h"
+#include "Rele.h"
 
 RTC_DS1307 RTC;
 DateTime now;
@@ -17,7 +18,7 @@ void RTCInit()
 	{
 		while (1)
 		{
-			BlinkLed(LED);
+			BlinkLed(BUTTON_LED);
 		}
 	}
 
@@ -29,11 +30,11 @@ void RTCInit()
 		delay(1000);
 		// following line sets the RTC to the date & time this sketch was compiled
 		RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
-		ON(LED);
+		ON(BUTTON_LED);
 		ClearLCD();
 		LCDPrintString(0, CENTER_ALIGN, "Setting the time");
 		delay(2000);
-		OFF(LED);
+		OFF(BUTTON_LED);
 		LCDDisplayOff();	
 	}	
 	return;
@@ -47,4 +48,5 @@ void TakePresentTime()
   PresentTime.year = now.year();
   PresentTime.hour = now.hour();
   PresentTime.minute = now.minute();
+  PresentTime.second = now.second();
 }

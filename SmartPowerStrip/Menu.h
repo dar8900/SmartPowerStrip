@@ -29,6 +29,4 @@ bool ChangeTimeBand(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
-bool SetTimer(short Rele);
-bool ReleInit(void);
-void TakeReleTime(short Rele);
+

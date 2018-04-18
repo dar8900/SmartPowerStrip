@@ -17,7 +17,7 @@
 #define RELE7 D8
 #define RELE8 D9
 
-#define LED  D10
+#define BUTTON_LED  D10
 #define ANALOG	A0
 
 typedef enum
@@ -29,33 +29,16 @@ typedef enum
 }ICON_NUMB;
 
 
-typedef enum
-{
-	RELE_1 = 0,
-	RELE_2,
-	RELE_3,
-	RELE_4,
-	RELE_5,
-	RELE_6,
-	RELE_7,
-	RELE_8,
-	RELE_MAX
-}RELE_NUMB;
-
-typedef struct
-{
-	bool IsActive;
-	uint32_t ActiveTime;
-	bool HaveTimer;
-	int TimerTime;	
-	short EepromAddr;
-}RELE;
 
 typedef struct
 {
 	bool EnterSetup;
+	bool BandActive;
+	bool BandInvalid;
 	bool WifiActive;
 	bool ClientConnected;
+	bool AllReleDown;
+	bool ReleRS;
 }FLAGS;
 
 

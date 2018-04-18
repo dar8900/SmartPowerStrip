@@ -5,6 +5,8 @@
 #include "SmartPowerStrip.h"
 #include "Web.h"
 #include "Menu.h"
+#include "Band.h"
+#include "Rele.h"
 
 
 
@@ -61,7 +63,8 @@ uint8_t OnRele[]
 	// bool IsActive;
 	// uint32_t ActiveTime;
 	// bool HaveTimer;
-	// int TimerTime;		
+	// int TimerTime;	
+	// short EepromAddr;	
 // }RELE;
 
 RELE Rele[]
@@ -102,19 +105,25 @@ void setup()
 	pinMode(RELE7, OUTPUT);
 	pinMode(RELE8, OUTPUT);
 	
-	pinMode(LED, OUTPUT);
+	pinMode(BUTTON_LED, OUTPUT);
 	
 	LCDCreateIcon(WifiConnectionOn, WIFI_OK);
 	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
 	TakePresentTime();
-	
-	// Leggere dalla memoria lo stato dei rele e memorizzarlo nella variabile RELE.IsActive TODO!!
+	ReleInit();
+	SetBandInvalid();
 }
 
 void loop() 
 {
+	if(CheckBand)
+	{
+		if(!Flag.AllReleDown)
+			TurnOffAllRele();
+		LCDDisplayOff();
+		Flag.ReleRS = false;
+	}
 	MainScreen();
-
 }
