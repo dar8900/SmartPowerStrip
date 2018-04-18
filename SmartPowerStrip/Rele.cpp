@@ -151,9 +151,9 @@ bool SetTimerRele(short ReleNbr)
 		LCDPrintValue(2, CENTER_ALIGN, ReleNbr);
 		if(SetTimer <= 60)
 			TimerStr = String(SetTimer) + "s";
-		else if(SetTimer <= 3600 && SetTimer > 60)
+		else if(SetTimer <= 3600 && SetTimer => 60)
 			TimerStr = String(SetTimer/60) + "m";
-		else if(SetTimer < MAX_TIME_TIMER && SetTimer > 3600)
+		else if(SetTimer < MAX_TIME_TIMER && SetTimer => 3600)
 			TimerStr = String(SetTimer/3600) + "h";
 		LCDPrintString(3, CENTER_ALIGN, TimerStr);
 		ButtonPress = CheckButtons();
@@ -165,9 +165,9 @@ bool SetTimerRele(short ReleNbr)
 				{
 					if(SetTimer <= 60)
 						SetTimer--;
-					else if(SetTimer <= 3600 && SetTimer > 60)
+					else if(SetTimer <= 3600 && SetTimer => 60)
 						SetTimer -= 60;
-					else if(SetTimer < MAX_TIME_TIMER && SetTimer > 3600)
+					else if(SetTimer < MAX_TIME_TIMER && SetTimer => 3600)
 						SetTimer -= 3600;
 				}
 				else
@@ -179,9 +179,9 @@ bool SetTimerRele(short ReleNbr)
 				{
 					if(SetTimer <= 60)
 						SetTimer++;
-					else if(SetTimer <= 3600 && SetTimer > 60)
+					else if(SetTimer <= 3600 && SetTimer => 60)
 						SetTimer += 60;
-					else if(SetTimer < MAX_TIME_TIMER && SetTimer > 3600)
+					else if(SetTimer < MAX_TIME_TIMER && SetTimer => 3600)
 						SetTimer += 3600;					
 				}
 				else
