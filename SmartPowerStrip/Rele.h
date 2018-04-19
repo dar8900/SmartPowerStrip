@@ -1,6 +1,8 @@
 
 #define MAX_TIME_TIMER		14401
 
+
+
 typedef enum
 {
 	RELE_1 = 0,
@@ -19,7 +21,7 @@ typedef struct
 	bool IsActive;
 	uint32_t ActiveTime;
 	bool HaveTimer;
-	int TimerTime;	
+	uint32_t TimerTime;	
 	short EepromAddr;
 }RELE;
 

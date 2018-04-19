@@ -9,7 +9,7 @@
 #include "Rele.h"
 
 extern TIME_DATE_FORMAT PresentTime;
-extern TIME_DATE_FORMAT Band;
+extern BAND_FORMAT Band;
 extern RELE Rele[];
 extern FLAGS Flag;
 extern String HostName;
@@ -251,10 +251,15 @@ bool ManualRele()
 						LCDPrintString(2, CENTER_ALIGN, "Valore Salvato");
 					else
 						LCDPrintString(2, CENTER_ALIGN, "Valore non cambiato");
-						if(Status == 0)
-							Rele[ReleIndx].IsActive = false;
-						else
-							Rele[ReleIndx].IsActive = true;
+					if(Status == 0)
+					{
+						Rele[ReleIndx].IsActive = false;
+						Rele[ReleIndx].ActiveTime = 0;
+					}
+					else
+					{
+						Rele[ReleIndx].IsActive = true;
+					}
 					WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 					ReleSetted = true;
 					break;
@@ -328,11 +333,17 @@ bool ChangeTimeBand()
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
-				OkBandSet = SetTimeBand();
+				if(SetTimeBand())
+				{
+				  OkBandSet = IsBandCorrect();
+				}
 				if(OkBandSet)
 					ExitChangeBand = true;
 				else
+				{
+					SetBandInvalid();
 					ExitChangeBand = false;
+				}
 				break;
 		}
 		delay(60);
