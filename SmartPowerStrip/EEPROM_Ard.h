@@ -27,8 +27,11 @@ typedef enum
 	RELE_8_ADDR                     
 }RELE_EEPROM_ADDR;
 
-#define BAND_HOUR_ADDR					   10
-#define BAND_MINUTE_ADDR				   11
+#define BAND_INIT_HOUR_ADDR					   10
+#define BAND_INIT_MINUTE_ADDR				   11
+#define BAND_END_HOUR_ADDR					   12
+#define BAND_END_MINUTE_ADDR				   13
+#define BAND_VALIDATION_VALUE_ADDR			   14
 
 #define FLAG_VALUE_ADDR					   50
 

@@ -112,8 +112,13 @@ void setup()
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
 	TakePresentTime();
-	ReleInit();
+	
+	// FARE CHECK PRIMO AVVIO (CONTROLLARE LA MEMORIA TUTTA A 255 ETC...)
 	SetBandInvalid();
+	
+	
+	ReleInit();
+	
 }
 
 void loop() 
@@ -122,7 +127,11 @@ void loop()
 	{
 		if(!Flag.AllReleDown)
 			TurnOffAllRele();
-		LCDDisplayOff();
+		if(Flag.IsDisplayOn)
+		{
+			LCDDisplayOff();
+			Flag.IsDisplayOn = false;
+		}
 		Flag.ReleRS = false;
 	}
 	MainScreen();

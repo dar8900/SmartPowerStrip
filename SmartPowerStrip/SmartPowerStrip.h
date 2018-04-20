@@ -5,20 +5,19 @@
 #define READ(pin)  digitalRead(pin)
 
 
-#define SDA   D1
-#define SCL   D2
+#define SDA   5
+#define SCL   4
 
-#define RELE1 D0
-#define RELE2 D3
-#define RELE3 D4
-#define RELE4 D5
-#define RELE5 D6
-#define RELE6 D7
-#define RELE7 D8
-#define RELE8 D9
+#define RELE1  0
+#define RELE2  2
+#define RELE3 14
+#define RELE4 12
+#define RELE5 13
+#define RELE6 15
+#define RELE7  3
+#define RELE8  1
 
-#define BUTTON_LED  D10
-#define ANALOG	A0
+#define BUTTON_LED  10
 
 typedef enum
 {
@@ -33,6 +32,7 @@ typedef enum
 typedef struct
 {
 	bool EnterSetup;
+	bool IsDisplayOn;
 	bool BandActive;
 	bool BandInvalid;
 	bool WifiActive;

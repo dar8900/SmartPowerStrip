@@ -49,19 +49,16 @@ void TakeReleTime()
 			if(Rele[ReleIndx].ActiveTime == SEC_IN_31_GG)
 				Rele[ReleIndx].ActiveTime = 0;
 		}
-	}
-}
-
-void CalcTimerRele()
-{
-	short ReleIndx;
-	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
-	{
-		TakePresentTime();
 		if(Rele[ReleIndx].HaveTimer)
 		{
-			Rele[ReleIndx].TimerTime -= (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second;
-		}		
+			Rele[ReleIndx].TimerTime -= ((PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE));
+			if(Rele[ReleIndx].TimerTime <= 0)
+			{
+				Rele[ReleIndx].HaveTimer = false;
+				Rele[ReleIndx].IsActive = false;
+				OFF(ReleIndx);
+			}
+		}
 	}
 }
 
@@ -100,18 +97,22 @@ void ReleReStart()
 		LCDPrintString(2, CENTER_ALIGN, "i valori dei rele");
 		ReadMemory(Rele[ReleIndx].EepromAddr, 1, &TmpReleActive);
 		if(TmpReleActive == 0)
+		{
 			Rele[ReleIndx].IsActive = false;
-		else
-			Rele[ReleIndx].IsActive = true;
-		if(Rele[ReleIndx].IsActive)
-			ON(ReleIndx);
-		else
 			OFF(ReleIndx);
+		}
+		else
+		{
+			Rele[ReleIndx].IsActive = true;
+			ON(ReleIndx);
+		}
+
 		delay(500);
 	}
 	ClearLCD();
 	Flag.AllReleDown = false;
 	Flag.ReleRS = true;
+	TakeReleTime();
 }
 
 
@@ -143,6 +144,7 @@ bool SetTimerRele(short ReleNbr)
 	short Hour = 0, Minute_1 = 0, Minute_2 = 0;
 	String TimerStr;
 	ClearLCD();
+	TakeReleTime();
 	LCDPrintString(0, CENTER_ALIGN, "Imposta il timer");
 	LCDPrintString(1, CENTER_ALIGN, "per la presa ");
 	LCDPrintValue(2, CENTER_ALIGN, ReleNbr);
@@ -154,6 +156,7 @@ bool SetTimerRele(short ReleNbr)
 	LCDPrintString(3, CENTER_ALIGN, "per confermare");
 	delay(3000);
 	ClearLCD();
+	TakeReleTime();
 	while(!ExitSetTimer)
 	{
 		TakePresentTime();
@@ -164,6 +167,7 @@ bool SetTimerRele(short ReleNbr)
 		LCDPrintString(3, 9, ":");
 		LCDPrintValue(3, 10, Minute_1);
 		LCDPrintValue(3, 11, Minute_2);
+		TakeReleTime();
 		switch(Cursor)
 		{
 			case 0:
@@ -247,7 +251,7 @@ bool SetTimerRele(short ReleNbr)
 				BlinkLed(BUTTON_LED);
 				SetTimer.hour = Hour;
 				SetTimer.minute = (Minute_1*10) + Minute_2;
-				Rele[ReleNbr].TimerTime = (SetTimer.hour * SEC_IN_HOUR) + (SetTimer.minute * SEC_IN_MINUTE);
+				Rele[ReleNbr].TimerTime = ((SetTimer.hour + PresentTime.hour) * SEC_IN_HOUR) + ((SetTimer.minute + PresentTime.minute) * SEC_IN_MINUTE);
 				ExitSetTimer = true;
 				break;
 			default:

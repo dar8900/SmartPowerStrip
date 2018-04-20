@@ -21,14 +21,13 @@ typedef struct
 	bool IsActive;
 	uint32_t ActiveTime;
 	bool HaveTimer;
-	uint32_t TimerTime;	
+	int32_t TimerTime;	
 	short EepromAddr;
 }RELE;
 
 bool ReleInit(void);
 void ReleReStart(void);
 void TakeReleTime(void);
-void CalcTimerRele(void);
 void ShowReleIcons(void);
 void TurnOffAllRele(void);
 void TurnOnAllRele(void);
