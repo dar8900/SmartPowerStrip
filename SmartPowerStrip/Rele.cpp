@@ -19,9 +19,11 @@ void TurnOffAllRele()
 	short ReleIndx;
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
-		OFF(ReleIndx);
+		OFF(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = false;
 		delay(500);
+		Rele[ReleIndx].TurnOnTime = 0;
+		Rele[ReleIndx].ActiveTime = 0;
 	}
 	Flag.AllReleDown = true;
 }
@@ -31,39 +33,45 @@ void TurnOnAllRele()
 	short ReleIndx;
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
-		ON(ReleIndx);
+		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
+		Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
 		delay(500);
 	}
+	Flag.AllReleDown = false;
+	TakeReleTime();
 }
 
 void TakeReleTime()
 {
 	short ReleIndx;
-	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+	if(!Flag.AllReleDown)
 	{
-		TakePresentTime();
-		if(Rele[ReleIndx].IsActive)
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
-			Rele[ReleIndx].ActiveTime = (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second;
-			if(Rele[ReleIndx].ActiveTime == SEC_IN_31_GG)
-				Rele[ReleIndx].ActiveTime = 0;
-		}
-		if(Rele[ReleIndx].HaveTimer)
-		{
-			Rele[ReleIndx].TimerTime -= ((PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE));
-			if(Rele[ReleIndx].TimerTime <= 0)
+			TakePresentTime();
+			if(Rele[ReleIndx].IsActive)
 			{
-				Rele[ReleIndx].HaveTimer = false;
-				Rele[ReleIndx].IsActive = false;
-				OFF(ReleIndx);
+				Rele[ReleIndx].ActiveTime += (PRESENT_DAY_HOUR_MINUTE_SECOND - Rele[ReleIndx].TurnOnTime);
+				if(Rele[ReleIndx].ActiveTime == SEC_IN_31_GG)
+					Rele[ReleIndx].ActiveTime = 0;
+			}
+			if(Rele[ReleIndx].HaveTimer)
+			{
+				Rele[ReleIndx].TimerTime -= ((PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE));
+				if(Rele[ReleIndx].TimerTime <= 0)
+				{
+					Rele[ReleIndx].HaveTimer = false;
+					Rele[ReleIndx].IsActive = false;
+					OFF(ReleIdx2Pin(ReleIndx));
+				}
 			}
 		}
 	}
 }
 
 
-bool ReleInit()
+bool ReleInit(bool FirstGo)
 {
 	short ReleIndx;
 	ClearLCD();
@@ -74,17 +82,21 @@ bool ReleInit()
 	delay(1000);
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
-		ON(ReleIndx);
+		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
 		ShowReleIcons();
 		delay(1000);
-		OFF(ReleIndx);
+		OFF(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = false;
 		ShowReleIcons();
 		delay(1000);
 	}
 	TakePresentTime();
-	ReleReStart();
+	if(!FirstGo)
+	{
+		ReleReStart();
+	}
+	CheckReleStatus();
 }
 
 void ReleReStart()
@@ -99,38 +111,65 @@ void ReleReStart()
 		if(TmpReleActive == 0)
 		{
 			Rele[ReleIndx].IsActive = false;
-			OFF(ReleIndx);
+			OFF(ReleIdx2Pin(ReleIndx));
 		}
 		else
 		{
 			Rele[ReleIndx].IsActive = true;
-			ON(ReleIndx);
+			ON(ReleIdx2Pin(ReleIndx));
+			Flag.AllReleDown = false;
+			Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
 			TakeReleTime();
 		}
 
 		delay(500);
 	}
 	ClearLCD();
-	Flag.AllReleDown = false;
 	Flag.ReleRS = true;
 	TakeReleTime();
 }
 
-
-void ShowReleIcons()
+void CheckReleStatus()
 {
 	short ReleIndx;
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
 		if(Rele[ReleIndx].IsActive)
 		{
-			LCDMoveCursor(2, 6 + ReleIndx);
-			LCDShowIcon(RELE_ON);
+				Flag.AllReleDown = false;
+				break;
 		}
 		else
+			Flag.AllReleDown = true;
+	}
+	
+}
+
+void ShowReleIcons()
+{
+	short ReleIndx;
+	if(Flag.AllReleDown)
+	{
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
 			LCDMoveCursor(2, 6 + ReleIndx);
-			LCDShowIcon(RELE_OFF);
+			LCDShowIcon(RELE_OFF);			
+		}
+	}
+	else
+	{
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+		{
+			if(Rele[ReleIndx].IsActive)
+			{
+				LCDMoveCursor(2, 6 + ReleIndx);
+				LCDShowIcon(RELE_ON);
+			}
+			else
+			{
+				LCDMoveCursor(2, 6 + ReleIndx);
+				LCDShowIcon(RELE_OFF);
+			}
 		}
 	}
 }
@@ -261,4 +300,41 @@ bool SetTimerRele(short ReleNbr)
 		
 	}
 	return ExitSetTimer;
+}
+
+
+short ReleIdx2Pin(short ReleIndx)
+{
+	short PinNum = 0;
+	switch(ReleIndx)
+	{
+		case RELE_1:
+			PinNum = RELE1; 
+			break;
+		case RELE_2:
+			PinNum = RELE2;
+			break;
+		case RELE_3:
+			PinNum = RELE3;
+			break;
+		case RELE_4:
+			PinNum = RELE4;
+			break;
+		case RELE_5:
+			PinNum = RELE5;
+			break;
+		case RELE_6:
+			PinNum = RELE6;
+			break;
+		case RELE_7:
+			PinNum = RELE7;
+			break;
+		case RELE_8: 
+			PinNum = RELE8;
+			break;
+		default:
+			PinNum = RELE1;
+			break;
+	}
+	return PinNum;	
 }

@@ -48,6 +48,7 @@ void MainScreen()
 	String Time,Date;
 	short ReleIndx = 0;
 	int TimerMenu = 300; // 30s circa
+	bool EnterSetup = false;
 	if(!Flag.BandActive && !CheckBand())
 	{
 		ClearLCD();
@@ -65,11 +66,12 @@ void MainScreen()
 		LCDPrintString(1, CENTER_ALIGN, "per entrare nel");
 		LCDPrintString(2, CENTER_ALIGN, "Menu Principale");
 		delay(3000);
-		while(!Flag.EnterSetup)
+		while(!EnterSetup)
 		{
 			ClearLCD();
+			CheckReleStatus();
 			TakeReleTime();
-			Flag.EnterSetup = SetupInterrupt();
+			EnterSetup = SetupInterrupt();
 			TakePresentTime();
 			// Scrittura data e ora
 			Time = String(PresentTime.hour);
@@ -117,10 +119,10 @@ void MainScreen()
 				TimerMenu = 300;
 			}
 		}
-		if(Flag.EnterSetup)
+		if(EnterSetup)
 		{
 			MainMenu();
-			Flag.EnterSetup = false;
+			EnterSetup = false;
 		}
 	}
 }
@@ -128,7 +130,7 @@ void MainScreen()
 void MainMenu()
 {
 	bool ExitMainMenu = false;
-	bool EnterMenu = false;
+	bool ReEnterMenu = false;
 	short ButtonPress = 0, Item = MANUAL_RELE;
 	ClearLCD();
 	LCDPrintString(0, CENTER_ALIGN, "Premere Up o Down");
@@ -144,7 +146,7 @@ void MainMenu()
 	ClearLCD();
 	while(!ExitMainMenu)
 	{	
-		if(EnterMenu)
+		if(ReEnterMenu)
 		{
 			ClearLCD();
 			TakeReleTime();
@@ -160,7 +162,7 @@ void MainMenu()
 			delay(2000);
 			ClearLCD();
 			TakeReleTime();
-			EnterMenu = false;
+			ReEnterMenu = false;
 		}
 		ClearLCD();
 		TakeReleTime();
@@ -193,7 +195,7 @@ void MainMenu()
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
-				EnterMenu = true;
+				ReEnterMenu = true;
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
@@ -203,7 +205,7 @@ void MainMenu()
 				break;			
 		}
 		delay(100);
-		if(EnterMenu)
+		if(ReEnterMenu)
 		{
 			MainMenuItems[Item].MenuFunc();
 		}
@@ -216,7 +218,7 @@ bool ManualRele()
 	bool ReleSetted = false;
 	short ButtonPress = 0, Status = 0, OldStatus = 0;
 	String SelRele = "Impostare il Rele ";
-	while(ReleIndx < RELE_MAX)
+	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{		
 		ClearLCD();
 		TakePresentTime();
@@ -234,8 +236,9 @@ bool ManualRele()
 			Status = STATUS_OFF;
 		}	
 		OldStatus = Status;
-		while(1)
+		while(!ReleSetted)
 		{
+			ClearLCD();
 			TakePresentTime();
 			ButtonPress = CheckButtons();
 			LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
@@ -266,10 +269,15 @@ bool ManualRele()
 					{
 						Rele[ReleIndx].IsActive = false;
 						Rele[ReleIndx].ActiveTime = 0;
+						Rele[ReleIndx].TurnOnTime = 0;
+						OFF(ReleIdx2Pin(ReleIndx));
 					}
 					else
 					{
 						Rele[ReleIndx].IsActive = true;
+						ON(ReleIdx2Pin(ReleIndx));
+						Flag.AllReleDown = false;
+						Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
 					}
 					WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 					ReleSetted = true;
@@ -279,12 +287,10 @@ bool ManualRele()
 				default:
 					break;
 			}
-			if(ReleSetted)
-				break;
 			delay(50);
-		}
-		ReleIndx++;	
+		}	
 	}
+	CheckReleStatus();
 }
 
 bool ChangeTimeBand()
@@ -301,7 +307,8 @@ bool ChangeTimeBand()
 	ClearLCD();
 	LCDPrintString(0, CENTER_ALIGN, "Premere Ok/Set");
 	LCDPrintString(1, CENTER_ALIGN, "per cambiare");
-	LCDPrintString(2, CENTER_ALIGN, "la banda");
+	LCDPrintString(2, CENTER_ALIGN, "la banda o");
+	LCDPrintString(3, CENTER_ALIGN, "diabilitarla");
 	delay(3000);
 	ClearLCD();
 	LCDPrintString(0, CENTER_ALIGN, "Premere Left/Back");
@@ -318,17 +325,15 @@ bool ChangeTimeBand()
 			TakeReleTime();
 			LCDPrintString(0, CENTER_ALIGN, "Premere Ok/Set");
 			LCDPrintString(1, CENTER_ALIGN, "per cambiare");
-			LCDPrintString(2, CENTER_ALIGN, "la banda");
+			LCDPrintString(2, CENTER_ALIGN, "la banda o");
+			LCDPrintString(3, CENTER_ALIGN, "diabilitarla");
 			delay(4000);
 			ClearLCD();
 			LCDPrintString(0, CENTER_ALIGN, "Premere Left/Back");
 			LCDPrintString(1, CENTER_ALIGN, "per tornare al");
 			LCDPrintString(2, CENTER_ALIGN, "Menu Principale");
 			delay(2000);
-			ClearLCD();	
-			LCDPrintString(0, CENTER_ALIGN, "e disabilitare");
-			LCDPrintString(1, CENTER_ALIGN, "la banda");
-			delay(3000);
+
 			ClearLCD();	
 			OkBandSet = true;
 		}
@@ -344,21 +349,38 @@ bool ChangeTimeBand()
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
-				SetBandInvalid();
 				ExitChangeBand = true;
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
-				if(SetTimeBand())
+				if(!Flag.IsBandSetted)
 				{
-				  OkBandSet = IsBandCorrect();
-				}
-				if(OkBandSet)
-					ExitChangeBand = true;
+					if(SetTimeBand())
+					{
+					  if(IsBandCorrect())
+						{
+							Flag.IsBandSetted = true;
+							ExitChangeBand = true;
+						}
+						else
+						{	
+							ClearLCD();
+							LCDPrintString(0, CENTER_ALIGN, "La banda");
+							LCDPrintString(1, CENTER_ALIGN, "non è");
+							LCDPrintString(2, CENTER_ALIGN, "corretta");
+							delay(2000);
+							ClearLCD();
+							TakeReleTime();
+							SetBandInvalid();
+							ExitChangeBand = false;	
+							OkBandSet = false;
+						}
+					}
+				}					
 				else
 				{
 					SetBandInvalid();
-					ExitChangeBand = false;
+					ExitChangeBand = true;
 				}
 				break;
 		}
@@ -498,7 +520,8 @@ bool AssignReleTimer()
 					delay(2000);
 					ClearLCD();
 					Rele[ReleNumber].HaveTimer = SetTimerRele(ReleNumber);
-					ON(ReleNumber);
+					ON(ReleIdx2Pin(ReleNumber));
+					Flag.AllReleDown = false;
 					TakeReleTime();
 					TimerAssignedCnt++;	
 				}

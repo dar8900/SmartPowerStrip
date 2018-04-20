@@ -123,15 +123,21 @@ void setup()
 	if(FirstStart == EMPTY_MEMORY_VALUE)
 	{
 		WriteMemory(FIRST_START_CHECK_ADDR, 0);
+		LCDNoBlink();
+		LCDDisplayOn();
 		SetBandInvalid();
+		LCDDisplayOff();
 		TurnOffAllRele();
+		Flag.IsBandSetted = false;
+		Flag.IsDisplayOn = false;
+		Flag.ReleRS = true;
+		ReleInit(true);
 	}
-	// FARE CHECK PRIMO AVVIO (CONTROLLARE LA MEMORIA TUTTA A 255 ETC...)
 	else
 	{
-		ReleInit();	
+		ReleInit(false);	
 		BandInit();	
-		LCDDisplayOn();
+		Flag.IsDisplayOn = false;
 		LCDNoBlink();
 	}
 #else
@@ -139,7 +145,7 @@ void setup()
 	EepromInit();
 	ClearMemory();
 	LCDInit();
-	if(IsMemoryEmpty)
+	if(IsMemoryEmpty())
 		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");
 
 #endif // FIRST_GO	

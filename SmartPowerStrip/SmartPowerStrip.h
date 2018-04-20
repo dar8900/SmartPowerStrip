@@ -31,10 +31,10 @@ typedef enum
 
 typedef struct
 {
-	bool EnterSetup;
 	bool IsDisplayOn;
 	bool BandActive;
 	bool BandInvalid;
+	bool IsBandSetted;
 	bool WifiActive;
 	bool ClientConnected;
 	bool AllReleDown;

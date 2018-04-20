@@ -116,8 +116,8 @@ void SetBandInvalid()
 	Band.EndHour = INVALID_BAND_VALUE;
 	Band.EndMinute = INVALID_BAND_VALUE;
 	ClearLCD();
-	LCDPrintString(1, CENTER_ALIGN, "La banda non è");
-	LCDPrintString(2, CENTER_ALIGN, "valida");
+	LCDPrintString(1, CENTER_ALIGN, "La banda è");
+	LCDPrintString(2, CENTER_ALIGN, "disabilitata");
 	delay(2000);
 	TakeReleTime();
 	ClearLCD();
@@ -233,9 +233,11 @@ bool SetTimeBand()
 						{
 							ClearLCD();
 							LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
+							LCDPrintString(2, CENTER_ALIGN, "Re-inserire ora");
 							delay(1000);
+							ClearLCD();
 							ValidSet = false;
-							TimeVar = EXIT;							
+							TimeVar = INIT_HOUR;							
 						}
 						else if(Hour == OldHour)
 						{
@@ -316,9 +318,12 @@ bool SetTimeBand()
 							{
 								ClearLCD();
 								LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
+								LCDPrintString(2, CENTER_ALIGN, "Re-inserire i");
+								LCDPrintString(3, CENTER_ALIGN, "minuti");
 								delay(1000);
+								ClearLCD();
 								ValidSet = false;
-								TimeVar = END_HOUR;									
+								TimeVar = INIT_MINUTE;									
 							}
 						}
 						break;
@@ -361,9 +366,11 @@ bool SetTimeBand()
 						{
 							ClearLCD();
 							LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
+							LCDPrintString(2, CENTER_ALIGN, "Re-inserire ora");
 							delay(1000);
+							ClearLCD();
 							ValidSet = false;
-							TimeVar = EXIT;							
+							TimeVar = END_HOUR;							
 						}
 						else if(Hour == OldHour)
 						{
@@ -444,9 +451,12 @@ bool SetTimeBand()
 							{
 								ClearLCD();
 								LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
+								LCDPrintString(2, CENTER_ALIGN, "Re-inserire i");
+								LCDPrintString(3, CENTER_ALIGN, "minuti");
 								delay(1000);
+								ClearLCD();
 								ValidSet = false;
-								TimeVar = EXIT;									
+								TimeVar = END_MINUTE;									
 							}
 						}
 						break;

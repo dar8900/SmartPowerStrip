@@ -19,16 +19,19 @@ typedef enum
 typedef struct
 {
 	bool IsActive;
+	uint32_t TurnOnTime;
 	uint32_t ActiveTime;
 	bool HaveTimer;
 	int32_t TimerTime;	
 	short EepromAddr;
 }RELE;
 
-bool ReleInit(void);
+bool ReleInit(bool FirstGo);
 void ReleReStart(void);
 void TakeReleTime(void);
 void ShowReleIcons(void);
 void TurnOffAllRele(void);
 void TurnOnAllRele(void);
+void CheckReleStatus(void);
 bool SetTimerRele(short ReleNbr);
+short ReleIdx2Pin(short ReleIndx);
