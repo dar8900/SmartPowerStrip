@@ -14,6 +14,7 @@
 #define MAX_EEPROM_DIM_NODEMCU			  512
 
 #define MAX_CELL_EEPROM	                  254
+#define EMPTY_MEMORY_VALUE				  255	
 
 typedef enum
 {

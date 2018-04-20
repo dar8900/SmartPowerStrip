@@ -273,6 +273,7 @@ bool ManualRele()
 					}
 					WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 					ReleSetted = true;
+					delay(1500);
 					break;
 				case BUTTON_LEFT:
 				default:

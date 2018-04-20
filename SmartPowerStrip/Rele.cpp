@@ -105,6 +105,7 @@ void ReleReStart()
 		{
 			Rele[ReleIndx].IsActive = true;
 			ON(ReleIndx);
+			TakeReleTime();
 		}
 
 		delay(500);

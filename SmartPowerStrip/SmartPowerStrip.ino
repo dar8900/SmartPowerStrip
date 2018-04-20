@@ -8,7 +8,7 @@
 #include "Band.h"
 #include "Rele.h"
 
-
+#undef FIRST_GO
 
 uint8_t WifiConnectionOn[]
 {
@@ -88,8 +88,14 @@ void BlinkLed(short pin)
 	OFF(pin);	
 }
 
+
+
+
 void setup() 
 {
+#ifndef FIRST_GO
+	short FirstStart = 0;
+
 	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
 	EepromInit();
 	LCDInit();
@@ -113,17 +119,36 @@ void setup()
 	LCDCreateIcon(OnRele, RELE_ON);
 	TakePresentTime();
 	
+	ReadMemory(FIRST_START_CHECK_ADDR, 1, &FirstStart);
+	if(FirstStart == EMPTY_MEMORY_VALUE)
+	{
+		WriteMemory(FIRST_START_CHECK_ADDR, 0);
+		SetBandInvalid();
+		TurnOffAllRele();
+	}
 	// FARE CHECK PRIMO AVVIO (CONTROLLARE LA MEMORIA TUTTA A 255 ETC...)
-	SetBandInvalid();
-	
-	
-	ReleInit();
-	
+	else
+	{
+		ReleInit();	
+		BandInit();	
+		LCDDisplayOn();
+		LCDNoBlink();
+	}
+#else
+	Wire.begin(SDA, SCL);
+	EepromInit();
+	ClearMemory();
+	LCDInit();
+	if(IsMemoryEmpty)
+		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");
+
+#endif // FIRST_GO	
 }
 
 void loop() 
 {
-	if(CheckBand)
+#ifndef FIRST_GO
+	if(CheckBand())
 	{
 		if(!Flag.AllReleDown)
 			TurnOffAllRele();
@@ -135,4 +160,5 @@ void loop()
 		Flag.ReleRS = false;
 	}
 	MainScreen();
+#endif
 }

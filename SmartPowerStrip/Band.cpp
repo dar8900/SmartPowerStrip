@@ -12,6 +12,16 @@ extern TIME_DATE_FORMAT PresentTime;
 BAND_FORMAT Band;
 extern FLAGS Flag;
 
+void BandInit()
+{
+	short ValidValue = 0, indx;
+	for(indx = INIT_HOUR; indx <= END_MINUTE; indx++)
+	{
+		ReadBandValues(indx);
+	}
+	CheckBand();
+}
+
 bool CheckBand()
 {
 	bool InBand = false;

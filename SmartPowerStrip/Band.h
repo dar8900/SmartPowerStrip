@@ -21,6 +21,7 @@ typedef struct
 
 } BAND_FORMAT;
 
+void BandInit(void);
 bool IsBandCorrect(void);
 bool CheckBand(void);
 void SetBandInvalid(void);
