@@ -31,7 +31,8 @@
 	2.5  Quando un relè è attivo, attivare un contatore per sapere da quanto tempo è acceso; 
 	     servirà una funzione che venga chiamata nel loop principale e che prenda i secondi dall'RTC
 
-3 WEB SERVER: (Esempio: https://www.arduino.cc/en/Tutorial/WiFiWebServer, http://www.electronicwings.com/nodemcu/http-server-on-nodemcu-with-arduino-ide)
+3 WEB SERVER: (Esempio: https://startingelectronics.org/tutorials/arduino/ethernet-shield-web-server-tutorial/web-server-read-switch-using-AJAX/
+ https://www.arduino.cc/en/Tutorial/WiFiWebServer, http://www.electronicwings.com/nodemcu/http-server-on-nodemcu-with-arduino-ide)
 	3.1  Informazioni: Indirizzo IP, relè attivi, se la banda è attiva , orario e data
 	3.2  Scrivere pagina web in html con tabella per i vari relè con: 
 			3.3.1 La label a cui è associato (solo visualizzazione)
