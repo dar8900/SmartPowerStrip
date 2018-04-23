@@ -116,8 +116,8 @@ void SetBandInvalid()
 	Band.EndHour = INVALID_BAND_VALUE;
 	Band.EndMinute = INVALID_BAND_VALUE;
 	ClearLCD();
-	LCDPrintString(1, CENTER_ALIGN, "La banda è");
-	LCDPrintString(2, CENTER_ALIGN, "disabilitata");
+	LCDPrintString(TWO, CENTER_ALIGN, "La banda è");
+	LCDPrintString(THREE, CENTER_ALIGN, "disabilitata");
 	delay(2000);
 	TakeReleTime();
 	ClearLCD();
@@ -175,15 +175,15 @@ bool SetTimeBand()
 	String MinuteStr;
 	ClearLCD();
 	TakeReleTime();
-	LCDPrintString(0, CENTER_ALIGN, "Cambiare l'orario");
-	LCDPrintString(1, CENTER_ALIGN, "della banda");
-	LCDPrintString(2, CENTER_ALIGN, "con Up e Down");
+	LCDPrintString(ONE  , CENTER_ALIGN, "Cambiare l'orario");
+	LCDPrintString(TWO  , CENTER_ALIGN, "della banda");
+	LCDPrintString(THREE, CENTER_ALIGN, "con Up e Down");
 	delay(2000);
 	ClearLCD();
-	LCDPrintString(0, CENTER_ALIGN, "Premere Ok/Set");
-	LCDPrintString(1, CENTER_ALIGN, "per confermare");
-	LCDPrintString(2, CENTER_ALIGN, "Premere Left/Back");
-	LCDPrintString(3, CENTER_ALIGN, "per uscire");
+	LCDPrintString(ONE  , CENTER_ALIGN, "Premere Ok/Set");
+	LCDPrintString(TWO  , CENTER_ALIGN, "per confermare");
+	LCDPrintString(THREE, CENTER_ALIGN, "Premere Left/Back");
+	LCDPrintString(FOUR , CENTER_ALIGN, "per uscire");
 	delay(2000);
 	ClearLCD();
 	TakeReleTime();
@@ -192,14 +192,14 @@ bool SetTimeBand()
 		ClearLCD();
 		TakePresentTime();
 		TakeReleTime();
-		LCDPrintString(0, CENTER_ALIGN, "Cambiare l'orario");
-		LCDPrintString(1, CENTER_ALIGN, "della banda");
+		LCDPrintString(ONE  , CENTER_ALIGN, "Cambiare l'orario");
+		LCDPrintString(TWO  , CENTER_ALIGN, "della banda");
 		switch(TimeVar)
 		{
 			case INIT_HOUR:
 				ButtonPress = CheckButtons();
-				LCDPrintString(2, CENTER_ALIGN, "Ora iniziale:");
-				LCDPrintValue(3, CENTER_ALIGN, Hour);
+				LCDPrintString(THREE, CENTER_ALIGN, "Ora iniziale:");
+				LCDPrintValue(FOUR, CENTER_ALIGN, Hour);
 				TakeReleTime();
 				switch(ButtonPress)
 				{
@@ -222,7 +222,7 @@ bool SetTimeBand()
 						if(Hour != OldHour && Hour > OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 							delay(1000);
 							SaveBandValues(INIT_HOUR, Hour);
 							Band.InitHour = Hour;
@@ -232,8 +232,8 @@ bool SetTimeBand()
 						else if(Hour != OldHour && Hour < OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
-							LCDPrintString(2, CENTER_ALIGN, "Re-inserire ora");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
+							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire ora");
 							delay(1000);
 							ClearLCD();
 							ValidSet = false;
@@ -242,7 +242,7 @@ bool SetTimeBand()
 						else if(Hour == OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore uguale");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
 							delay(1000);
 							ValidSet = true;
 							TimeVar = INIT_MINUTE;
@@ -259,7 +259,7 @@ bool SetTimeBand()
 			case INIT_MINUTE:
 				ButtonPress = CheckButtons();
 				MinuteStr = "0";
-				LCDPrintString(2, CENTER_ALIGN, "Minuti:");	
+				LCDPrintString(THREE, CENTER_ALIGN, "Minuti:");	
 				TakeReleTime();
 				if(Minute < 10)
 				{
@@ -269,7 +269,7 @@ bool SetTimeBand()
 				{
 					MinuteStr = String(Minute);					
 				}
-				LCDPrintString(3, CENTER_ALIGN, MinuteStr);
+				LCDPrintString(FOUR, CENTER_ALIGN, MinuteStr);
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:
@@ -291,12 +291,12 @@ bool SetTimeBand()
 						if(Hour != OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 							delay(1000);
 							SaveBandValues(INIT_MINUTE, Minute);
 							Band.InitMinute = Minute;
 							ValidSet = true;
-							TimeVar = EXIT;	
+							TimeVar = END_HOUR;	
 							Flag.BandInvalid = false;
 							WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
 						}
@@ -305,21 +305,21 @@ bool SetTimeBand()
 							if(Minute > OldMinute)
 							{
 								ClearLCD();
-								LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+								LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 								delay(1000);
 								SaveBandValues(INIT_MINUTE, Minute);
 								Band.InitMinute = Minute;
 								ValidSet = true;
-								TimeVar = EXIT;	
+								TimeVar = END_HOUR;	
 								Flag.BandInvalid = false;
 								WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
 							}
 							else
 							{
 								ClearLCD();
-								LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
-								LCDPrintString(2, CENTER_ALIGN, "Re-inserire i");
-								LCDPrintString(3, CENTER_ALIGN, "minuti");
+								LCDPrintString(TWO  , CENTER_ALIGN, "Valore non valido");
+								LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire i");
+								LCDPrintString(FOUR , CENTER_ALIGN, "minuti");
 								delay(1000);
 								ClearLCD();
 								ValidSet = false;
@@ -331,8 +331,8 @@ bool SetTimeBand()
 				break;
 			case END_HOUR:
 				ButtonPress = CheckButtons();
-				LCDPrintString(2, CENTER_ALIGN, "Ora finale:");
-				LCDPrintValue(3, CENTER_ALIGN, Hour);
+				LCDPrintString(THREE, CENTER_ALIGN, "Ora finale:");
+				LCDPrintValue(FOUR, CENTER_ALIGN, Hour);
 				TakeReleTime();
 				switch(ButtonPress)
 				{
@@ -355,7 +355,7 @@ bool SetTimeBand()
 						if(Hour != OldHour && Hour > OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 							delay(1000);
 							SaveBandValues(END_HOUR, Hour);
 							Band.EndHour = Hour;
@@ -365,8 +365,8 @@ bool SetTimeBand()
 						else if(Hour != OldHour && Hour < OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
-							LCDPrintString(2, CENTER_ALIGN, "Re-inserire ora");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
+							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire ora");
 							delay(1000);
 							ClearLCD();
 							ValidSet = false;
@@ -375,7 +375,7 @@ bool SetTimeBand()
 						else if(Hour == OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore uguale");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
 							delay(1000);
 							ValidSet = true;
 							TimeVar = END_MINUTE;
@@ -392,7 +392,7 @@ bool SetTimeBand()
 			case END_MINUTE:
 				ButtonPress = CheckButtons();
 				MinuteStr = "0";
-				LCDPrintString(2, CENTER_ALIGN, "Minuti:");	
+				LCDPrintString(THREE, CENTER_ALIGN, "Minuti:");	
 				TakeReleTime();
 				if(Minute < 10)
 				{
@@ -402,7 +402,7 @@ bool SetTimeBand()
 				{
 					MinuteStr = String(Minute);					
 				}
-				LCDPrintString(3, CENTER_ALIGN, MinuteStr);
+				LCDPrintString(FOUR, CENTER_ALIGN, MinuteStr);
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:
@@ -424,7 +424,7 @@ bool SetTimeBand()
 						if(Hour != OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 							delay(1000);
 							SaveBandValues(END_MINUTE, Minute);
 							Band.EndMinute = Minute;
@@ -438,7 +438,7 @@ bool SetTimeBand()
 							if(Minute > OldMinute)
 							{
 								ClearLCD();
-								LCDPrintString(1, CENTER_ALIGN, "Valore Salvato");
+								LCDPrintString(TWO, CENTER_ALIGN, "Valore Salvato");
 								delay(1000);
 								SaveBandValues(END_MINUTE, Minute);
 								Band.EndMinute = Minute;
@@ -450,9 +450,9 @@ bool SetTimeBand()
 							else
 							{
 								ClearLCD();
-								LCDPrintString(1, CENTER_ALIGN, "Valore non valido");
-								LCDPrintString(2, CENTER_ALIGN, "Re-inserire i");
-								LCDPrintString(3, CENTER_ALIGN, "minuti");
+								LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
+								LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire i");
+								LCDPrintString(FOUR, CENTER_ALIGN, "minuti");
 								delay(1000);
 								ClearLCD();
 								ValidSet = false;

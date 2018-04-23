@@ -29,7 +29,7 @@ typedef struct
 bool ReleInit(bool FirstGo);
 void ReleReStart(void);
 void TakeReleTime(void);
-void ShowReleIcons(void);
+void ShowReleIcons(short Row);
 void TurnOffAllRele(void);
 void TurnOnAllRele(void);
 void CheckReleStatus(void);

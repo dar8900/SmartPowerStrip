@@ -24,7 +24,8 @@ typedef enum
 	WIFI_OK = 0,
 	WIFI_NO,
 	RELE_OFF,
-	RELE_ON
+	RELE_ON,
+	ALARM
 }ICON_NUMB;
 
 

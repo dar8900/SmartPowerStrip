@@ -10,6 +10,8 @@
 
 #undef FIRST_GO
 
+extern uint8_t AlarmIcon[];
+
 uint8_t WifiConnectionOn[]
 {
 	0x0E,
@@ -117,6 +119,7 @@ void setup()
 	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
+	LCDCreateIcon(AlarmIcon, ALARM);
 	TakePresentTime();
 	
 	ReadMemory(FIRST_START_CHECK_ADDR, 1, &FirstStart);

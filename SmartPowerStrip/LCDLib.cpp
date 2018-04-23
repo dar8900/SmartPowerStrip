@@ -2,6 +2,17 @@
 #include "SmartPowerStrip.h"
 LiquidCrystal_I2C lcd_main(0x27, 20,4);
 
+uint8_t AlarmIcon[]
+{
+	0x0E,
+	0x15,
+	0x15,
+	0x15,
+	0x11,
+	0x15,
+	0x11,
+	0x0E
+};
 
 void LCDInit()
 {
@@ -19,6 +30,29 @@ void LCDMoveCursor(short row, short col)
 {
 	lcd_main.setCursor(col, row);
 }
+
+void BlinkDisplay(short NumTimes)
+{
+	short num = 0;
+	for(num = 0; num < NumTimes; num++)
+	{
+		LCDDisplayOn();
+		delay(400);
+		LCDDisplayOff();
+		delay(400);		
+	}
+	LCDDisplayOn();
+}
+
+void LCDShowPopUp(String Avviso)
+{
+	ClearLCD();
+	LCDPrintString(2, CENTER_ALIGN, Avviso);
+	BlinkDisplay(5);
+	delay(2000);
+	ClearLCD();
+}
+
 
 void LcdTimeWrite(int Time2Write)
 {

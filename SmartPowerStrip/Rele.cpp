@@ -64,6 +64,9 @@ void TakeReleTime()
 					Rele[ReleIndx].HaveTimer = false;
 					Rele[ReleIndx].IsActive = false;
 					OFF(ReleIdx2Pin(ReleIndx));
+					String ReleName;
+					ReleName = "Presa " + String(ReleIndx+1) + "spenta";
+					LCDShowPopUp(ReleName);
 				}
 			}
 		}
@@ -75,20 +78,20 @@ bool ReleInit(bool FirstGo)
 {
 	short ReleIndx;
 	ClearLCD();
-	LCDPrintString(0, CENTER_ALIGN, "Inizializzo i rele");
-	LCDPrintString(1, CENTER_ALIGN, "attendere...");
+	LCDPrintString(ONE, CENTER_ALIGN, "Inizializzo i rele");
+	LCDPrintString(TWO, CENTER_ALIGN, "attendere...");
 	TurnOffAllRele();
-	ShowReleIcons();
+	ShowReleIcons(THREE);
 	delay(1000);
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
 		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
-		ShowReleIcons();
+		ShowReleIcons(THREE);
 		delay(1000);
 		OFF(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = false;
-		ShowReleIcons();
+		ShowReleIcons(THREE);
 		delay(1000);
 	}
 	TakePresentTime();
@@ -105,8 +108,8 @@ void ReleReStart()
 	ClearLCD();
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{	
-		LCDPrintString(1, CENTER_ALIGN, "Sto ristabilendo");
-		LCDPrintString(2, CENTER_ALIGN, "i valori dei rele");
+		LCDPrintString(TWO, CENTER_ALIGN, "Sto ristabilendo");
+		LCDPrintString(THREE, CENTER_ALIGN, "i valori dei rele");
 		ReadMemory(Rele[ReleIndx].EepromAddr, 1, &TmpReleActive);
 		if(TmpReleActive == 0)
 		{
@@ -145,14 +148,14 @@ void CheckReleStatus()
 	
 }
 
-void ShowReleIcons()
+void ShowReleIcons(short Row)
 {
 	short ReleIndx;
 	if(Flag.AllReleDown)
 	{
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
-			LCDMoveCursor(2, 6 + ReleIndx);
+			LCDMoveCursor(Row, 6 + ReleIndx);
 			LCDShowIcon(RELE_OFF);			
 		}
 	}
@@ -162,12 +165,12 @@ void ShowReleIcons()
 		{
 			if(Rele[ReleIndx].IsActive)
 			{
-				LCDMoveCursor(2, 6 + ReleIndx);
+				LCDMoveCursor(Row, 6 + ReleIndx);
 				LCDShowIcon(RELE_ON);
 			}
 			else
 			{
-				LCDMoveCursor(2, 6 + ReleIndx);
+				LCDMoveCursor(Row, 6 + ReleIndx);
 				LCDShowIcon(RELE_OFF);
 			}
 		}
@@ -185,41 +188,41 @@ bool SetTimerRele(short ReleNbr)
 	String TimerStr;
 	ClearLCD();
 	TakeReleTime();
-	LCDPrintString(0, CENTER_ALIGN, "Imposta il timer");
-	LCDPrintString(1, CENTER_ALIGN, "per la presa ");
-	LCDPrintValue(2, CENTER_ALIGN, ReleNbr);
+	LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
+	LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
+	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
 	delay(2000);
 	ClearLCD();
-	LCDPrintString(0, CENTER_ALIGN, "Il tempo massimo");
-	LCDPrintString(1, CENTER_ALIGN, "è di 4h");
-	LCDPrintString(2, CENTER_ALIGN, "Premere Ok/Set");
-	LCDPrintString(3, CENTER_ALIGN, "per confermare");
+	LCDPrintString(ONE  , CENTER_ALIGN, "Il tempo massimo");
+	LCDPrintString(TWO  , CENTER_ALIGN, "è di 4h");
+	LCDPrintString(THREE, CENTER_ALIGN, "Premere Ok/Set");
+	LCDPrintString(FOUR , CENTER_ALIGN, "per confermare");
 	delay(3000);
 	ClearLCD();
 	TakeReleTime();
 	while(!ExitSetTimer)
 	{
 		TakePresentTime();
-		LCDPrintString(0, CENTER_ALIGN, "Imposta il timer");
-		LCDPrintString(1, CENTER_ALIGN, "per la presa ");
-		LCDPrintValue(2, CENTER_ALIGN, ReleNbr);
-		LCDPrintValue(3, 8, Hour);
-		LCDPrintString(3, 9, ":");
-		LCDPrintValue(3, 10, Minute_1);
-		LCDPrintValue(3, 11, Minute_2);
+		LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
+		LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
+		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
+		LCDPrintValue(FOUR, 8, Hour);
+		LCDPrintString(FOUR, 9, ":");
+		LCDPrintValue(FOUR, 10, Minute_1);
+		LCDPrintValue(FOUR, 11, Minute_2);
 		TakeReleTime();
 		switch(Cursor)
 		{
 			case 0:
-				LCDMoveCursor(3, 8);
+				LCDMoveCursor(FOUR, 8);
 				LCDBlink();
 				break;
 			case 1:
-				LCDMoveCursor(3, 10);
+				LCDMoveCursor(FOUR, 10);
 				LCDBlink();
 				break;
 			case 2:
-				LCDMoveCursor(3, 11);
+				LCDMoveCursor(FOUR, 11);
 				LCDBlink();
 				break;
 			default:

@@ -8,11 +8,19 @@
 #define RIGHT_ALIGN   19
 #define LEFT_ALIGN     0
 
-
+typedef enum
+{
+	ONE = 0,
+	TWO,
+	THREE,
+	FOUR	
+} LCD_ROWS;
 
 void LCDInit(void);
 void LCDMoveCursor(short row, short col);
 void ClearLCD(void);
+void BlinkDisplay(short NumTimes);
+void LCDShowPopUp(String Avviso);
 void LcdTimeWrite(int Time2Write);
 void LCDPrintString(short row, short col, String string);
 void LCDPrintValue(short row, short col, short value);
