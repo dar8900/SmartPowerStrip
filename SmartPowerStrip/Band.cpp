@@ -68,7 +68,7 @@ bool CheckBand()
 			}
 		}
 	}
-	TakeReleTime();
+	CheckEvents();
 	return InBand;
 }
 
@@ -119,7 +119,7 @@ void SetBandInvalid()
 	LCDPrintString(TWO, CENTER_ALIGN, "La banda è");
 	LCDPrintString(THREE, CENTER_ALIGN, "disabilitata");
 	delay(2000);
-	TakeReleTime();
+	CheckEvents();
 	ClearLCD();
 	Flag.BandInvalid = true;
 	WriteMemory(BAND_VALIDATION_VALUE_ADDR, 1);
@@ -174,7 +174,7 @@ bool SetTimeBand()
 	short OldHour = PresentTime.hour, OldMinute = PresentTime.minute;
 	String MinuteStr;
 	ClearLCD();
-	TakeReleTime();
+	CheckEvents();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Cambiare l'orario");
 	LCDPrintString(TWO  , CENTER_ALIGN, "della banda");
 	LCDPrintString(THREE, CENTER_ALIGN, "con Up e Down");
@@ -186,12 +186,12 @@ bool SetTimeBand()
 	LCDPrintString(FOUR , CENTER_ALIGN, "per uscire");
 	delay(2000);
 	ClearLCD();
-	TakeReleTime();
+	CheckEvents();
 	while(!ExitSetTimeBand)
 	{
 		ClearLCD();
 		TakePresentTime();
-		TakeReleTime();
+		CheckEvents();
 		LCDPrintString(ONE  , CENTER_ALIGN, "Cambiare l'orario");
 		LCDPrintString(TWO  , CENTER_ALIGN, "della banda");
 		switch(TimeVar)
@@ -200,7 +200,7 @@ bool SetTimeBand()
 				ButtonPress = CheckButtons();
 				LCDPrintString(THREE, CENTER_ALIGN, "Ora iniziale:");
 				LCDPrintValue(FOUR, CENTER_ALIGN, Hour);
-				TakeReleTime();
+				CheckEvents();
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:
@@ -260,7 +260,7 @@ bool SetTimeBand()
 				ButtonPress = CheckButtons();
 				MinuteStr = "0";
 				LCDPrintString(THREE, CENTER_ALIGN, "Minuti:");	
-				TakeReleTime();
+				CheckEvents();
 				if(Minute < 10)
 				{
 					MinuteStr += String(Minute);
@@ -333,7 +333,7 @@ bool SetTimeBand()
 				ButtonPress = CheckButtons();
 				LCDPrintString(THREE, CENTER_ALIGN, "Ora finale:");
 				LCDPrintValue(FOUR, CENTER_ALIGN, Hour);
-				TakeReleTime();
+				CheckEvents();
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:
@@ -393,7 +393,7 @@ bool SetTimeBand()
 				ButtonPress = CheckButtons();
 				MinuteStr = "0";
 				LCDPrintString(THREE, CENTER_ALIGN, "Minuti:");	
-				TakeReleTime();
+				CheckEvents();
 				if(Minute < 10)
 				{
 					MinuteStr += String(Minute);
@@ -463,7 +463,7 @@ bool SetTimeBand()
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = EXIT;
-						TakeReleTime();
+						CheckEvents();
 						ValidSet = true;
 					default:
 						break;

@@ -39,7 +39,7 @@ void TurnOnAllRele()
 		delay(500);
 	}
 	Flag.AllReleDown = false;
-	TakeReleTime();
+	CheckEvents();
 }
 
 void TakeReleTime()
@@ -122,14 +122,14 @@ void ReleReStart()
 			ON(ReleIdx2Pin(ReleIndx));
 			Flag.AllReleDown = false;
 			Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
-			TakeReleTime();
+			CheckEvents();
 		}
 
 		delay(500);
 	}
 	ClearLCD();
 	Flag.ReleRS = true;
-	TakeReleTime();
+	CheckEvents();
 }
 
 void CheckReleStatus()
@@ -187,7 +187,7 @@ bool SetTimerRele(short ReleNbr)
 	short Hour = 0, Minute_1 = 0, Minute_2 = 0;
 	String TimerStr;
 	ClearLCD();
-	TakeReleTime();
+	CheckEvents();
 	LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
 	LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
 	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
@@ -199,10 +199,10 @@ bool SetTimerRele(short ReleNbr)
 	LCDPrintString(FOUR , CENTER_ALIGN, "per confermare");
 	delay(3000);
 	ClearLCD();
-	TakeReleTime();
+	CheckEvents();
 	while(!ExitSetTimer)
 	{
-		TakePresentTime();
+		
 		LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
 		LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
 		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
@@ -210,7 +210,7 @@ bool SetTimerRele(short ReleNbr)
 		LCDPrintString(FOUR, 9, ":");
 		LCDPrintValue(FOUR, 10, Minute_1);
 		LCDPrintValue(FOUR, 11, Minute_2);
-		TakeReleTime();
+		CheckEvents();
 		switch(Cursor)
 		{
 			case 0:

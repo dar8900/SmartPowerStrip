@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Arduino Ajax I/O</title>
+        <title>Smart Power-Strip</title>
         <script>
-		strLED1 = "";
-		strLED2 = "";
-		strLED3 = "";
-		strLED4 = "";
-		var LED3_state = 0;
-		var LED4_state = 0;
+		Rele1Str = "";
+		Rele2Str = "";
+		Rele3Str = "";
+		Rele4Str = "";
+		Rele5Str = "";
+		Rele6Str = "";
+		Rele7Str = "";
+		Rele8Str = "";
+		
+		var RELE1State = 0;
+		var RELE2State = 0;
+		var RELE3State = 0;
+		var RELE4State = 0;
+		var RELE5State = 0;
+		var RELE6State = 0;
+		var RELE7State = 0;
+		var RELE8State = 0;
 		function GetArduinoIO()
 		{
 			nocache = "&nocache=" + Math.random() * 1000000;
@@ -20,99 +31,199 @@
 						if (this.responseXML != null) {
 							// XML file received - contains analog values, switch values and LED states
 							var count;
-							// get analog inputs
-							var num_an = this.responseXML.getElementsByTagName('analog').length;
-							for (count = 0; count < num_an; count++) {
-								document.getElementsByClassName("analog")[count].innerHTML =
-									this.responseXML.getElementsByTagName('analog')[count].childNodes[0].nodeValue;
+							// RELE 1
+							if (this.responseXML.getElementsByTagName('RELE')[0].childNodes[0].nodeValue === "on") 
+							{
+								document.getElementById("RELE1").innerHTML = "RELE 1 is ON";
+								RELE1State = 1;
 							}
-							// get switch inputs
-							var num_an = this.responseXML.getElementsByTagName('switch').length;
-							for (count = 0; count < num_an; count++) {
-								document.getElementsByClassName("switches")[count].innerHTML =
-									this.responseXML.getElementsByTagName('switch')[count].childNodes[0].nodeValue;
+							else 
+							{
+								document.getElementById("RELE1").innerHTML = "RELE 1 is OFF";
+								RELE2State = 0;
 							}
-							// LED 1
-							if (this.responseXML.getElementsByTagName('LED')[0].childNodes[0].nodeValue === "checked") {
-								document.LED_form.LED1.checked = true;
+							// RELE 2
+							if (this.responseXML.getElementsByTagName('RELE')[1].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE2").innerHTML = "RELE 2 is ON";
+								RELE2State = 1;
 							}
-							else {
-								document.LED_form.LED1.checked = false;
+							else 
+							{
+								document.getElementById("RELE2").innerHTML = "RELE 2 is OFF";
+								RELE1State = 0;
 							}
-							// LED 2
-							if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "checked") {
-								document.LED_form.LED2.checked = true;
+							 // RELE 3
+							if (this.responseXML.getElementsByTagName('RELE')[2].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE3").innerHTML = "RELE 3 is ON";
+								RELE3State = 1;
 							}
-							else {
-								document.LED_form.LED2.checked = false;
+							else 
+							{
+								document.getElementById("RELE3").innerHTML = "RELE 3 is OFF";
+								RELE3State = 0;
 							}
-							// LED 3
-							if (this.responseXML.getElementsByTagName('LED')[2].childNodes[0].nodeValue === "on") {
-								document.getElementById("LED3").innerHTML = "LED 3 is ON (D8)";
-								LED3_state = 1;
+							  // RELE 4
+							if (this.responseXML.getElementsByTagName('RELE')[3].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE4").innerHTML = "RELE 4 is ON";
+								RELE4State = 1;
 							}
-							else {
-								document.getElementById("LED3").innerHTML = "LED 3 is OFF (D8)";
-								LED3_state = 0;
+							else 
+							{
+								document.getElementById("RELE4").innerHTML = "RELE 4 is OFF";
+								RELE4State = 0;
 							}
-							// LED 4
-							if (this.responseXML.getElementsByTagName('LED')[3].childNodes[0].nodeValue === "on") {
-								document.getElementById("LED4").innerHTML = "LED 4 is ON (D9)";
-								LED4_state = 1;
+							 // RELE 5
+							if (this.responseXML.getElementsByTagName('RELE')[4].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE5").innerHTML = "RELE 5 is ON";
+								RELE5State = 1;
 							}
-							else {
-								document.getElementById("LED4").innerHTML = "LED 4 is OFF (D9)";
-								LED4_state = 0;
+							else
+							{
+								document.getElementById("RELE5").innerHTML = "RELE 5 is OFF";
+								RELE5State = 0;
+							}
+							 // RELE 6
+							if (this.responseXML.getElementsByTagName('RELE')[5].childNodes[0].nodeValue === "on") 
+							{
+								document.getElementById("RELE6").innerHTML = "RELE 6 is ON";
+								RELE6State = 1;
+							}
+							else 
+							{
+								document.getElementById("RELE6").innerHTML = "RELE 6 is OFF";
+								RELE6State = 0;
+							}
+							 // RELE 7
+							if (this.responseXML.getElementsByTagName('RELE')[6].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE7").innerHTML = "RELE 7 is ON";
+								RELE7State = 1;
+							}
+							else 
+							{
+								document.getElementById("RELE7").innerHTML = "RELE 7 is OFF";
+								RELE7State = 0;
+							}
+							 // RELE 8
+							if (this.responseXML.getElementsByTagName('RELE')[7].childNodes[0].nodeValue === "on")
+							{
+								document.getElementById("RELE8").innerHTML = "RELE 8 is ON";
+								RELE8State = 1;
+							}
+							else 
+							{
+								document.getElementById("RELE8").innerHTML = "RELE 8 is OFF";
+								RELE8State = 0;
 							}
 						}
 					}
 				}
 			}
 			// send HTTP GET request with LEDs to switch on/off if any
-			request.open("GET", "ajax_inputs" + strLED1 + strLED2 + strLED3 + strLED4 + nocache, true);
+			request.open("GET", "ajax_inputs" + Rele1Str + Rele2Str + Rele3Str + Rele4Str + Rele5Str +
+                		Rele6Str + Rele7Str + Rele8Str + nocache, true);
 			request.send(null);
-			setTimeout('GetArduinoIO()', 1000);
-			strLED1 = "";
-			strLED2 = "";
-			strLED3 = "";
-			strLED4 = "";
+			setTimeout('GetArduinoIO()', 500);
+			Rele1Str = "";
+			Rele2Str = "";			
+			Rele3Str = "";			
+			Rele4Str = "";			
+			Rele5Str = "";			
+			Rele6Str = "";			
+			Rele7Str = "";			
+			Rele8Str = "";			
 		}
-		// service LEDs when checkbox checked/unchecked
-		function GetCheck()
+		
+		function GetRele1()
 		{
-			if (LED_form.LED1.checked) {
-				strLED1 = "&LED1=1";
+			if (RELE1State === 1) {
+				RELE1State = 0;
+				Rele1Str = "&RELE1=0";
 			}
 			else {
-				strLED1 = "&LED1=0";
-			}
-			if (LED_form.LED2.checked) {
-				strLED2 = "&LED2=1";
-			}
-			else {
-				strLED2 = "&LED2=0";
-			}
-		}
-		function GetButton1()
-		{
-			if (LED3_state === 1) {
-				LED3_state = 0;
-				strLED3 = "&LED3=0";
-			}
-			else {
-				LED3_state = 1;
-				strLED3 = "&LED3=1";
+				RELE1State = 1;
+				Rele1Str = "&RELE1=1";
 			}
 		}
-		function GetButton2()
+		function GetRele2()
 		{
-			if (LED4_state === 1) {
-				LED4_state = 0;
-				strLED4 = "&LED4=0";
+			if (RELE2State === 1) {
+				RELE2State = 0;
+				Rele2Str = "&RELE2=0";
 			}
 			else {
-				LED4_state = 1;
-				strLED4 = "&LED4=1";
+				RELE2State = 1;
+				Rele2Str = "&RELE2=1";
+			}
+		}
+		function GetRele3()
+		{
+			if (RELE3State === 1) {
+				RELE3State = 0;
+				Rele3Str = "&RELE3=0";
+			}
+			else {
+				RELE3State = 1;
+				Rele3Str = "&RELE3=1";
+			}
+		}
+		function GetRele4()
+		{
+			if (RELE4State === 1) {
+				RELE4State = 0;
+				Rele4Str = "&RELE4=0";
+			}
+			else {
+				RELE4State = 1;
+				Rele4Str = "&RELE4=1";
+			}
+		}
+		function GetRele5()
+		{
+			if (RELE5State === 1) {
+				RELE5State = 0;
+				Rele5Str = "&RELE5=0";
+			}
+			else {
+				RELE5State = 1;
+				Rele5Str = "&RELE5=1";
+			}
+		}
+		function GetRele6()
+		{
+			if (RELE6State === 1) {
+				RELE6State = 0;
+				Rele6Str = "&RELE6=0";
+			}
+			else {
+				RELE6State = 1;
+				Rele6Str = "&RELE6=1";
+			}
+		}
+		function GetRele7()
+		{
+			if (RELE7State === 1) {
+				RELE7State = 0;
+				Rele7Str = "&RELE7=0";
+			}
+			else {
+				RELE7State = 1;
+				Rele7Str = "&RELE7=1";
+			}
+		}
+		function GetRele8()
+		{
+			if (RELE8State === 1) {
+				RELE8State = 0;
+				Rele8Str = "&RELE8=0";
+			}
+			else {
+				RELE8State = 1;
+				Rele8Str = "&RELE8=1";
 			}
 		}
 	</script>
@@ -146,36 +257,28 @@
     </head>
     <body onload="GetArduinoIO()">
         <h1>Arduino Ajax I/O</h1>
-        <div class="IO_box">
-			<h2>Analog Inputs</h2>
-			<p class="small_text">A0 used by Ethernet shield</p>
-			<p class="small_text">A1 used by Ethernet shield</p>
-			<p>A2: <span class="analog">...</span></p>
-			<p>A3: <span class="analog">...</span></p>
-			<p>A4: <span class="analog">...</span></p>
-			<p>A5: <span class="analog">...</span></p>
-		</div>
 		<div class="IO_box">
-			<h2>Switch Inputs</h2>
-			<p class="small_text">D0: used by serial RX</p>
-			<p class="small_text">D1: used by serial TX</p>
-			<p>Switch 1 (D2): <span class="switches">...</span></p>
-			<p>Switch 2 (D3): <span class="switches">...</span></p>
-			<p class="small_text">D4: used by Ethernet shield</p>
-			<p>Switch 3 (D5): <span class="switches">...</span></p>
+		<h2>RELEs Using Buttons</h2>
+			
+			<button type="button" id="RELE1" onclick="GetRele1()">RELE 1 is OFF</button><br /><br />
+			<button type="button" id="RELE2" onclick="GetRele2()">RELE 2 is OFF</button><br /><br />
+			<button type="button" id="RELE3" onclick="GetRele3()">RELE 3 is OFF</button><br /><br />
+			<button type="button" id="RELE4" onclick="GetRele4()">RELE 4 is OFF</button><br /><br />
+			<button type="button" id="RELE5" onclick="GetRele5()">RELE 5 is OFF</button><br /><br />
+			<button type="button" id="RELE6" onclick="GetRele6()">RELE 6 is OFF</button><br /><br />
+			<button type="button" id="RELE7" onclick="GetRele7()">RELE 7 is OFF</button><br /><br />
+			<button type="button" id="RELE8" onclick="GetRele8()">RELE 8 is OFF</button><br /><br />
 		</div>
-		<div class="IO_box">
-			<h2>LEDs Using Checkboxes</h2>
-			<form id="check_LEDs" name="LED_form">
-				<input type="checkbox" name="LED1" value="0" onclick="GetCheck()" />LED 1 (D6)<br /><br />
-				<input type="checkbox" name="LED2" value="0" onclick="GetCheck()" />LED 2 (D7)<br /><br />
-			</form>
-		</div>
-		<div class="IO_box">
-			<h2>LEDs Using Buttons</h2>
-			<button type="button" id="LED3" onclick="GetButton1()">LED 3 is OFF (D8)</button><br /><br />
-			<button type="button" id="LED4" onclick="GetButton2()">LED 4 is OFF (D9)</button><br /><br />
-			<p class="small_text">D10 to D13 used by Ethernet shield</p>
-		</div>
+		
+		<table style="width:100%;" border="1px solid black;">
+			<tr><td><button type="button" id="RELE1" onclick="GetRele1()">RELE 1 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE2" onclick="GetRele2()">RELE 2 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE3" onclick="GetRele3()">RELE 3 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE4" onclick="GetRele4()">RELE 4 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE5" onclick="GetRele5()">RELE 5 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE6" onclick="GetRele6()">RELE 6 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE7" onclick="GetRele7()">RELE 7 is OFF</button></td></tr>
+			<tr><td><button type="button" id="RELE8" onclick="GetRele8()">RELE 8 is OFF</button></td></tr>
+		</table>
     </body>
 </html>

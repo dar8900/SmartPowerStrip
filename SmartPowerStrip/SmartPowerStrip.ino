@@ -90,7 +90,12 @@ void BlinkLed(short pin)
 	OFF(pin);	
 }
 
-
+void CheckEvents()
+{
+	TakePresentTime();
+	TakeReleTime();
+	WebClient();
+}
 
 
 void setup() 
@@ -103,6 +108,7 @@ void setup()
 	LCDInit();
 	RTCInit();
 	WifiInit();
+	WebServerInit();
 	
 	pinMode(RELE1, OUTPUT);
 	pinMode(RELE2, OUTPUT);

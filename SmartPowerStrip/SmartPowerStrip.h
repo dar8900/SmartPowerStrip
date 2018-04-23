@@ -45,3 +45,4 @@ typedef struct
 
 
 void BlinkLed(short pin);
+void CheckEvents(void);
