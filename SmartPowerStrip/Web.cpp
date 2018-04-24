@@ -49,8 +49,8 @@ void WifiInit()
 		LCDPrintString(2, 0 + NumbPoint, ".");
 		NumbPoint++;
 			
-	}
-	LCDPrintString(3, CENTER_ALIGN, "Connesso");
+	}	
+	LCDShowPopUp("Connesso!");
 	delay(2000);
 	ClearLCD();
 	HostnameExtended += String(Hostname);
@@ -288,8 +288,13 @@ void WebClient()
     if (client) 
 	{  // got client?
         bool currentLineIsBlank = true;
+		Flag.ClientConnected = true;
+		ClearLCD();
+		LCDShowPopUp("Client CONNESSO");
+		LCDPrintString(TWO, CENTER_ALIGN, "Client CONNESSO");
         while (client.connected()) 
 		{
+			TakeReleTime();
             if (client.available()) 
 			{   // client data available to read
                 char c = client.read(); // read 1 byte (character) from client
@@ -352,5 +357,10 @@ void WebClient()
         } // end while (client.connected())
         delay(1);      // give the web browser time to receive the data
         client.stop(); // close the connection
+		LCDShowPopUp("Client DISCONNESSO");
+		delay(2000);
+		ClearLCD();
+		CheckReleStatus();
+		Flag.ClientConnected = false;
     } // end if (client)
 }

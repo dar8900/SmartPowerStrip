@@ -31,15 +31,17 @@ void LCDMoveCursor(short row, short col)
 	lcd_main.setCursor(col, row);
 }
 
-void BlinkDisplay(short NumTimes)
+void BlinkDisplay(short NumTimes, short PulseTime)
 {
-	short num = 0;
+	short num = 0, Pulse = PulseTime;
+	if(Pulse < 20)
+		Pulse = 20;
 	for(num = 0; num < NumTimes; num++)
 	{
 		LCDDisplayOn();
-		delay(400);
+		delay(Pulse);
 		LCDDisplayOff();
-		delay(400);		
+		delay(Pulse);		
 	}
 	LCDDisplayOn();
 }
@@ -47,8 +49,8 @@ void BlinkDisplay(short NumTimes)
 void LCDShowPopUp(String Avviso)
 {
 	ClearLCD();
-	LCDPrintString(2, CENTER_ALIGN, Avviso);
-	BlinkDisplay(5);
+	LCDPrintString(THREE, CENTER_ALIGN, Avviso);
+	BlinkDisplay(5, 300);
 	delay(2000);
 	ClearLCD();
 }
