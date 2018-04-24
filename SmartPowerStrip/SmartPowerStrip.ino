@@ -60,25 +60,17 @@ uint8_t OnRele[]
 	0x04
 };
 
-// typedef struct
-// {
-	// bool IsActive;
-	// uint32_t ActiveTime;
-	// bool HaveTimer;
-	// int TimerTime;	
-	// short EepromAddr;	
-// }RELE;
 
 RELE Rele[]
 {
-	{false, 0, false, 0, RELE_1_ADDR},  // RELE_1
-	{false, 0, false, 0, RELE_2_ADDR},  // RELE_2
-	{false, 0, false, 0, RELE_3_ADDR},  // RELE_3
-	{false, 0, false, 0, RELE_4_ADDR},  // RELE_4
-	{false, 0, false, 0, RELE_5_ADDR},  // RELE_5
-	{false, 0, false, 0, RELE_6_ADDR},  // RELE_6
-	{false, 0, false, 0, RELE_7_ADDR},  // RELE_7
-	{false, 0, false, 0, RELE_8_ADDR},  // RELE_8
+	{false, 0, 0, false, 0, RELE_1_ADDR},  // RELE_1
+	{false, 0, 0, false, 0, RELE_2_ADDR},  // RELE_2
+	{false, 0, 0, false, 0, RELE_3_ADDR},  // RELE_3
+	{false, 0, 0, false, 0, RELE_4_ADDR},  // RELE_4
+	{false, 0, 0, false, 0, RELE_5_ADDR},  // RELE_5
+	{false, 0, 0, false, 0, RELE_6_ADDR},  // RELE_6
+	{false, 0, 0, false, 0, RELE_7_ADDR},  // RELE_7
+	{false, 0, 0, false, 0, RELE_8_ADDR},  // RELE_8
 };
 
 FLAGS Flag;

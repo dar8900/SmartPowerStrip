@@ -122,17 +122,18 @@ void SetRele(void)
 		{
 			Rele[ReleIndx].IsActive = true;  // save RELE state
 			ON(ReleIdx2Pin(ReleIndx));
+			Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
 		}
 		else if (StrContains(HTTP_req, TagOff[ReleIndx])) 
 		{
 			Rele[ReleIndx].IsActive = false;  // save RELE state
 			OFF(ReleIdx2Pin(ReleIndx));
+			Rele[ReleIndx].TurnOnTime = 0;
 		}		
 	}
 }
 
-// send the XML file with analog values, switch status
-//  and LED status
+// send the XML file with LED status
 void XML_response(WiFiClient cl)
 {
     int analog_val;            // stores value read from analog inputs

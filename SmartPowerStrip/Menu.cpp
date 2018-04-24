@@ -17,11 +17,11 @@ extern String HostName;
 
 MENU_VOICES MainMenuItems[]
 {
-	{ManualRele		,	"Rele Manuali"	},
-	{ChangeTimeBand	,	"Cambio Banda"	},
-	{HelpInfo		,	"Help e Info"	},
-	{WiFiInfo		,	"Wifi Info"		},
-	{AssignReleTimer,	"Assegna Timer"	},
+	{ManualRele		,	"Gestione Manuale"	},
+	{ChangeTimeBand	,	"Cambio Banda"		},
+	{HelpInfo		,	"Help e Info"		},
+	{WiFiInfo		,	"Wifi Info"			},
+	{AssignReleTimer,	"Assegna Timer"		},
 };
 
 static const String ONOFF[] = {"Off", "On"}; 
@@ -44,6 +44,7 @@ bool SetupInterrupt()
 		}
 		InterruptTimer--;
 		delay(8);
+		ButtonPress = NO_PRESS;
 	}
 	return EnterSetup;
 }
@@ -209,6 +210,7 @@ void MainMenu()
 			default:
 				break;			
 		}
+		ButtonPress = NO_PRESS;
 		delay(100);
 		if(ReEnterMenu)
 		{
@@ -219,83 +221,161 @@ void MainMenu()
 
 bool ManualRele()
 {
-	short ReleIndx = RELE_1;
-	bool ReleSetted = false;
+	short ReleIndx = RELE_1, YesNoChoice = 0;
+	bool ReleSetted = false, OnOffAll = false, ExitYesNo = false;
+	String YesNo[] = {"No", "Si"};
 	short ButtonPress = 0, Status = 0, OldStatus = 0;
-	String SelRele = "Impostare il Rele ";
-	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
-	{		
+	if(Flag.AllReleUp)
+	{
 		ClearLCD();
-		
+		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi spegnere");
+		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
+		delay(2000);		
+	}
+	else
+	{
+		ClearLCD();
+		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi accendere");
+		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
+		delay(2000);
+	}
+	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
+	LCDPrintString(TWO, CENTER_ALIGN, "per confermare");
+	while(!ExitYesNo)
+	{
 		CheckEvents();
-		ReleSetted = false;
-		LCDPrintString(1, CENTER_ALIGN, SelRele + String(ReleIndx + 1));
-		if(Rele[ReleIndx].IsActive)
+		LCDPrintString(THREE, CENTER_ALIGN, YesNo[YesNoChoice]);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
 		{
-			LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_ON]);
-			Status = STATUS_ON;
+			case BUTTON_UP:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+					YesNoChoice = 1;
+				else
+					YesNoChoice = 0;
+				break;
+			case BUTTON_DOWN:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+					YesNoChoice = 1;
+				else
+					YesNoChoice = 0;
+				break;
+			case BUTTON_SET:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+				{
+					OnOffAll = false;
+					ExitYesNo = true;
+				}					
+				else
+				{
+					OnOffAll = true;
+					ExitYesNo = true;
+				}
+				break;
+			default:
+				break;
+		}
+		ButtonPress = NO_PRESS;
+	}
+	if(OnOffAll)
+	{
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Attendere...");
+		delay(1000);
+		if(Flag.AllReleUp)
+		{
+			TurnOffAllRele();
+			LCDShowPopUp("Tutte Spente");			
 		}
 		else
 		{
-			LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_OFF]);
-			Status = STATUS_OFF;
-		}	
-		OldStatus = Status;
-		while(!ReleSetted)
-		{
+			TurnOnAllRele();
+			LCDShowPopUp("Tutte Accese");
+		}
+	}
+	else
+	{
+		ClearLCD();
+		String SelRele = "Impostare il Rele ";
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+		{		
 			ClearLCD();
 			
-			ButtonPress = CheckButtons();
-			LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
-			switch(ButtonPress)
+			CheckEvents();
+			ReleSetted = false;
+			LCDPrintString(1, CENTER_ALIGN, SelRele + String(ReleIndx + 1));
+			if(Rele[ReleIndx].IsActive)
 			{
-				case BUTTON_UP:
-					BlinkLed(BUTTON_LED);
-					if(Status == STATUS_ON)
-						Status = STATUS_OFF;
-					else
-						Status = STATUS_ON;
-					break;
-				case BUTTON_DOWN:
-					BlinkLed(BUTTON_LED);
-					if(Status == STATUS_ON)
-						Status = STATUS_OFF;
-					else
-						Status = STATUS_ON;
-					break;
-				case BUTTON_SET:
-					BlinkLed(BUTTON_LED);
-					ClearLCD();
-					if(OldStatus != Status)
-						LCDPrintString(2, CENTER_ALIGN, "Valore Salvato");
-					else
-						LCDPrintString(2, CENTER_ALIGN, "Valore non cambiato");
-					if(Status == 0)
-					{
-						Rele[ReleIndx].IsActive = false;
-						Rele[ReleIndx].ActiveTime = 0;
-						Rele[ReleIndx].TurnOnTime = 0;
-						OFF(ReleIdx2Pin(ReleIndx));
-					}
-					else
-					{
-						Rele[ReleIndx].IsActive = true;
-						ON(ReleIdx2Pin(ReleIndx));
-						Flag.AllReleDown = false;
-						Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
-					}
-					WriteMemory(Rele[ReleIndx].EepromAddr, Status);
-					ReleSetted = true;
-					delay(1500);
-					break;
-				case BUTTON_LEFT:
-				default:
-					break;
+				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_ON]);
+				Status = STATUS_ON;
 			}
-			delay(50);
-		}	
+			else
+			{
+				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_OFF]);
+				Status = STATUS_OFF;
+			}	
+			OldStatus = Status;
+			while(!ReleSetted)
+			{
+				ClearLCD();
+				
+				ButtonPress = CheckButtons();
+				LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
+				switch(ButtonPress)
+				{
+					case BUTTON_UP:
+						BlinkLed(BUTTON_LED);
+						if(Status == STATUS_ON)
+							Status = STATUS_OFF;
+						else
+							Status = STATUS_ON;
+						break;
+					case BUTTON_DOWN:
+						BlinkLed(BUTTON_LED);
+						if(Status == STATUS_ON)
+							Status = STATUS_OFF;
+						else
+							Status = STATUS_ON;
+						break;
+					case BUTTON_SET:
+						BlinkLed(BUTTON_LED);
+						ClearLCD();
+						if(OldStatus != Status)
+							LCDPrintString(2, CENTER_ALIGN, "Valore Salvato");
+						else
+							LCDPrintString(2, CENTER_ALIGN, "Valore non cambiato");
+						if(Status == 0)
+						{
+							Rele[ReleIndx].IsActive = false;
+							Rele[ReleIndx].ActiveTime = 0;
+							Rele[ReleIndx].TurnOnTime = 0;
+							OFF(ReleIdx2Pin(ReleIndx));
+						}
+						else
+						{
+							Rele[ReleIndx].IsActive = true;
+							ON(ReleIdx2Pin(ReleIndx));
+							Flag.AllReleDown = false;
+							Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
+						}
+						WriteMemory(Rele[ReleIndx].EepromAddr, Status);
+						ReleSetted = true;
+						delay(1500);
+						break;
+					case BUTTON_LEFT:
+					default:
+						break;
+				}
+				delay(50);
+				ButtonPress = NO_PRESS;
+			}	
+		}
+		CheckReleStatus();
 	}
-	CheckReleStatus();
 }
 
 bool ChangeTimeBand()
@@ -390,13 +470,14 @@ bool ChangeTimeBand()
 				break;
 		}
 		delay(60);
+		ButtonPress = NO_PRESS;
 	}
 }
 
 bool HelpInfo()
 {
 	short NumTimer = 0, ReleIndx = 0, ReleTimer[2];
-	String BandTime1, BandTime2;
+	String BandTime1, BandTime2, Hour, Minute, Day, TotalTime;
 	CheckEvents();
 	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, "Info e Aiuto");
@@ -461,6 +542,28 @@ bool HelpInfo()
 	delay(4000);
 	CheckEvents();
 	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Tempo accensione");
+	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+	{
+		CheckEvents();
+		LCDPrintString(TWO, 6, "presa: ");
+		LCDPrintValue(TWO, 14, ReleIndx+1);
+		if(Rele[ReleIndx].IsActive)
+		{
+			Day = String((Rele[ReleIndx].ActiveTime/SEC_IN_DAY));
+			Hour = String((((Rele[ReleIndx].ActiveTime/SEC_IN_HOUR))% HOUR_IN_DAY));
+			Minute = String((((Rele[ReleIndx].ActiveTime/SEC_IN_MINUTE))% MINUTE_IN_HOUR));
+			TotalTime = Day + "g" + Hour + "h" + Minute + "s";
+			LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
+			delay(2000);
+		}
+		else
+		{
+			LCDPrintString(THREE, CENTER_ALIGN, "Non Attiva");
+			delay(2000);
+		}
+	}
+	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
 	delay(2000);
 	CheckEvents();
@@ -511,6 +614,7 @@ bool WiFiInfo()
 				break;
 			
 		}
+		ButtonPress = NO_PRESS;
 		if(ExitWifiInfo)
 			break;
 	}
@@ -616,7 +720,7 @@ bool AssignReleTimer()
 			default:
 				break;
 		}
-		
+		ButtonPress = NO_PRESS;
 	}
 }
 

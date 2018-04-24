@@ -39,6 +39,7 @@ typedef struct
 	bool WifiActive;
 	bool ClientConnected;
 	bool AllReleDown;
+	bool AllReleUp;
 	bool ReleRS;
 }FLAGS;
 

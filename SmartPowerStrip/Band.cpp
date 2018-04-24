@@ -208,11 +208,11 @@ bool SetTimeBand()
 						if(Hour > 0)
 							Hour--;
 						else
-							Hour = 23;
+							Hour = HOUR_IN_DAY;
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
-						if(Hour < 23)
+						if(Hour < HOUR_IN_DAY)
 							Hour++;
 						else
 							Hour = 0;
@@ -232,8 +232,8 @@ bool SetTimeBand()
 						else if(Hour != OldHour && Hour < OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
-							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire ora");
+							LCDPrintString(TWO, CENTER_ALIGN,   "Valore non valido");
+							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire l'ora");
 							delay(1000);
 							ClearLCD();
 							ValidSet = false;
@@ -255,6 +255,7 @@ bool SetTimeBand()
 					default:
 						break;
 				}
+				ButtonPress = NO_PRESS;
 				break;
 			case INIT_MINUTE:
 				ButtonPress = CheckButtons();
@@ -277,11 +278,11 @@ bool SetTimeBand()
 						if(Minute > 0)
 							Minute--;
 						else
-							Minute = 59;
+							Minute = MINUTE_IN_HOUR;
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
-						if(Minute < 59)
+						if(Minute < MINUTE_IN_HOUR)
 							Minute++;
 						else
 							Minute = 0;
@@ -328,6 +329,7 @@ bool SetTimeBand()
 						}
 						break;
 				}
+				ButtonPress = NO_PRESS;
 				break;
 			case END_HOUR:
 				ButtonPress = CheckButtons();
@@ -341,11 +343,11 @@ bool SetTimeBand()
 						if(Hour > 0)
 							Hour--;
 						else
-							Hour = 23;
+							Hour = HOUR_IN_DAY;
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
-						if(Hour < 23)
+						if(Hour < HOUR_IN_DAY)
 							Hour++;
 						else
 							Hour = 0;
@@ -388,6 +390,7 @@ bool SetTimeBand()
 					default:
 						break;
 				}
+				ButtonPress = NO_PRESS;
 				break;
 			case END_MINUTE:
 				ButtonPress = CheckButtons();
@@ -410,11 +413,11 @@ bool SetTimeBand()
 						if(Minute > 0)
 							Minute--;
 						else
-							Minute = 59;
+							Minute = MINUTE_IN_HOUR;
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
-						if(Minute < 59)
+						if(Minute < MINUTE_IN_HOUR)
 							Minute++;
 						else
 							Minute = 0;
@@ -463,11 +466,11 @@ bool SetTimeBand()
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = EXIT;
-						CheckEvents();
 						ValidSet = true;
 					default:
 						break;
 				}
+				ButtonPress = NO_PRESS;
 				break;
 			case EXIT:
 				Band.InitDay = PresentTime.day;

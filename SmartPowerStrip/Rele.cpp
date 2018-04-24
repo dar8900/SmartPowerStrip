@@ -26,6 +26,7 @@ void TurnOffAllRele()
 		Rele[ReleIndx].ActiveTime = 0;
 	}
 	Flag.AllReleDown = true;
+	Flag.AllReleUp = false;
 }
 
 void TurnOnAllRele()
@@ -39,6 +40,7 @@ void TurnOnAllRele()
 		delay(500);
 	}
 	Flag.AllReleDown = false;
+	Flag.AllReleUp = true;
 	CheckEvents();
 }
 
@@ -61,12 +63,14 @@ void TakeReleTime()
 				Rele[ReleIndx].TimerTime -= ((PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE));
 				if(Rele[ReleIndx].TimerTime <= 0)
 				{
+					Rele[ReleIndx].TimerTime = 0;
 					Rele[ReleIndx].HaveTimer = false;
 					Rele[ReleIndx].IsActive = false;
 					OFF(ReleIdx2Pin(ReleIndx));
 					String ReleName;
 					ReleName = "Presa " + String(ReleIndx+1) + "spenta";
 					LCDShowPopUp(ReleName);
+					delay(1500);
 				}
 			}
 		}
@@ -294,13 +298,25 @@ bool SetTimerRele(short ReleNbr)
 				BlinkLed(BUTTON_LED);
 				SetTimer.hour = Hour;
 				SetTimer.minute = (Minute_1*10) + Minute_2;
-				Rele[ReleNbr].TimerTime = ((SetTimer.hour + PresentTime.hour) * SEC_IN_HOUR) + ((SetTimer.minute + PresentTime.minute) * SEC_IN_MINUTE);
-				ExitSetTimer = true;
+				if(SetTimer.hour == 0 && SetTimer.minute == 0)
+				{
+					ClearLCD();
+					LCDPrintString(ONE, CENTER_ALIGN, "Timer non corretto");
+					LCDPrintString(ONE, CENTER_ALIGN, "Re-Inserire i valori");
+					delay(2000);
+					ClearLCD();
+					ExitSetTimer = false;
+				}
+				else
+				{
+					Rele[ReleNbr].TimerTime = ((SetTimer.hour + PresentTime.hour) * SEC_IN_HOUR) + ((SetTimer.minute + PresentTime.minute) * SEC_IN_MINUTE);
+					ExitSetTimer = true;
+				}
 				break;
 			default:
 				break;			
 		}
-		
+		ButtonPress = NO_PRESS;
 	}
 	return ExitSetTimer;
 }
