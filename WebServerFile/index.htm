@@ -35,13 +35,13 @@
 							// RELE 1
 							if (this.responseXML.getElementsByTagName('RELE')[0].childNodes[0].nodeValue === "on") 
 							{
-								document.getElementById("RELE1").innerHTML = "RELE 1 is ON";
+								document.getElementById("RELE1").innerHTML = "Accesa";
 								RELE1State = 1;
 							}
 							else 
 							{
-								document.getElementById("RELE1").innerHTML = "RELE 1 is OFF";
-								RELE2State = 0;
+								document.getElementById("RELE1").innerHTML = "Spenta";
+								RELE1State = 0;
 							}
 							// RELE 2
 							if (this.responseXML.getElementsByTagName('RELE')[1].childNodes[0].nodeValue === "on")
@@ -52,7 +52,7 @@
 							else 
 							{
 								document.getElementById("RELE2").innerHTML = "RELE 2 is OFF";
-								RELE1State = 0;
+								RELE2State = 0;
 							}
 							 // RELE 3
 							if (this.responseXML.getElementsByTagName('RELE')[2].childNodes[0].nodeValue === "on")
@@ -311,7 +311,7 @@
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" id="RELE7" onclick="GetRele7()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" id="RELE8" onclick="GetRele8()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
 		</table>
-		<p style="background-color: hsl(0, 0%, 85%); border-bottom: 6px solid MediumSeaGreen; color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria: <b style="color:red;">Disattivata</b> </p>
+		<p style="background-color: hsl(0, 0%, 85%); border-bottom: 6px solid DodgerBlue; color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria: <b style="color:MediumSeaGreen;">Disattivata</b> </p>
 		<br>
 		<br>
 		<footer style="text-align:center;">&copy Dario Cavedale</footer>

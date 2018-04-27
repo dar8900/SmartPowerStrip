@@ -477,7 +477,9 @@ bool ChangeTimeBand()
 bool HelpInfo()
 {
 	short NumTimer = 0, ReleIndx = 0, ReleTimer[2];
+	short CountTimer = 0;
 	String BandTime1, BandTime2, Hour, Minute, Day, TotalTime;
+	bool NoTimer = true;
 	CheckEvents();
 	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, "Info e Aiuto");
@@ -508,13 +510,28 @@ bool HelpInfo()
 				break;
 			ReleTimer[NumTimer] = ReleIndx;
 			NumTimer++;
+			NoTimer = false;
+		}
+		else
+		{
+			if(ReleIndx == RELE_MAX-1 && NoTimer)
+			{
+				break;
+			}
 		}
 	}
 	LCDPrintString(ONE, LEFT_ALIGN, "Timer attivi:");
-	LCDPrintValue(ONE, 15, NumTimer);
-	LCDPrintString(TWO, LEFT_ALIGN, "Rele associati:");
-	LCDPrintValue(THREE, 5, ReleTimer[0]);
-	LCDPrintValue(THREE, 15, ReleTimer[1]);
+	if(!NoTimer)
+	{
+		LCDPrintValue(ONE, 15, NumTimer);
+		LCDPrintString(TWO, LEFT_ALIGN, "Rele associati:");
+		LCDPrintValue(THREE, 5, ReleTimer[0]);
+		LCDPrintValue(THREE, 15, ReleTimer[1]);		
+	}
+	else
+	{
+		LCDPrintString(TWO, CENTER_ALIGN, "Nessuno");
+	}
 	delay(3000);
 	CheckEvents();
 	ClearLCD();
