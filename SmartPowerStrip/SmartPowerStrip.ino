@@ -9,6 +9,7 @@
 #include "Rele.h"
 
 #undef FIRST_GO
+#define TEST_GO
 
 extern uint8_t AlarmIcon[];
 
@@ -95,7 +96,7 @@ void setup()
 {
 #ifndef FIRST_GO
 	short FirstStart = 0;
-
+#ifndef TEST_GO
 	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
 	EepromInit();
 	LCDInit();
@@ -145,6 +146,19 @@ void setup()
 		ReleInit(false);	
 		BandInit();	
 	}
+#else
+	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
+	EepromInit();
+	LCDInit();
+	RTCInit();
+	WifiInit();
+	WebServerInit();
+	LCDNoBlink();
+	LCDDisplayOn();
+	Flag.IsDisplayOn = true;
+	ReleInit(false);	
+	BandInit();	
+#endif // TEST_GO
 #else
 	Wire.begin(SDA, SCL);
 	EepromInit();

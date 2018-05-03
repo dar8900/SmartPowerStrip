@@ -90,6 +90,6 @@ void loop()
 	if(ChekButtons())
 	{
 		BlinkLed(YELLOW_LED);
-		delay(75);
+		delay(200);
 	}
 }

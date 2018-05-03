@@ -128,6 +128,7 @@ void MainScreen()
 				delay(2000);
 				CheckEvents();
 				TimerMenu = 300;
+				ClearLCD();
 			}
 		}
 		MainMenu();
@@ -172,7 +173,6 @@ void MainMenu()
 			CheckEvents();
 			ReEnterMenu = false;
 		}
-		ClearLCD();
 		CheckEvents();
 		LCDPrintString(2, CENTER_ALIGN, MainMenuItems[Item].MenuTitle);
 		
@@ -181,25 +181,27 @@ void MainMenu()
 		{
 			case BUTTON_UP:
 				BlinkLed(BUTTON_LED);
-				if(Item < MANUAL_RELE)
-				{
-					Item = MAX_MENU_ITEM - 1;
-				}
-				else
+				if(Item > MANUAL_RELE)
 				{
 					Item--;
 				}
+				else
+				{
+					Item = MAX_MENU_ITEM - 1;
+				}
+				ClearLCD();
 				break;
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
-				if(Item > MAX_MENU_ITEM - 1)
+				if(Item < MAX_MENU_ITEM - 1)
 				{
-					Item = MANUAL_RELE;
+					Item++;					
 				}
 				else
 				{
-					Item++;
+					Item = MANUAL_RELE;
 				}
+				ClearLCD();
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
@@ -283,6 +285,7 @@ bool ManualRele()
 				break;
 		}
 		ButtonPress = NO_PRESS;
+		delay(80);
 	}
 	if(OnOffAll)
 	{
@@ -323,10 +326,9 @@ bool ManualRele()
 			}	
 			OldStatus = Status;
 			while(!ReleSetted)
-			{
-				ClearLCD();
-				
+			{				
 				ButtonPress = CheckButtons();
+				LCDPrintString(TWO, CENTER_ALIGN, SelRele);
 				LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
 				switch(ButtonPress)
 				{
@@ -336,6 +338,7 @@ bool ManualRele()
 							Status = STATUS_OFF;
 						else
 							Status = STATUS_ON;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
@@ -343,6 +346,7 @@ bool ManualRele()
 							Status = STATUS_OFF;
 						else
 							Status = STATUS_ON;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						BlinkLed(BUTTON_LED);
@@ -367,6 +371,7 @@ bool ManualRele()
 						}
 						WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 						ReleSetted = true;
+						ClearLCD();
 						delay(1500);
 						break;
 					case BUTTON_LEFT:
@@ -489,9 +494,9 @@ bool ChangeTime()
 	short ButtonPress = NO_PRESS;
 	bool ExitTimeChange = false;
 	String MinuteStr;
+	ClearLCD();
 	while(!ExitTimeChange)
 	{
-		ClearLCD();
 		delay(20);
 		LCDPrintString(ONE, CENTER_ALIGN, "Cambia orario");
 		ButtonPress = CheckButtons();
@@ -507,12 +512,14 @@ bool ChangeTime()
 							Hour--;
 						else
 							Hour = HOUR_IN_DAY;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						if(Hour < HOUR_IN_DAY)
 							Hour++;
 						else
 							Hour = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						TimeSM = END_MINUTE;
@@ -536,16 +543,18 @@ bool ChangeTime()
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:	
-						if(Hour > 0)
-							Hour--;
+						if(Minute > 0)
+							Minute--;
 						else
-							Hour = MINUTE_IN_HOUR;
+							Minute = MINUTE_IN_HOUR;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
-						if(Hour < MINUTE_IN_HOUR)
-							Hour++;
+						if(Minute < MINUTE_IN_HOUR)
+							Minute++;
 						else
-							Hour = 0;
+							Minute = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						TimeSM = EXIT;
@@ -557,6 +566,7 @@ bool ChangeTime()
 				break;
 			case EXIT:
 				ExitTimeChange = true;
+				ClearLCD();
 				break;
 			default:
 				break;
@@ -584,12 +594,12 @@ bool HelpInfo()
 	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
 	if(Flag.WifiActive)
 	{
-		LCDMoveCursor(THREE, 13);
+		LCDMoveCursor(THREE, 17);
 		LCDShowIcon(WIFI_OK);
 	}
 	else
 	{
-		LCDMoveCursor(THREE, 13);
+		LCDMoveCursor(THREE, 17);
 		LCDShowIcon(WIFI_NO);
 	}
 	delay(3000);
@@ -695,8 +705,7 @@ bool WiFiInfo()
 	CheckEvents();
 	ClearLCD();
 	while(1)
-	{
-		
+	{		
 		CheckEvents();
 		ButtonPress = CheckButtons();
 		LCDPrintString(ONE, LEFT_ALIGN, "IP:");
@@ -727,6 +736,7 @@ bool WiFiInfo()
 		ButtonPress = NO_PRESS;
 		if(ExitWifiInfo)
 			break;
+		delay(100);
 	}
 }
 

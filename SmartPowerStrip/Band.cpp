@@ -189,7 +189,6 @@ bool SetTimeBand()
 	CheckEvents();
 	while(!ExitSetTimeBand)
 	{
-		ClearLCD();
 		TakePresentTime();
 		CheckEvents();
 		LCDPrintString(ONE  , CENTER_ALIGN, "Cambiare l'orario");
@@ -209,6 +208,7 @@ bool SetTimeBand()
 							Hour--;
 						else
 							Hour = HOUR_IN_DAY;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
@@ -216,6 +216,7 @@ bool SetTimeBand()
 							Hour++;
 						else
 							Hour = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						BlinkLed(BUTTON_LED);
@@ -228,6 +229,7 @@ bool SetTimeBand()
 							Band.InitHour = Hour;
 							ValidSet = true;
 							TimeVar = INIT_MINUTE;
+							ClearLCD();
 						}
 						else if(Hour != OldHour && Hour < OldHour)
 						{
@@ -245,7 +247,10 @@ bool SetTimeBand()
 							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
 							delay(1000);
 							ValidSet = true;
+							SaveBandValues(INIT_HOUR, Hour);
+							Band.InitHour = Hour;
 							TimeVar = INIT_MINUTE;
+							ClearLCD();
 						}
 						break;
 					case BUTTON_LEFT:
@@ -279,6 +284,7 @@ bool SetTimeBand()
 							Minute--;
 						else
 							Minute = MINUTE_IN_HOUR;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
@@ -286,6 +292,7 @@ bool SetTimeBand()
 							Minute++;
 						else
 							Minute = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						BlinkLed(BUTTON_LED);
@@ -299,6 +306,7 @@ bool SetTimeBand()
 							ValidSet = true;
 							TimeVar = END_HOUR;	
 							Flag.BandInvalid = false;
+							ClearLCD();
 							WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
 						}
 						else
@@ -313,6 +321,7 @@ bool SetTimeBand()
 								ValidSet = true;
 								TimeVar = END_HOUR;	
 								Flag.BandInvalid = false;
+								ClearLCD();
 								WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
 							}
 							else
@@ -344,6 +353,7 @@ bool SetTimeBand()
 							Hour--;
 						else
 							Hour = HOUR_IN_DAY;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
@@ -351,6 +361,7 @@ bool SetTimeBand()
 							Hour++;
 						else
 							Hour = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						BlinkLed(BUTTON_LED);
@@ -363,6 +374,7 @@ bool SetTimeBand()
 							Band.EndHour = Hour;
 							ValidSet = true;
 							TimeVar = END_MINUTE;
+							ClearLCD();
 						}
 						else if(Hour != OldHour && Hour < OldHour)
 						{
@@ -380,13 +392,17 @@ bool SetTimeBand()
 							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
 							delay(1000);
 							ValidSet = true;
+							SaveBandValues(END_HOUR, Hour);
+							Band.EndHour = Hour;
 							TimeVar = END_MINUTE;
+							ClearLCD();
 						}
 						break;
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = END_MINUTE;
 						ValidSet = true;
+						ClearLCD();
 					default:
 						break;
 				}
@@ -414,6 +430,7 @@ bool SetTimeBand()
 							Minute--;
 						else
 							Minute = MINUTE_IN_HOUR;
+						ClearLCD();
 						break;
 					case BUTTON_DOWN:
 						BlinkLed(BUTTON_LED);
@@ -421,6 +438,7 @@ bool SetTimeBand()
 							Minute++;
 						else
 							Minute = 0;
+						ClearLCD();
 						break;
 					case BUTTON_SET:
 						BlinkLed(BUTTON_LED);
@@ -435,6 +453,7 @@ bool SetTimeBand()
 							TimeVar = EXIT;	
 							Flag.BandInvalid = false;
 							WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+							ClearLCD();
 						}
 						else
 						{
@@ -449,6 +468,7 @@ bool SetTimeBand()
 								TimeVar = EXIT;	
 								Flag.BandInvalid = false;
 								WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+								ClearLCD();
 							}
 							else
 							{
@@ -466,6 +486,7 @@ bool SetTimeBand()
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = EXIT;
+						ClearLCD();
 						ValidSet = true;
 					default:
 						break;
@@ -475,12 +496,13 @@ bool SetTimeBand()
 			case EXIT:
 				Band.InitDay = PresentTime.day;
 				ExitSetTimeBand = true;
+				ClearLCD();
 				break;
 			default:
 				break;
 			
 		}
-		
+		delay(80);
 	}
 	return ValidSet;
 }

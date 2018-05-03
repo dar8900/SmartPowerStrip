@@ -41,7 +41,7 @@ void WifiInit()
 	while (WiFi.status() != WL_CONNECTED) 
 	{
 		delay(1000);
-		if(NumbPoint > 20)
+		if(NumbPoint > 19)
 		{
 			NumbPoint = 0;
 			LCDPrintLineVoid(2);

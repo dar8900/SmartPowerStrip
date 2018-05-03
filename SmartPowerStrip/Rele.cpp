@@ -87,6 +87,7 @@ bool ReleInit(bool FirstGo)
 	TurnOffAllRele();
 	ShowReleIcons(THREE);
 	delay(1000);
+	Flag.AllReleDown = false;
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
 		ON(ReleIdx2Pin(ReleIndx));
@@ -98,6 +99,7 @@ bool ReleInit(bool FirstGo)
 		ShowReleIcons(THREE);
 		delay(1000);
 	}
+	Flag.AllReleDown = true;
 	TakePresentTime();
 	if(!FirstGo)
 	{
