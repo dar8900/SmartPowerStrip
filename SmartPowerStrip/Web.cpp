@@ -49,7 +49,7 @@ void WifiInit()
 		LCDPrintString(2, 0 + NumbPoint, ".");
 		NumbPoint++;
 		TimerNoConnection++;
-		if(TimerNoConnection == 15)
+		if(TimerNoConnection == 25)
 		{
 			ClearLCD();
 			LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
