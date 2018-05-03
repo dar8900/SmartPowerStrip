@@ -4,6 +4,8 @@
 #define  ON(pin)   digitalWrite(pin, HIGH)
 #define ARDUINO_ADDR	0x08
 
+#define YELLOW_LED 13
+
 typedef enum
 {
 	BUTTON_UP = 0,
@@ -18,8 +20,7 @@ enum
 	UP = 2,
 	DOWN,
 	LEFT,
-	SET,
-	YELLOW_LED,
+	SET
 };
 
 short ButtonPress = NO_PRESS;
@@ -54,6 +55,7 @@ static bool ChekButtons()
 	else
 	{
 		ButtonPress = NO_PRESS;
+		Press = false;
 	}
 	
 	return Press;
@@ -88,6 +90,6 @@ void loop()
 	if(ChekButtons())
 	{
 		BlinkLed(YELLOW_LED);
+		delay(75);
 	}
-	delay(50);
 }
