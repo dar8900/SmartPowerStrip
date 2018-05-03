@@ -40,6 +40,13 @@ void RTCInit()
 	return;
 }
 
+void TimeAdjust(short Hour, short Minute)
+{
+	DateTime AdjustTime(PresentTime.year, PresentTime.month, PresentTime.day, Hour, Minute, 0 );
+	RTC.adjust(AdjustTime);
+	return;
+}
+
 void TakePresentTime()
 {
   now = RTC.now();

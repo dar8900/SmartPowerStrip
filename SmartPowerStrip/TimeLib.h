@@ -19,4 +19,5 @@ typedef struct
 
 
 void RTCInit(void);
+void TimeAdjust(short Hour, short Minute);
 void TakePresentTime(void);

@@ -19,6 +19,8 @@ MENU_VOICES MainMenuItems[]
 {
 	{ManualRele		,	"Gestione Manuale"	},
 	{ChangeTimeBand	,	"Cambio Banda"		},
+	{WifiConnect	,	"Connetti WiFi"		},
+	{ChangeTime 	,	"Cambia ora"    	},
 	{HelpInfo		,	"Help e Info"		},
 	{WiFiInfo		,	"Wifi Info"			},
 	{AssignReleTimer,	"Assegna Timer"		},
@@ -54,7 +56,7 @@ void MainScreen()
 	String Time,Date;
 	short ReleIndx = 0;
 	int TimerMenu = 300; // 30s circa
-	bool EnterSetup = false;
+	short EnterSetup = NO_PRESS;
 	if(!Flag.BandActive && !CheckBand())
 	{
 		ClearLCD();
@@ -71,14 +73,17 @@ void MainScreen()
 		LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
 		LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
 		LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
-		delay(3000);
-		while(!EnterSetup)
+		delay(2000);
+		ClearLCD();
+		while(1)
 		{
-			ClearLCD();
 			CheckReleStatus();
 			CheckEvents();
-			EnterSetup = SetupInterrupt();
-			
+			EnterSetup = CheckButtons();
+			if(EnterSetup == BUTTON_SET)
+			{
+				break;
+			}
 			// Scrittura data e ora
 			Time = String(PresentTime.hour);
 			if(PresentTime.minute < 10)
@@ -89,47 +94,44 @@ void MainScreen()
 			{
 				Time += ":" + String(PresentTime.minute);
 			}
-			Date = String(PresentTime.day) + "/" + String(PresentTime.month);
+			Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
 			LCDPrintString(ONE, LEFT_ALIGN, Time);
 			LCDPrintString(ONE, RIGHT_ALIGN, Date);
 			// Stato relè
 			LCDPrintString(TWO, CENTER_ALIGN, "Prese attive:");
 			ShowReleIcons(THREE);
 			// Stato wifi
-			LCDPrintString(FOUR, LEFT_ALIGN, "Wifi status:");
+			LCDPrintString(FOUR, LEFT_ALIGN, "Wifi status: ");
 			if(Flag.WifiActive)
 			{
-				LCDMoveCursor(FOUR, 13);
+				LCDMoveCursor(FOUR, 14);
 				LCDShowIcon(WIFI_OK);
 			}
 			else
 			{
-				LCDMoveCursor(FOUR, 13);
+				LCDMoveCursor(FOUR, 14);
 				LCDShowIcon(WIFI_NO);
 			}
 			
 			// GESTIONE PARTE WEB
 			
 			TimerMenu--;
-			delay(100);
+			delay(50);
 			
-			if(TimerMenu == 0 && !EnterSetup)
+			if(TimerMenu == 0)
 			{
 				ClearLCD();
 				CheckEvents();
 				LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
 				LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
 				LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
-				delay(3000);
+				delay(2000);
 				CheckEvents();
 				TimerMenu = 300;
 			}
 		}
-		if(EnterSetup)
-		{
-			MainMenu();
-			EnterSetup = false;
-		}
+		MainMenu();
+		EnterSetup = NO_PRESS;
 	}
 }
 
@@ -224,6 +226,7 @@ bool ManualRele()
 	short ReleIndx = RELE_1, YesNoChoice = 0;
 	bool ReleSetted = false, OnOffAll = false, ExitYesNo = false;
 	String YesNo[] = {"No", "Si"};
+	String SelRele;
 	short ButtonPress = 0, Status = 0, OldStatus = 0;
 	if(Flag.AllReleUp)
 	{
@@ -300,14 +303,14 @@ bool ManualRele()
 	else
 	{
 		ClearLCD();
-		String SelRele = "Impostare il Rele ";
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{		
 			ClearLCD();
-			
+			SelRele = "Impostare il Rele ";
+			SelRele += String(ReleIndx + 1);
 			CheckEvents();
 			ReleSetted = false;
-			LCDPrintString(1, CENTER_ALIGN, SelRele + String(ReleIndx + 1));
+			LCDPrintString(TWO, CENTER_ALIGN, SelRele);
 			if(Rele[ReleIndx].IsActive)
 			{
 				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_ON]);
@@ -474,6 +477,96 @@ bool ChangeTimeBand()
 	}
 }
 
+bool WifiConnect()
+{
+	WifiInit();
+}
+
+bool ChangeTime()
+{
+	TakePresentTime();
+	short Hour = PresentTime.hour, Minute = PresentTime.minute, TimeSM = END_HOUR;
+	short ButtonPress = NO_PRESS;
+	bool ExitTimeChange = false;
+	String MinuteStr;
+	while(!ExitTimeChange)
+	{
+		ClearLCD();
+		delay(20);
+		LCDPrintString(ONE, CENTER_ALIGN, "Cambia orario");
+		ButtonPress = CheckButtons();
+		switch(TimeSM)
+		{
+			case END_HOUR:
+				LCDPrintString(TWO, CENTER_ALIGN, "Ora:");
+				LCDPrintValue(THREE, CENTER_ALIGN, Hour);
+				switch(ButtonPress)
+				{
+					case BUTTON_UP:	
+						if(Hour > 0)
+							Hour--;
+						else
+							Hour = HOUR_IN_DAY;
+						break;
+					case BUTTON_DOWN:
+						if(Hour < HOUR_IN_DAY)
+							Hour++;
+						else
+							Hour = 0;
+						break;
+					case BUTTON_SET:
+						TimeSM = END_MINUTE;
+						break;
+					case BUTTON_LEFT:
+					default:
+						break;
+				}
+				break;
+			case END_MINUTE:
+				LCDPrintString(TWO, CENTER_ALIGN, "Minuti:");
+				if(Minute < 10)
+				{
+					MinuteStr = "0" + String(Minute);
+				}
+				else
+				{
+					MinuteStr = String(Minute);
+				}
+				LCDPrintString(THREE, CENTER_ALIGN, MinuteStr);
+				switch(ButtonPress)
+				{
+					case BUTTON_UP:	
+						if(Hour > 0)
+							Hour--;
+						else
+							Hour = MINUTE_IN_HOUR;
+						break;
+					case BUTTON_DOWN:
+						if(Hour < MINUTE_IN_HOUR)
+							Hour++;
+						else
+							Hour = 0;
+						break;
+					case BUTTON_SET:
+						TimeSM = EXIT;
+						break;
+					case BUTTON_LEFT:
+					default:
+						break;
+				}
+				break;
+			case EXIT:
+				ExitTimeChange = true;
+				break;
+			default:
+				break;
+		}
+		
+	}
+	TimeAdjust(Hour, Minute);
+}
+
+
 bool HelpInfo()
 {
 	short NumTimer = 0, ReleIndx = 0, ReleTimer[2];
@@ -488,7 +581,7 @@ bool HelpInfo()
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Stato Rele:");
 	ShowReleIcons(TWO);
-	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi:");
+	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
 	if(Flag.WifiActive)
 	{
 		LCDMoveCursor(THREE, 13);

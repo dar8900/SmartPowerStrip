@@ -29,6 +29,7 @@ WiFiServer server(80);
 void WifiInit()
 {
 	short NumbPoint = 0;
+	short TimerNoConnection = 0;
 	String HostnameExtended = "http://";
 	Flag.WifiActive = false;
 	ClearLCD();
@@ -44,21 +45,34 @@ void WifiInit()
 		{
 			NumbPoint = 0;
 			LCDPrintLineVoid(2);
-			delay(1000);
 		}
 		LCDPrintString(2, 0 + NumbPoint, ".");
 		NumbPoint++;
-			
+		TimerNoConnection++;
+		if(TimerNoConnection == 15)
+		{
+			ClearLCD();
+			LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
+			LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
+			LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+			delay(2000);
+			ClearLCD();
+			Flag.WifiActive = false;
+			break;
+		}
+		Flag.WifiActive = true;
 	}	
-	LCDShowPopUp("Connesso!");
-	delay(2000);
-	ClearLCD();
-	HostnameExtended += String(Hostname);
-	LCDPrintString(0, CENTER_ALIGN, "Hostname: ");	
-	LCDPrintString(1, CENTER_ALIGN, HostnameExtended);
-	delay(3000);
-	ClearLCD();
-	Flag.WifiActive = true;
+	if(Flag.WifiActive)
+	{
+		LCDShowPopUp("Connesso!");
+		delay(2000);
+		ClearLCD();
+		HostnameExtended += String(Hostname);
+		LCDPrintString(0, CENTER_ALIGN, "Hostname: ");	
+		LCDPrintString(1, CENTER_ALIGN, HostnameExtended);
+		delay(3000);
+		ClearLCD();		
+	}
 	return;
 }
 

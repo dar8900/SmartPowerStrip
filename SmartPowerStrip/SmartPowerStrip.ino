@@ -86,7 +86,8 @@ void CheckEvents()
 {
 	TakePresentTime();
 	TakeReleTime();
-	WebClient();
+	if(Flag.WifiActive)
+		WebClient();
 }
 
 
@@ -132,14 +133,17 @@ void setup()
 		Flag.IsBandSetted = false;
 		Flag.IsDisplayOn = false;
 		Flag.ReleRS = true;
+		LCDDisplayOn();
+		Flag.IsDisplayOn = true;
 		ReleInit(true);
 	}
 	else
 	{
+		LCDNoBlink();
+		LCDDisplayOn();
+		Flag.IsDisplayOn = true;
 		ReleInit(false);	
 		BandInit();	
-		Flag.IsDisplayOn = false;
-		LCDNoBlink();
 	}
 #else
 	Wire.begin(SDA, SCL);

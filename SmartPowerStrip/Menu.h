@@ -26,6 +26,8 @@ void MainScreen(void);
 void MainMenu(void);
 bool ManualRele(void);
 bool ChangeTimeBand(void);
+bool WifiConnect(void);
+bool ChangeTime(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
