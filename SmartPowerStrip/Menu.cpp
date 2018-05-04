@@ -433,7 +433,10 @@ bool ChangeTimeBand()
 		
 		CheckEvents();
 		ButtonPress = CheckButtons();
-		LCDPrintString(1, CENTER_ALIGN, "Cambia Banda");
+		LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
+		LCDPrintString(TWO, CENTER_ALIGN, "per modificare");
+		LCDPrintString(THREE, CENTER_ALIGN, "Premi Left/Back");
+		LCDPrintString(FOUR, CENTER_ALIGN, "per uscire");
 		switch(ButtonPress)
 		{
 			case BUTTON_UP:
@@ -442,6 +445,10 @@ bool ChangeTimeBand()
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
+				ClearLCD();
+				LCDPrintString(TWO, CENTER_ALIGN, "Uscita...");
+				delay(1500);
+				ClearLCD();
 				ExitChangeBand = true;
 				break;
 			case BUTTON_SET:
@@ -497,7 +504,6 @@ bool ChangeTime()
 	ClearLCD();
 	while(!ExitTimeChange)
 	{
-		delay(20);
 		LCDPrintString(ONE, CENTER_ALIGN, "Cambia orario");
 		ButtonPress = CheckButtons();
 		switch(TimeSM)
@@ -571,7 +577,7 @@ bool ChangeTime()
 			default:
 				break;
 		}
-		
+		delay(60);
 	}
 	TimeAdjust(Hour, Minute);
 }
@@ -594,12 +600,12 @@ bool HelpInfo()
 	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
 	if(Flag.WifiActive)
 	{
-		LCDMoveCursor(THREE, 17);
+		LCDMoveCursor(THREE, 16);
 		LCDShowIcon(WIFI_OK);
 	}
 	else
 	{
-		LCDMoveCursor(THREE, 17);
+		LCDMoveCursor(THREE, 16);
 		LCDShowIcon(WIFI_NO);
 	}
 	delay(3000);
@@ -659,7 +665,7 @@ bool HelpInfo()
 	}
 	else
 		LCDPrintString(TWO, CENTER_ALIGN, "Non Settata");
-	delay(4000);
+	delay(2000);
 	CheckEvents();
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Tempo accensione");
@@ -675,12 +681,12 @@ bool HelpInfo()
 			Minute = String((((Rele[ReleIndx].ActiveTime/SEC_IN_MINUTE))% MINUTE_IN_HOUR));
 			TotalTime = Day + "g" + Hour + "h" + Minute + "s";
 			LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
-			delay(2000);
+			delay(1000);
 		}
 		else
 		{
 			LCDPrintString(THREE, CENTER_ALIGN, "Non Attiva");
-			delay(2000);
+			delay(1000);
 		}
 	}
 	ClearLCD();
@@ -736,7 +742,7 @@ bool WiFiInfo()
 		ButtonPress = NO_PRESS;
 		if(ExitWifiInfo)
 			break;
-		delay(100);
+		delay(80);
 	}
 }
 

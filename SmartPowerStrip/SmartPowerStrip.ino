@@ -9,7 +9,7 @@
 #include "Rele.h"
 
 #undef FIRST_GO
-#define TEST_GO
+
 
 extern uint8_t AlarmIcon[];
 
@@ -27,14 +27,14 @@ uint8_t WifiConnectionOn[]
 
 uint8_t WifiConnectionOff[]
 {
-	0x00,
-	0x0A,
-	0x00,
-	0x04,
-	0x00,
+	0x11,
+	0x19,
+	0x15,
+	0x13,
 	0x0E,
 	0x11,
-	0x00
+	0x11,
+	0x0E
 };
 
 uint8_t OffRele[]
@@ -96,7 +96,6 @@ void setup()
 {
 #ifndef FIRST_GO
 	short FirstStart = 0;
-#ifndef TEST_GO
 	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
 	EepromInit();
 	LCDInit();
@@ -146,7 +145,6 @@ void setup()
 		ReleInit(false);	
 		BandInit();	
 	}
-#else
 	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
 	EepromInit();
 	LCDInit();
@@ -158,11 +156,10 @@ void setup()
 	Flag.IsDisplayOn = true;
 	ReleInit(false);	
 	BandInit();	
-#endif // TEST_GO
 #else
 	Wire.begin(SDA, SCL);
-	EepromInit();
-	ClearMemory();
+	// EepromInit();
+	// ClearMemory();
 	LCDInit();
 	if(IsMemoryEmpty())
 		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");

@@ -79,7 +79,8 @@ void WifiInit()
 String WifiIP()
 {
 	String IP;
-	IP = String(WiFi.localIP());
+	//IP = String(WiFi.localIP());
+	IP = WiFi.localIP().toString();
 	return IP;
 }
 
@@ -356,6 +357,7 @@ void WebClient()
 		ClearLCD();
 		LCDShowPopUp("Client CONNESSO");
 		LCDPrintString(TWO, CENTER_ALIGN, "Client CONNESSO");
+		String PaginaWeb = WebPage();
         while (client.connected()) 
 		{
 			TakeReleTime();
@@ -396,7 +398,7 @@ void WebClient()
                         client.println("Connection: keep-alive");
                         client.println();
                         // send web page
-						client.println(WebPage());
+						client.println(PaginaWeb);
                     }
                     // display received HTTP request on serial port
                     Serial.print(HTTP_req);
@@ -418,6 +420,7 @@ void WebClient()
                     currentLineIsBlank = false;
                 }
             } // end if (client.available())
+			delay(60);
         } // end while (client.connected())
         delay(1);      // give the web browser time to receive the data
         client.stop(); // close the connection

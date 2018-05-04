@@ -318,6 +318,7 @@ bool SetTimerRele(short ReleNbr)
 			default:
 				break;			
 		}
+		delay(70);
 		ButtonPress = NO_PRESS;
 	}
 	return ExitSetTimer;
