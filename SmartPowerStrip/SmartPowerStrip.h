@@ -44,6 +44,6 @@ typedef struct
 }FLAGS;
 
 
-
+bool IsRebooted(void);
 void BlinkLed(short pin);
 void CheckEvents(void);

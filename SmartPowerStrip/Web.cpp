@@ -10,13 +10,17 @@
 #include "EEPROM_Ard.h"
 #include "TimeLib.h"
 
+#define DEFAULT_SSID 	"ssid"
+#define NONNA_WIFI	"TP-LINK_Extender_2.4GHz"
+#define DEO_WIFI  "DEO DOOM"
+
 extern FLAGS Flag;
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
 extern BAND_FORMAT Band;
 
-const char* ssid = "ssid";  // Enter SSID here
-const char* password = "password";  //Enter Password here
+const char* ssid = DEO_WIFI;  // Enter SSID here
+const char* password = "dari9299";  //Enter Password here
 const char* Hostname = "cavestrip";
 
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
@@ -34,44 +38,46 @@ void WifiInit()
 	Flag.WifiActive = false;
 	ClearLCD();
 	WiFi.mode(WIFI_STA);
-	WiFi.begin(ssid, password);	
-	WiFi.hostname(Hostname);
-	LCDPrintString(0, CENTER_ALIGN, "Connettendo a:");
-	LCDPrintString(1, CENTER_ALIGN, String(ssid));
-	while (WiFi.status() != WL_CONNECTED) 
+	if(String(ssid) != DEFAULT_SSID)
 	{
-		delay(1000);
-		if(NumbPoint > 19)
+		WiFi.hostname(Hostname);
+		WiFi.begin(ssid, password);	
+		LCDPrintString(0, CENTER_ALIGN, "Connettendo a:");
+		LCDPrintString(1, CENTER_ALIGN, String(ssid));
+		while (WiFi.status() != WL_CONNECTED) 
 		{
-			NumbPoint = 0;
-			LCDPrintLineVoid(2);
-		}
-		LCDPrintString(2, 0 + NumbPoint, ".");
-		NumbPoint++;
-		TimerNoConnection++;
-		if(TimerNoConnection == 25)
+			delay(1000);
+			if(NumbPoint > 19)
+			{
+				NumbPoint = 0;
+				LCDPrintLineVoid(2);
+			}
+			LCDPrintString(2, 0 + NumbPoint, ".");
+			NumbPoint++;
+			TimerNoConnection++;
+			if(TimerNoConnection == 25)
+			{
+				ClearLCD();
+				LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
+				LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
+				LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+				delay(2000);
+				ClearLCD();
+				Flag.WifiActive = false;
+				break;
+			}
+			Flag.WifiActive = true;
+		}	
+		if(Flag.WifiActive)
 		{
-			ClearLCD();
-			LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
-			LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
-			LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
-			delay(2000);
-			ClearLCD();
-			Flag.WifiActive = false;
-			break;
+			LCDShowPopUp("Connesso!");
+			delay(1000);
+			HostnameExtended += String(Hostname);
+			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");	
+			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
+			delay(3000);
+			ClearLCD();		
 		}
-		Flag.WifiActive = true;
-	}	
-	if(Flag.WifiActive)
-	{
-		LCDShowPopUp("Connesso!");
-		delay(2000);
-		ClearLCD();
-		HostnameExtended += String(Hostname);
-		LCDPrintString(0, CENTER_ALIGN, "Hostname: ");	
-		LCDPrintString(1, CENTER_ALIGN, HostnameExtended);
-		delay(3000);
-		ClearLCD();		
 	}
 	return;
 }
@@ -88,6 +94,18 @@ String WifiIP()
 void WebServerInit()
 {
     server.begin();           // start to listen for clients
+}
+
+void WifiDisconnect()
+{
+	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
+	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete");
+	LCDPrintString(THREE, CENTER_ALIGN, String(ssid));
+	WiFi.disconnect(); 
+	Flag.WifiActive = false;
+	delay(1500);
+	ClearLCD();
 }
 
 // searches for the string sfind in the string str

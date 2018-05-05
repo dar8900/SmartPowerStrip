@@ -93,11 +93,11 @@ bool ReleInit(bool FirstGo)
 		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
 		ShowReleIcons(THREE);
-		delay(1000);
+		delay(500);
 		OFF(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = false;
 		ShowReleIcons(THREE);
-		delay(1000);
+		delay(500);
 	}
 	Flag.AllReleDown = true;
 	TakePresentTime();

@@ -91,18 +91,34 @@ void CheckEvents()
 		WebClient();
 }
 
+void RebootESP()
+{
+	WriteMemory(REBOOT_ADDR, 1);
+	ESP.restart();
+}
+
+bool IsRebooted()
+{
+	bool IsESPRebboted = false;
+	short RebootValue = 0;
+	ReadMemory(REBOOT_ADDR, 1, &RebootValue);
+	if(RebootValue == 1)
+	{
+		IsESPRebboted = true;
+		RebootValue = 0;
+		WriteMemory(REBOOT_ADDR, RebootValue);
+	}
+	else
+	{
+		IsESPRebboted = false;
+	}
+	
+	return IsESPRebboted;
+}
 
 void setup() 
 {
 #ifndef FIRST_GO
-	short FirstStart = 0;
-	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
-	EepromInit();
-	LCDInit();
-	RTCInit();
-	WifiInit();
-	WebServerInit();
-	
 	pinMode(RELE1, OUTPUT);
 	pinMode(RELE2, OUTPUT);
 	pinMode(RELE3, OUTPUT);
@@ -114,6 +130,14 @@ void setup()
 	
 	pinMode(BUTTON_LED, OUTPUT);
 	
+	short FirstStart = 0;
+	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
+	EepromInit();
+	LCDInit();
+	RTCInit();
+	WifiInit();
+	WebServerInit();
+		
 	LCDCreateIcon(WifiConnectionOn, WIFI_OK);
 	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
@@ -145,21 +169,10 @@ void setup()
 		ReleInit(false);	
 		BandInit();	
 	}
-	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
-	EepromInit();
-	LCDInit();
-	RTCInit();
-	WifiInit();
-	WebServerInit();
-	LCDNoBlink();
-	LCDDisplayOn();
-	Flag.IsDisplayOn = true;
-	ReleInit(false);	
-	BandInit();	
 #else
 	Wire.begin(SDA, SCL);
-	// EepromInit();
-	// ClearMemory();
+	EepromInit();
+	ClearMemory();
 	LCDInit();
 	if(IsMemoryEmpty())
 		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");
@@ -170,17 +183,6 @@ void setup()
 void loop() 
 {
 #ifndef FIRST_GO
-	if(CheckBand())
-	{
-		if(!Flag.AllReleDown)
-			TurnOffAllRele();
-		if(Flag.IsDisplayOn)
-		{
-			LCDDisplayOff();
-			Flag.IsDisplayOn = false;
-		}
-		Flag.ReleRS = false;
-	}
 	MainScreen();
 #endif
 }

@@ -34,9 +34,11 @@ typedef enum
 #define BAND_END_MINUTE_ADDR				   13
 #define BAND_VALIDATION_VALUE_ADDR			   14
 
-#define FLAG_VALUE_ADDR					   50
+#define FLAG_VALUE_ADDR					 	   50
 
-#define FIRST_START_CHECK_ADDR			  100
+#define FIRST_START_CHECK_ADDR			      100
+
+#define REBOOT_ADDR						      200
 
 
 void EepromUpdate(short address, short value);

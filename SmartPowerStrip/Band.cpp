@@ -116,12 +116,13 @@ void SetBandInvalid()
 	Band.EndHour = INVALID_BAND_VALUE;
 	Band.EndMinute = INVALID_BAND_VALUE;
 	ClearLCD();
-	LCDPrintString(TWO, CENTER_ALIGN, "La banda è");
+	LCDPrintString(TWO, CENTER_ALIGN, "Banda");
 	LCDPrintString(THREE, CENTER_ALIGN, "disabilitata");
 	delay(2000);
 	CheckEvents();
 	ClearLCD();
 	Flag.BandInvalid = true;
+	Flag.IsBandSetted = false;
 	WriteMemory(BAND_VALIDATION_VALUE_ADDR, 1);
 }
 
@@ -256,7 +257,7 @@ bool SetTimeBand()
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = EXIT;
-						ValidSet = true;
+						ValidSet = false;
 					default:
 						break;
 				}
@@ -337,6 +338,12 @@ bool SetTimeBand()
 							}
 						}
 						break;
+					case BUTTON_LEFT:
+						BlinkLed(BUTTON_LED);
+						TimeVar = EXIT;
+						ValidSet = false;
+					default:
+						break;
 				}
 				ButtonPress = NO_PRESS;
 				break;
@@ -401,7 +408,7 @@ bool SetTimeBand()
 					case BUTTON_LEFT:
 						BlinkLed(BUTTON_LED);
 						TimeVar = END_MINUTE;
-						ValidSet = true;
+						ValidSet = false;
 						ClearLCD();
 					default:
 						break;
@@ -487,7 +494,7 @@ bool SetTimeBand()
 						BlinkLed(BUTTON_LED);
 						TimeVar = EXIT;
 						ClearLCD();
-						ValidSet = true;
+						ValidSet = false;
 					default:
 						break;
 				}
