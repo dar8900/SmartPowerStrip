@@ -9,6 +9,11 @@ enum
 	EXIT
 };
 
+enum
+{
+	VALID = 0,
+	INVALID
+};
 
 typedef struct
 {

@@ -14,25 +14,20 @@ extern FLAGS Flag;
 
 void BandInit()
 {
-	short ValidValue = 0, indx;
-	for(indx = INIT_HOUR; indx <= END_MINUTE; indx++)
-	{
-		ReadBandValues(indx);
-	}
-	CheckBand();
+	SetBandInvalid();
 }
 
 bool CheckBand()
 {
-	bool InBand = false;
-	short  ValidBand;
+	bool InBand = false, BandInvalid = false;
+	short  BandValidationValue = INVALID;
 	TakePresentTime();
-	ReadMemory(BAND_VALIDATION_VALUE_ADDR, 1, &ValidBand);
-	if(ValidBand == 0)
-		Flag.BandInvalid = false;
+	ReadMemory(BAND_INVALIDATION_VALUE_ADDR, 1, &BandValidationValue);
+	if(BandValidationValue == VALID)
+		BandInvalid = false;
 	else
-		Flag.BandInvalid = true;
-	if(Flag.BandInvalid)
+		BandInvalid = true;
+	if(BandInvalid)
 	{
 		InBand = false;
 		Flag.BandActive = false;
@@ -49,7 +44,7 @@ bool CheckBand()
 		{
 			if(Band.InitDay < PresentTime.day)
 			{
-				if((0 <= PresentTime.hour && 0 <= PresentTime.minute) &&
+				if((PresentTime.hour >= 0 && PresentTime.minute >= 0) &&
 				  (Band.EndHour >= PresentTime.hour && Band.EndMinute >= PresentTime.minute))
 				{
 					InBand = true;
@@ -68,7 +63,6 @@ bool CheckBand()
 			}
 		}
 	}
-	CheckEvents();
 	return InBand;
 }
 
@@ -80,8 +74,7 @@ bool IsBandCorrect()
 		if(Band.InitMinute < Band.EndMinute)
 		{
 			BandCorrect = true;
-			Flag.BandInvalid = false;
-			WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 		}
 		else
 		{
@@ -95,8 +88,7 @@ bool IsBandCorrect()
 		if(Band.InitDay < PresentTime.day)
 		{
 			BandCorrect = true;
-			Flag.BandInvalid = false;
-			WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 		}
 		else
 		{
@@ -121,9 +113,8 @@ void SetBandInvalid()
 	delay(2000);
 	CheckEvents();
 	ClearLCD();
-	Flag.BandInvalid = true;
 	Flag.IsBandSetted = false;
-	WriteMemory(BAND_VALIDATION_VALUE_ADDR, 1);
+	WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 1);
 }
 
 void SaveBandValues(short WichItem, short Value)
@@ -306,9 +297,8 @@ bool SetTimeBand()
 							Band.InitMinute = Minute;
 							ValidSet = true;
 							TimeVar = END_HOUR;	
-							Flag.BandInvalid = false;
 							ClearLCD();
-							WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+							WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 						}
 						else
 						{
@@ -321,9 +311,8 @@ bool SetTimeBand()
 								Band.InitMinute = Minute;
 								ValidSet = true;
 								TimeVar = END_HOUR;	
-								Flag.BandInvalid = false;
 								ClearLCD();
-								WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+								WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 							}
 							else
 							{
@@ -386,23 +375,25 @@ bool SetTimeBand()
 						else if(Hour != OldHour && Hour < OldHour)
 						{
 							ClearLCD();
+							LCDPrintString(TWO, CENTER_ALIGN, "L'ora e' valida");
+							LCDPrintString(THREE, CENTER_ALIGN, "per domani");
+							delay(1000);
+							ValidSet = true;
+							SaveBandValues(END_HOUR, Hour);
+							Band.EndHour = Hour;
+							Band.InitDay = PresentTime.day;
+							TimeVar = END_MINUTE;
+							ClearLCD();							
+						}
+						else if(Hour == OldHour)
+						{
+							ClearLCD();
 							LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
 							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire ora");
 							delay(1000);
 							ClearLCD();
 							ValidSet = false;
-							TimeVar = END_HOUR;							
-						}
-						else if(Hour == OldHour)
-						{
-							ClearLCD();
-							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
-							delay(1000);
-							ValidSet = true;
-							SaveBandValues(END_HOUR, Hour);
-							Band.EndHour = Hour;
-							TimeVar = END_MINUTE;
-							ClearLCD();
+							TimeVar = END_HOUR;	
 						}
 						break;
 					case BUTTON_LEFT:
@@ -458,8 +449,7 @@ bool SetTimeBand()
 							Band.EndMinute = Minute;
 							ValidSet = true;
 							TimeVar = EXIT;	
-							Flag.BandInvalid = false;
-							WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+							WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 							ClearLCD();
 						}
 						else
@@ -473,8 +463,7 @@ bool SetTimeBand()
 								Band.EndMinute = Minute;
 								ValidSet = true;
 								TimeVar = EXIT;	
-								Flag.BandInvalid = false;
-								WriteMemory(BAND_VALIDATION_VALUE_ADDR, 0);
+								WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
 								ClearLCD();
 							}
 							else
@@ -501,7 +490,6 @@ bool SetTimeBand()
 				ButtonPress = NO_PRESS;
 				break;
 			case EXIT:
-				Band.InitDay = PresentTime.day;
 				ExitSetTimeBand = true;
 				ClearLCD();
 				break;

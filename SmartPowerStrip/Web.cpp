@@ -155,13 +155,13 @@ void SetRele(void)
 		{
 			Rele[ReleIndx].IsActive = true;  // save RELE state
 			ON(ReleIdx2Pin(ReleIndx));
-			Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
+			Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
 		}
 		else if (StrContains(HTTP_req, TagOff[ReleIndx])) 
 		{
 			Rele[ReleIndx].IsActive = false;  // save RELE state
 			OFF(ReleIdx2Pin(ReleIndx));
-			Rele[ReleIndx].TurnOnTime = 0;
+			Rele[ReleIndx].TurnOnTime = SetTimeVarRele(0,0,0,0);
 		}		
 	}
 }

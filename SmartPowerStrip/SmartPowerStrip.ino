@@ -12,6 +12,7 @@
 
 
 extern uint8_t AlarmIcon[];
+extern RELE Rele[];
 
 uint8_t WifiConnectionOn[]
 {
@@ -61,18 +62,6 @@ uint8_t OnRele[]
 	0x04
 };
 
-
-RELE Rele[]
-{
-	{false, 0, 0, false, 0, RELE_1_ADDR},  // RELE_1
-	{false, 0, 0, false, 0, RELE_2_ADDR},  // RELE_2
-	{false, 0, 0, false, 0, RELE_3_ADDR},  // RELE_3
-	{false, 0, 0, false, 0, RELE_4_ADDR},  // RELE_4
-	{false, 0, 0, false, 0, RELE_5_ADDR},  // RELE_5
-	{false, 0, 0, false, 0, RELE_6_ADDR},  // RELE_6
-	{false, 0, 0, false, 0, RELE_7_ADDR},  // RELE_7
-	{false, 0, 0, false, 0, RELE_8_ADDR},  // RELE_8
-};
 
 FLAGS Flag;
 
@@ -158,7 +147,7 @@ void setup()
 		Flag.IsDisplayOn = false;
 		Flag.ReleRS = true;
 		LCDDisplayOn();
-		Flag.IsDisplayOn = true;
+		Flag.IsDisplayOn = true;	
 		ReleInit(true);
 	}
 	else

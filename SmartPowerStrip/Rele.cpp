@@ -8,11 +8,21 @@
 #include "Band.h"
 #include "Rele.h"
 
-extern RELE Rele[];
 extern FLAGS Flag;
 extern TIME_DATE_FORMAT PresentTime;
 
 
+RELE Rele[]
+{
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_1_ADDR},  // RELE_1
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_2_ADDR},  // RELE_2
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_3_ADDR},  // RELE_3
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_4_ADDR},  // RELE_4
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_5_ADDR},  // RELE_5
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_6_ADDR},  // RELE_6
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_7_ADDR},  // RELE_7
+	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_8_ADDR},  // RELE_8
+};
 
 void TurnOffAllRele()
 {
@@ -22,8 +32,8 @@ void TurnOffAllRele()
 		OFF(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = false;
 		delay(500);
-		Rele[ReleIndx].TurnOnTime = 0;
-		Rele[ReleIndx].ActiveTime = 0;
+		Rele[ReleIndx].TurnOnTime = SetTimeVarRele(0,0,0,0);
+		Rele[ReleIndx].ActiveTime = SetTimeVarRele(0,0,0,0);
 	}
 	Flag.AllReleDown = true;
 	Flag.AllReleUp = false;
@@ -32,16 +42,16 @@ void TurnOffAllRele()
 void TurnOnAllRele()
 {
 	short ReleIndx;
+	CheckEvents();
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
 		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
-		Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
+		Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
 		delay(500);
 	}
 	Flag.AllReleDown = false;
 	Flag.AllReleUp = true;
-	CheckEvents();
 }
 
 void TakeReleTime()
@@ -54,16 +64,16 @@ void TakeReleTime()
 			TakePresentTime();
 			if(Rele[ReleIndx].IsActive)
 			{
-				Rele[ReleIndx].ActiveTime += (PRESENT_DAY_HOUR_MINUTE_SECOND - Rele[ReleIndx].TurnOnTime);
-				if(Rele[ReleIndx].ActiveTime == SEC_IN_31_GG)
-					Rele[ReleIndx].ActiveTime = 0;
+				Rele[ReleIndx].ActiveTime.day = PresentTime.day - Rele[ReleIndx].TurnOnTime.day;
+				Rele[ReleIndx].ActiveTime.hour = PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour;
+				Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
+				Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
 			}
 			if(Rele[ReleIndx].HaveTimer)
 			{
-				Rele[ReleIndx].TimerTime -= ((PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE));
-				if(Rele[ReleIndx].TimerTime <= 0)
+				if(Rele[ReleIndx].TimerTime.hour == PresentTime.hour && Rele[ReleIndx].TimerTime.minute == PresentTime.minute)
 				{
-					Rele[ReleIndx].TimerTime = 0;
+					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);
 					Rele[ReleIndx].HaveTimer = false;
 					Rele[ReleIndx].IsActive = false;
 					OFF(ReleIdx2Pin(ReleIndx));
@@ -127,7 +137,7 @@ void ReleReStart()
 			Rele[ReleIndx].IsActive = true;
 			ON(ReleIdx2Pin(ReleIndx));
 			Flag.AllReleDown = false;
-			Rele[ReleIndx].TurnOnTime = PRESENT_DAY_HOUR_MINUTE_SECOND;
+			Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
 			CheckEvents();
 		}
 
@@ -311,7 +321,9 @@ bool SetTimerRele(short ReleNbr)
 				}
 				else
 				{
-					Rele[ReleNbr].TimerTime = ((SetTimer.hour + PresentTime.hour) * SEC_IN_HOUR) + ((SetTimer.minute + PresentTime.minute) * SEC_IN_MINUTE);
+					Rele[ReleNbr].TimerTime.day = PresentTime.day;
+					Rele[ReleNbr].TimerTime.hour = PresentTime.hour + SetTimer.hour;
+					Rele[ReleNbr].TimerTime.minute = PresentTime.minute + SetTimer.minute;
 					ExitSetTimer = true;
 				}
 				break;
@@ -323,6 +335,18 @@ bool SetTimerRele(short ReleNbr)
 	}
 	return ExitSetTimer;
 }
+
+
+RELE_TIME_FORMAT SetTimeVarRele(short Hour, short Minute, short Second, short Day)
+{
+	RELE_TIME_FORMAT TempVar;
+	TempVar.hour = Hour;
+	TempVar.hour = Minute;
+	TempVar.hour = Second;
+	TempVar.hour = Day;
+	return TempVar;
+}
+
 
 
 short ReleIdx2Pin(short ReleIndx)

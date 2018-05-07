@@ -32,7 +32,7 @@ typedef enum
 #define BAND_INIT_MINUTE_ADDR				   11
 #define BAND_END_HOUR_ADDR					   12
 #define BAND_END_MINUTE_ADDR				   13
-#define BAND_VALIDATION_VALUE_ADDR			   14
+#define BAND_INVALIDATION_VALUE_ADDR		   14
 
 #define FLAG_VALUE_ADDR					 	   50
 

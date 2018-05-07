@@ -18,11 +18,25 @@ typedef enum
 
 typedef struct
 {
+	short hour;
+	short minute;
+	short second;
+	short day;
+}RELE_TIME_FORMAT;
+
+enum
+{
+	TURN_ON_TIME = 0,
+	TIMER_TIME
+};
+
+typedef struct
+{
 	bool IsActive;
-	uint32_t TurnOnTime;
-	uint32_t ActiveTime;
+	RELE_TIME_FORMAT TurnOnTime;
+	RELE_TIME_FORMAT ActiveTime;
 	bool HaveTimer;
-	int32_t TimerTime;	
+	RELE_TIME_FORMAT TimerTime;	
 	short EepromAddr;
 }RELE;
 
@@ -34,4 +48,5 @@ void TurnOffAllRele(void);
 void TurnOnAllRele(void);
 void CheckReleStatus(void);
 bool SetTimerRele(short ReleNbr);
+RELE_TIME_FORMAT SetTimeVarRele(short Hour, short Minute, short Second, short Day);
 short ReleIdx2Pin(short ReleIndx);
