@@ -9,41 +9,86 @@
 #include "Menu.h"
 #include "EEPROM_Ard.h"
 #include "TimeLib.h"
-
-#define DEFAULT_SSID 	"ssid"
-#define NONNA_WIFI	"TP-LINK_Extender_2.4GHz"
-#define DEO_WIFI  "DEO DOOM"
+#include "Buttons.h"
 
 extern FLAGS Flag;
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
 extern BAND_FORMAT Band;
 
-const char* ssid = DEO_WIFI;  // Enter SSID here
-const char* password = "dari9299";  //Enter Password here
 const char* Hostname = "cavestrip";
+String HostName = "cavestrip";
 
 char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
 char req_index = 0;              // index into HTTP_req buffer
 
-String HostName = "cavestrip";
+WIFI_LIST List[] = 
+{
+	{"No Conn."     , "password"					, "NoConn" 					},
+	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				},
+	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" },
+	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					},
+	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			},
+	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		},
+};
+
+short WifiItemSsid;
 
 WiFiServer server(80);
+WiFiClient client;
 
 void WifiInit()
 {
 	short NumbPoint = 0;
 	short TimerNoConnection = 0;
-	String HostnameExtended = "http://";
+	bool ExitWifiInit = false;
+	short WifiListItem = 0;
+	short ButtonPress = NO_PRESS;
+	String HostnameExtended = "http://", NomeWifi;
 	Flag.WifiActive = false;
 	ClearLCD();
 	WiFi.mode(WIFI_STA);
-	if(String(ssid) != DEFAULT_SSID)
+	while(!ExitWifiInit)
+	{
+		LCDPrintString(ONE, CENTER_ALIGN, "Scegli a quale rete");
+		LCDPrintString(TWO, CENTER_ALIGN, "connettersi:");
+		LCDPrintString(THREE, CENTER_ALIGN, List[WifiListItem].Ssid);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				if(WifiListItem > 0)
+					WifiListItem--;
+				else
+					WifiListItem = MAX_WIFI_ITEM - 1;
+				LCDPrintLineVoid(THREE);
+				break;
+			case BUTTON_DOWN:
+				if(WifiListItem < MAX_WIFI_ITEM - 1)
+					WifiListItem++;
+				else
+					WifiListItem = 0;
+				LCDPrintLineVoid(THREE);			
+				break;
+			case BUTTON_SET:
+				NomeWifi = String(List[WifiListItem].RealSsid);
+				WifiItemSsid = WifiListItem;
+				ExitWifiInit = true;
+				ClearLCD();
+				break;
+			case BUTTON_LEFT:
+			default:
+				break;
+		}
+		ButtonPress = NO_PRESS;
+		delay(60);
+	}
+	if(NomeWifi != String(List[NO_CONN].RealSsid))
 	{
 		WiFi.hostname(Hostname);
-		WiFi.begin(ssid, password);	
-		LCDPrintString(0, CENTER_ALIGN, "Connettendo a:");
-		LCDPrintString(1, CENTER_ALIGN, String(ssid));
+		WiFi.begin(List[WifiListItem].RealSsid, List[WifiListItem].Password);	
+		LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
+		LCDPrintString(TWO, CENTER_ALIGN, List[WifiListItem].Ssid);
 		while (WiFi.status() != WL_CONNECTED) 
 		{
 			delay(1000);
@@ -71,7 +116,6 @@ void WifiInit()
 		if(Flag.WifiActive)
 		{
 			LCDShowPopUp("Connesso!");
-			delay(1000);
 			HostnameExtended += String(Hostname);
 			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");	
 			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
@@ -101,7 +145,7 @@ void WifiDisconnect()
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete");
-	LCDPrintString(THREE, CENTER_ALIGN, String(ssid));
+	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].RealSsid);
 	WiFi.disconnect(); 
 	Flag.WifiActive = false;
 	delay(1500);
@@ -366,15 +410,13 @@ String WebPage()
 
 void WebClient()
 {
-    WiFiClient client = server.available();
-
     if (client) 
 	{  // got client?
         bool currentLineIsBlank = true;
 		Flag.ClientConnected = true;
 		ClearLCD();
 		LCDShowPopUp("Client CONNESSO");
-		LCDPrintString(TWO, CENTER_ALIGN, "Client CONNESSO");
+		LCDPrintString(THREE, CENTER_ALIGN, "Client CONNESSO");
 		String PaginaWeb = WebPage();
         while (client.connected()) 
 		{
@@ -443,7 +485,7 @@ void WebClient()
         delay(1);      // give the web browser time to receive the data
         client.stop(); // close the connection
 		LCDShowPopUp("Client DISCONNESSO");
-		delay(2000);
+		delay(1000);
 		ClearLCD();
 		CheckReleStatus();
 		Flag.ClientConnected = false;

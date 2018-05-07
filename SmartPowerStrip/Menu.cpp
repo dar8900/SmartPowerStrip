@@ -14,6 +14,8 @@ extern RELE Rele[];
 extern FLAGS Flag;
 extern String HostName;
 
+extern WIFI_LIST List[];
+extern short WifiItemSsid;
 
 MENU_VOICES MainMenuItems[]
 {
@@ -736,7 +738,7 @@ bool HelpInfo()
 		LCDPrintValue(ONE, 15, NumTimer);
 		LCDPrintString(TWO, LEFT_ALIGN, "Rele associati:");
 		LCDPrintValue(THREE, 5, ReleTimer[0]);
-		LCDPrintValue(THREE, 15, ReleTimer[1]);		
+		LCDPrintValue(THREE, 15, ReleTimer[1]);				
 	}
 	else
 	{
@@ -826,8 +828,10 @@ bool WiFiInfo()
 			LCDMoveCursor(ONE, 4);
 			LCDShowIcon(WIFI_NO);
 		}
-		LCDPrintString(TWO, LEFT_ALIGN, "Hostname:");
-		LCDPrintString(TWO, RIGHT_ALIGN, HostName);
+		LCDPrintString(TWO, LEFT_ALIGN, "SSID:");
+		LCDPrintString(TWO, RIGHT_ALIGN, List[WifiItemSsid].Ssid);
+		LCDPrintString(THREE, LEFT_ALIGN, "Hostname:");
+		LCDPrintString(THREE, RIGHT_ALIGN, HostName);
 		switch(ButtonPress)
 		{
 			case BUTTON_LEFT:

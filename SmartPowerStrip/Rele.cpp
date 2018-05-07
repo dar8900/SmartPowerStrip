@@ -80,7 +80,6 @@ void TakeReleTime()
 					String ReleName;
 					ReleName = "Presa " + String(ReleIndx+1) + "spenta";
 					LCDShowPopUp(ReleName);
-					delay(1500);
 				}
 			}
 		}
@@ -319,9 +318,17 @@ bool SetTimerRele(short ReleNbr)
 					ClearLCD();
 					ExitSetTimer = false;
 				}
+				else if((PresentTime.hour + SetTimer.hour >= 24) || (PresentTime.minute + SetTimer.minute > 59))
+				{
+					ClearLCD();
+					LCDPrintString(ONE, CENTER_ALIGN, "Timer non corretto");
+					LCDPrintString(ONE, CENTER_ALIGN, "Re-Inserire i valori");
+					delay(2000);
+					ClearLCD();
+					ExitSetTimer = false;					
+				}
 				else
 				{
-					Rele[ReleNbr].TimerTime.day = PresentTime.day;
 					Rele[ReleNbr].TimerTime.hour = PresentTime.hour + SetTimer.hour;
 					Rele[ReleNbr].TimerTime.minute = PresentTime.minute + SetTimer.minute;
 					ExitSetTimer = true;

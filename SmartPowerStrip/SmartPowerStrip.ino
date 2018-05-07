@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <ESP8266WiFi.h>
 #include "EEPROM_Ard.h"
 #include "LCDLib.h"
 #include "TimeLib.h"
@@ -8,11 +9,14 @@
 #include "Band.h"
 #include "Rele.h"
 
+
 #undef FIRST_GO
 
 
 extern uint8_t AlarmIcon[];
 extern RELE Rele[];
+extern WiFiClient client;
+extern WiFiServer server;
 
 uint8_t WifiConnectionOn[]
 {
@@ -77,7 +81,10 @@ void CheckEvents()
 	TakePresentTime();
 	TakeReleTime();
 	if(Flag.WifiActive)
+	{
+		client = server.available();
 		WebClient();
+	}
 }
 
 void RebootESP()
