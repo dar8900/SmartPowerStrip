@@ -68,10 +68,66 @@ void TakeReleTime()
 			TakePresentTime();
 			if(Rele[ReleIndx].IsActive)
 			{
-				Rele[ReleIndx].ActiveTime.day = PresentTime.day - Rele[ReleIndx].TurnOnTime.day;
-				Rele[ReleIndx].ActiveTime.hour = PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour;
-				Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
-				Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
+				// if(PresentTime.day - Rele[ReleIndx].TurnOnTime.day < 0)
+			    // {
+					// Rele[ReleIndx].ActiveTime = SetTimeVarRele(0,0,0,0);
+				// }
+				// else
+				// {
+					// Rele[ReleIndx].ActiveTime.day = PresentTime.day - Rele[ReleIndx].TurnOnTime.day;
+				// }
+				// if((PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour) < 0)
+				// {
+					// Rele[ReleIndx].ActiveTime.hour = Rele[ReleIndx].TurnOnTime.hour + PresentTime.hour;
+				// }
+				// else
+				// {
+					// Rele[ReleIndx].ActiveTime.hour = PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour;
+				// }
+				// if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) < 0)
+				// {
+					// Rele[ReleIndx].ActiveTime.minute = Rele[ReleIndx].TurnOnTime.minute + PresentTime.minute;
+					// if(Rele[ReleIndx].ActiveTime.minute > 59)
+					// {
+						
+					// }
+				// }
+				// else
+				// {
+					// Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
+				// }
+				if(PresentTime.second >= Rele[ReleIndx].TurnOnTime.second && Rele[ReleIndx].TurnOnTime.second != 0)
+				{
+					Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
+				}
+				else if(PresentTime.second < Rele[ReleIndx].TurnOnTime.second && Rele[ReleIndx].TurnOnTime.second != 0)
+				{
+					Rele[ReleIndx].ActiveTime.second += (Rele[ReleIndx].TurnOnTime.second - (Rele[ReleIndx].TurnOnTime.second - PresentTime.second));
+				}
+				else if(Rele[ReleIndx].TurnOnTime.second == 0)
+				{
+					Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
+				}
+				if(Rele[ReleIndx].ActiveTime.second > 59)
+				{
+					Rele[ReleIndx].ActiveTime.second = 0;
+					Rele[ReleIndx].ActiveTime.minute++;
+				}
+				
+				if(Rele[ReleIndx].ActiveTime.minute > 59)
+				{
+					Rele[ReleIndx].ActiveTime.hour += 1;
+					Rele[ReleIndx].ActiveTime.minute = 0;
+				}
+				if(Rele[ReleIndx].ActiveTime.hour > 24)
+				{
+					Rele[ReleIndx].ActiveTime.day += 1;
+					Rele[ReleIndx].ActiveTime.hour = 0;
+				}
+				if(Rele[ReleIndx].ActiveTime.day > 31)
+				{
+					Rele[ReleIndx].ActiveTime = SetTimeVarRele(0,0,0,0);
+				}
 			}
 			if(Rele[ReleIndx].HaveTimer)
 			{
@@ -82,7 +138,7 @@ void TakeReleTime()
 					Rele[ReleIndx].IsActive = false;
 					OFF(ReleIdx2Pin(ReleIndx));
 					String ReleName;
-					ReleName = "Presa " + String(ReleIndx+1) + "spenta";
+					ReleName = "Presa " + String(ReleIndx+1) + " spenta";
 					LCDShowPopUp(ReleName);
 				}
 			}
@@ -230,8 +286,8 @@ bool SetTimerRele(short ReleNbr)
 	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
 	delay(2000);
 	ClearLCD();
-	LCDPrintString(ONE  , CENTER_ALIGN, "Il tempo massimo");
-	LCDPrintString(TWO  , CENTER_ALIGN, "è di 4h");
+	LCDPrintString(ONE  , CENTER_ALIGN, "Tempo massimo");
+	LCDPrintString(TWO  , CENTER_ALIGN, "4h");
 	LCDPrintString(THREE, CENTER_ALIGN, "Premere Ok/Set");
 	LCDPrintString(FOUR , CENTER_ALIGN, "per confermare");
 	delay(3000);
@@ -340,12 +396,25 @@ bool SetTimerRele(short ReleNbr)
 				}
 				else if((PresentTime.hour + SetTimer.hour >= 24) || (PresentTime.minute + SetTimer.minute > 59))
 				{
-					ClearLCD();
-					LCDPrintString(ONE, CENTER_ALIGN, "Timer non corretto");
-					LCDPrintString(ONE, CENTER_ALIGN, "Re-Inserire i valori");
-					delay(2000);
-					ClearLCD();
-					ExitSetTimer = false;					
+					if(PresentTime.hour + SetTimer.hour >= 24)
+					{
+						Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23) - ((PresentTime.hour + SetTimer.hour) / 23));					
+						Rele[ReleNbr].TimerTime.minute = PresentTime.minute + SetTimer.minute;
+					}
+					else if(PresentTime.minute + SetTimer.minute > 59)
+					{
+						Rele[ReleNbr].TimerTime.hour = PresentTime.hour + 1;	
+						Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
+					}
+					ExitSetTimer = true;
+					LCDNoBlink();				
+				}
+				else if((PresentTime.hour + SetTimer.hour >= 24) && (PresentTime.minute + SetTimer.minute > 59))
+				{
+					Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23) - ((PresentTime.hour + SetTimer.hour) / 23));					
+					Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
+					ExitSetTimer = true;
+					LCDNoBlink();				
 				}
 				else
 				{

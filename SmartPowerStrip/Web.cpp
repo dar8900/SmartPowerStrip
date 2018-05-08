@@ -91,7 +91,7 @@ void WifiInit()
 		LCDPrintString(TWO, CENTER_ALIGN, List[WifiListItem].Ssid);
 		while (WiFi.status() != WL_CONNECTED) 
 		{
-			delay(1000);
+			delay(500);
 			if(NumbPoint > 19)
 			{
 				NumbPoint = 0;
@@ -144,7 +144,7 @@ void WifiDisconnect()
 {
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
-	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete");
+	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete:");
 	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].Ssid);
 	WiFi.disconnect(); 
 	Flag.WifiActive = false;

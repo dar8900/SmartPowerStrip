@@ -59,7 +59,6 @@ void MainScreen()
 	short ReleIndx = 0;
 	int TimerMenu = 300; // 30s circa
 	short EnterSetup = NO_PRESS;
-	short TimerBandMsg = 30; // 3s con 100ms
 	bool InBand = false, ExitFromBand = true;
 	ClearLCD();
 	CheckEvents();
@@ -75,13 +74,10 @@ void MainScreen()
 		InBand = CheckBand();
 		if(InBand)
 		{
-			while(TimerBandMsg > 0)
-			{
-				LCDPrintString(TWO, CENTER_ALIGN, "Banda in attivazione");
-				TimerBandMsg--;
-				if(TimerBandMsg == 2)
-					ClearLCD();
-			}
+			ClearLCD();
+			LCDPrintString(TWO, CENTER_ALIGN, "Banda in attivazione");
+			delay(2500);
+			ClearLCD();
 			if(Flag.IsDisplayOn)
 			{
 				LCDDisplayOff();
@@ -91,6 +87,15 @@ void MainScreen()
 			{
 				TurnOffAllRele();
 			}
+			for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+			{
+				if(Rele[ReleIndx].HaveTimer == true)
+				{
+					Rele[ReleIndx].HaveTimer = false;
+					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);				
+				}
+			}
+
 			EnterSetup = NO_PRESS;
 			ExitFromBand = false;
 		}
@@ -100,7 +105,6 @@ void MainScreen()
 			{
 				LCDDisplayOn();
 				Flag.IsDisplayOn = true;
-				TimerBandMsg = 30;
 				LCDPrintString(TWO, CENTER_ALIGN, "Uscita dalla banda");
 				delay(2000);
 				ClearLCD();
@@ -552,7 +556,7 @@ bool WifiConnect()
 	if(Flag.WifiActive)
 	{
 		ClearLCD();
-		LCDPrintString(ONE, CENTER_ALIGN, "Sei già connesso");
+		LCDPrintString(ONE, CENTER_ALIGN, "Sei ancora connesso");
 		LCDPrintString(TWO, CENTER_ALIGN, "ad una rete WiFi!");
 		LCDPrintString(THREE, CENTER_ALIGN, "Disconnettere?");
 		delay(2000);
@@ -800,13 +804,13 @@ bool HelpInfo()
 			TotalTime = Day + "g " + Hour + "h " + Minute + "m " + Second + "s";
 			LCDPrintLineVoid(THREE);
 			LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
-			delay(5000);
+			delay(3000);
 			LCDPrintLineVoid(THREE);
 		}
 		else
 		{
 			LCDPrintString(THREE, CENTER_ALIGN, "Non Attiva");
-			delay(1200);
+			delay(1000);
 			LCDPrintLineVoid(THREE);
 		}
 		
@@ -960,7 +964,7 @@ bool AssignReleTimer()
 						Rele[ReleNumber].TimerTime = SetTimeVarRele(0,0,0,0);
 						TimerAssignedCnt--;
 					}
-					else if(TimerAssignedCnt == 1)
+					else if(TimerAssignedCnt == 2)
 					{
 						ClearLCD();
 						LCDPrintString(ONE, CENTER_ALIGN, "Raggiunto il");

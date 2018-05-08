@@ -34,17 +34,28 @@ bool CheckBand()
 	}
 	else
 	{
-		if((Band.InitHour <= PresentTime.hour && Band.InitMinute <= PresentTime.minute) &&
-			(Band.EndHour >= PresentTime.hour && Band.EndMinute >= PresentTime.minute))
+		if((Band.InitHour <= PresentTime.hour) && (Band.InitMinute <= PresentTime.minute) && (Band.EndHour >= PresentTime.hour) && (Band.EndMinute >= PresentTime.minute)
+			&& (Band.EndMinute > Band.InitMinute))
 		{
 			InBand = true;
 			Flag.BandActive = true;
 		}
-		else
+		if((Band.InitHour <= PresentTime.hour) && (Band.EndHour >= PresentTime.hour) && (Band.EndMinute >= PresentTime.minute)
+		   && (Band.EndMinute < Band.InitMinute))
+		{
+			InBand = true;
+			Flag.BandActive = true;			
+		}
+		else if(Band.InitHour > Band.EndHour)
 		{
 			if(Band.InitDay < PresentTime.day)
 			{
-				if((PresentTime.hour >= 0 && PresentTime.minute >= 0) &&
+				if((Band.InitHour <= PresentTime.hour) && (Band.InitMinute <= PresentTime.minute))
+				{
+					InBand = true;
+					Flag.BandActive = true;
+				}
+				else if((PresentTime.hour >= 0 && PresentTime.minute >= 0) &&
 				  (Band.EndHour >= PresentTime.hour && Band.EndMinute >= PresentTime.minute))
 				{
 					InBand = true;
@@ -71,15 +82,23 @@ bool IsBandCorrect()
 	bool BandCorrect = false;
 	if(Band.InitHour <= Band.EndHour)
 	{
-		if(Band.InitMinute < Band.EndMinute)
+		if(Band.InitHour == Band.EndHour)
+		{
+			if(Band.InitMinute < Band.EndMinute)
+			{
+				BandCorrect = true;
+				WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
+			}
+			else
+			{
+				BandCorrect = false;
+				SetBandInvalid();
+			}
+		}
+		else if(Band.InitHour < Band.EndHour)
 		{
 			BandCorrect = true;
 			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
-		}
-		else
-		{
-			BandCorrect = false;
-			SetBandInvalid();
 		}
 	}
 	else
@@ -388,12 +407,13 @@ bool SetTimeBand()
 						else if(Hour == OldHour)
 						{
 							ClearLCD();
-							LCDPrintString(TWO, CENTER_ALIGN, "Valore non valido");
-							LCDPrintString(THREE, CENTER_ALIGN, "Re-inserire ora");
+							LCDPrintString(TWO, CENTER_ALIGN, "Valore uguale");
 							delay(1000);
+							ValidSet = true;
+							SaveBandValues(END_HOUR, Hour);
+							Band.EndHour = Hour;
+							TimeVar = END_MINUTE;
 							ClearLCD();
-							ValidSet = false;
-							TimeVar = END_HOUR;	
 						}
 						break;
 					case BUTTON_LEFT:
