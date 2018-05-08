@@ -47,7 +47,11 @@ void TurnOnAllRele()
 	{
 		ON(ReleIdx2Pin(ReleIndx));
 		Rele[ReleIndx].IsActive = true;
-		Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
+		Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
+		Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
+		Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+		Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
+		WriteMemory(Rele[ReleIndx].EepromAddr, STATUS_ON);
 		delay(500);
 	}
 	Flag.AllReleDown = false;
@@ -136,7 +140,10 @@ void ReleReStart()
 			Rele[ReleIndx].IsActive = true;
 			ON(ReleIdx2Pin(ReleIndx));
 			Flag.AllReleDown = false;
-			Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
+			Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
+			Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
+			Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+			Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 			CheckEvents();
 		}
 
@@ -144,6 +151,7 @@ void ReleReStart()
 	}
 	ClearLCD();
 	Flag.ReleRS = true;
+	CheckReleStatus();
 	CheckEvents();
 }
 
@@ -158,7 +166,21 @@ void CheckReleStatus()
 				break;
 		}
 		else
+		{
 			Flag.AllReleDown = true;
+		}
+	}
+	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+	{
+		if(!Rele[ReleIndx].IsActive)
+		{
+				Flag.AllReleUp = false;
+				break;
+		}
+		else
+		{
+			Flag.AllReleUp = true;
+		}
 	}
 	
 }
@@ -205,7 +227,7 @@ bool SetTimerRele(short ReleNbr)
 	CheckEvents();
 	LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
 	LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
-	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
+	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
 	delay(2000);
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Il tempo massimo");
@@ -215,12 +237,13 @@ bool SetTimerRele(short ReleNbr)
 	delay(3000);
 	ClearLCD();
 	CheckEvents();
+	LCDBlink();
 	while(!ExitSetTimer)
 	{
 		
 		LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
 		LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
-		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr);
+		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
 		LCDPrintValue(FOUR, 8, Hour);
 		LCDPrintString(FOUR, 9, ":");
 		LCDPrintValue(FOUR, 10, Minute_1);
@@ -229,16 +252,13 @@ bool SetTimerRele(short ReleNbr)
 		switch(Cursor)
 		{
 			case 0:
-				LCDMoveCursor(FOUR, 8);
-				LCDBlink();
+				LCDMoveCursor(FOUR, 8);				
 				break;
 			case 1:
 				LCDMoveCursor(FOUR, 10);
-				LCDBlink();
 				break;
 			case 2:
 				LCDMoveCursor(FOUR, 11);
-				LCDBlink();
 				break;
 			default:
 				break;
@@ -300,7 +320,7 @@ bool SetTimerRele(short ReleNbr)
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
-				if(Cursor < 3)
+				if(Cursor < 2)
 					Cursor++;
 				else
 					Cursor = 0;
@@ -332,6 +352,7 @@ bool SetTimerRele(short ReleNbr)
 					Rele[ReleNbr].TimerTime.hour = PresentTime.hour + SetTimer.hour;
 					Rele[ReleNbr].TimerTime.minute = PresentTime.minute + SetTimer.minute;
 					ExitSetTimer = true;
+					LCDNoBlink();
 				}
 				break;
 			default:

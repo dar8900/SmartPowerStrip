@@ -145,7 +145,7 @@ void WifiDisconnect()
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete");
-	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].RealSsid);
+	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].Ssid);
 	WiFi.disconnect(); 
 	Flag.WifiActive = false;
 	delay(1500);
@@ -199,7 +199,10 @@ void SetRele(void)
 		{
 			Rele[ReleIndx].IsActive = true;  // save RELE state
 			ON(ReleIdx2Pin(ReleIndx));
-			Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
+			Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
+			Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
+			Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+			Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 		}
 		else if (StrContains(HTTP_req, TagOff[ReleIndx])) 
 		{

@@ -115,6 +115,7 @@ bool IsRebooted()
 void setup() 
 {
 #ifndef FIRST_GO
+	Serial.begin(115200);
 	pinMode(RELE1, OUTPUT);
 	pinMode(RELE2, OUTPUT);
 	pinMode(RELE3, OUTPUT);

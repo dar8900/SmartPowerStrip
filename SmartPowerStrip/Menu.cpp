@@ -267,7 +267,7 @@ void MainMenu()
 bool ManualRele()
 {
 	short ReleIndx = RELE_1, YesNoChoice = 0;
-	bool ReleSetted = false, OnOffAll = false, ExitYesNo = false;
+	bool ReleSetted = false, OnOffAll = false, ExitYesNo = false, ExitAll = false;
 	String YesNo[] = {"No", "Si"};
 	String SelRele;
 	short ButtonPress = 0, Status = 0, OldStatus = 0;
@@ -276,14 +276,14 @@ bool ManualRele()
 		ClearLCD();
 		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi spegnere");
 		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
-		delay(2000);		
+		delay(1000);		
 	}
 	else
 	{
 		ClearLCD();
 		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi accendere");
 		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
-		delay(2000);
+		delay(1000);
 	}
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
@@ -336,7 +336,11 @@ bool ManualRele()
 		if(Flag.AllReleUp)
 		{
 			TurnOffAllRele();
-			LCDShowPopUp("Tutte Spente");			
+			for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+			{
+				WriteMemory(Rele[ReleIndx].EepromAddr, STATUS_OFF);
+			}
+			LCDShowPopUp("Tutte Spente");
 		}
 		else
 		{
@@ -408,20 +412,29 @@ bool ManualRele()
 							Rele[ReleIndx].IsActive = true;
 							ON(ReleIdx2Pin(ReleIndx));
 							Flag.AllReleDown = false;
-							Rele[ReleIndx].TurnOnTime = SetTimeVarRele(PresentTime.hour,PresentTime.minute,PresentTime.second,PresentTime.day);
+							Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
+							Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
+							Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+							Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 						}
 						WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 						ReleSetted = true;
-						delay(1500);
+						delay(1000);
 						ClearLCD();
 						break;
 					case BUTTON_LEFT:
+						ExitAll = true;
+						break;
 					default:
 						break;
 				}
 				delay(50);
 				ButtonPress = NO_PRESS;
+				if(ExitAll)
+					break; // Uscita while
 			}	
+			if(ExitAll)
+				break; // Uscita for
 		}
 		CheckReleStatus();
 	}
@@ -698,7 +711,7 @@ bool HelpInfo()
 	delay(2000);
 	CheckEvents();
 	ClearLCD();
-	LCDPrintString(ONE, CENTER_ALIGN, "Stato Rele:");
+	LCDPrintString(ONE, CENTER_ALIGN, "Stato Prese:");
 	ShowReleIcons(TWO);
 	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
 	if(Flag.WifiActive)
@@ -720,7 +733,7 @@ bool HelpInfo()
 		{	
 			if(NumTimer > 1)
 				break;
-			ReleTimer[NumTimer] = ReleIndx;
+			ReleTimer[NumTimer] = ReleIndx + 1;
 			NumTimer++;
 			NoTimer = false;
 		}
@@ -736,9 +749,10 @@ bool HelpInfo()
 	if(!NoTimer)
 	{
 		LCDPrintValue(ONE, 15, NumTimer);
-		LCDPrintString(TWO, LEFT_ALIGN, "Rele associati:");
+		LCDPrintString(TWO, LEFT_ALIGN, "Prese associate:");
 		LCDPrintValue(THREE, 5, ReleTimer[0]);
-		LCDPrintValue(THREE, 15, ReleTimer[1]);				
+		if(ReleTimer[1] <= 8)
+			LCDPrintValue(THREE, 15, ReleTimer[1]);				
 	}
 	else
 	{
@@ -786,12 +800,16 @@ bool HelpInfo()
 			TotalTime = Day + "g " + Hour + "h " + Minute + "m " + Second + "s";
 			LCDPrintLineVoid(THREE);
 			LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
+			delay(5000);
+			LCDPrintLineVoid(THREE);
 		}
 		else
 		{
 			LCDPrintString(THREE, CENTER_ALIGN, "Non Attiva");
+			delay(1200);
+			LCDPrintLineVoid(THREE);
 		}
-		delay(1200);
+		
 	}
 	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
@@ -858,103 +876,129 @@ bool AssignReleTimer()
 	bool ExitAssignReleTimer = false;
 	ClearLCD();
 	CheckEvents();
-	LCDPrintString(TWO, CENTER_ALIGN, "Assegna un timer");
-	LCDPrintString(THREE, CENTER_ALIGN, "a massimo 2 prese");
-	delay(2000);
-	ClearLCD();
-	LCDPrintString(TWO, CENTER_ALIGN, "Premi Up o Down");
-	LCDPrintString(THREE, CENTER_ALIGN, "per scegliere");
-	LCDPrintString(FOUR, CENTER_ALIGN, "il rele");
-	delay(2000);
-	ClearLCD();
-	LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
-	LCDPrintString(TWO, CENTER_ALIGN, "per confermare");
-	LCDPrintString(THREE, CENTER_ALIGN, "o per disabilitare");
-	LCDPrintString(FOUR, CENTER_ALIGN, "un timer");
-	delay(2000);
-	ClearLCD();
-	LCDPrintString(TWO, CENTER_ALIGN, "Premi Left/Back");
-	LCDPrintString(THREE, CENTER_ALIGN, "per tornare al");
-	LCDPrintString(FOUR, CENTER_ALIGN, "Menu Principale");
-	delay(2000);
-	ClearLCD();
-	CheckEvents();
-	while(!ExitAssignReleTimer)
-	{		
-		CheckEvents();
-		LCDPrintString(ONE, CENTER_ALIGN, "Assegna il timer");
-		LCDPrintString(TWO, CENTER_ALIGN, "alla presa numero:");
-		LCDPrintValue(THREE, CENTER_ALIGN, ReleNumber+1);
-		if(Rele[ReleNumber].HaveTimer)
-		{
-			LCDPrintString(FOUR, CENTER_ALIGN, "Timer abilitato");
-		}
-		ButtonPress = CheckButtons();
-		switch(ButtonPress)
-		{
-			case BUTTON_UP:
-				BlinkLed(BUTTON_LED);
-				if(ReleNumber > RELE_1)
-					ReleNumber--;
-				else
-					ReleNumber = RELE_MAX - 1;
-				break;
-			case BUTTON_DOWN:
-				BlinkLed(BUTTON_LED);
-				if(ReleNumber < RELE_MAX - 1)
-					ReleNumber++;
-				else
-					ReleNumber = RELE_1;
-				break;
-			case BUTTON_SET:
-				BlinkLed(BUTTON_LED);
-				if(Rele[ReleNumber].HaveTimer)
-				{
-					ClearLCD();
-					LCDPrintString(THREE, CENTER_ALIGN, "Timer disabilitato");
-					delay(2000);
-					ClearLCD();
-					Rele[ReleNumber].HaveTimer = false;
-					Rele[ReleNumber].TimerTime = SetTimeVarRele(0,0,0,0);
-					TimerAssignedCnt--;
-				}
-				else if(TimerAssignedCnt == 1)
-				{
-					ClearLCD();
-					LCDPrintString(ONE, CENTER_ALIGN, "Raggiunto il");
-					LCDPrintString(TWO, CENTER_ALIGN, "numero massimo");
-					LCDPrintString(THREE, CENTER_ALIGN, "di timer assegnati");	
-					delay(3000);
-					ClearLCD();	
-					LCDPrintString(ONE, CENTER_ALIGN, "Disabilitare");
-					LCDPrintString(TWO, CENTER_ALIGN, "un timer");
-					LCDPrintString(THREE, CENTER_ALIGN, "o uscire");	
-					delay(3000);
-					ClearLCD();						
-				}
-				else
-				{
-					ClearLCD();
-					LCDPrintString(TWO, CENTER_ALIGN, "Timer abilitato");
-					delay(2000);
-					ClearLCD();
-					Rele[ReleNumber].HaveTimer = SetTimerRele(ReleNumber);
-					ON(ReleIdx2Pin(ReleNumber));
-					Flag.AllReleDown = false;
-					CheckEvents();
-					TimerAssignedCnt++;	
-				}
-
-				break;
-			case BUTTON_LEFT:
-				ExitAssignReleTimer = true;
-				break;
-			default:
-				break;
-		}
-		ButtonPress = NO_PRESS;
-		delay(60);
+	if(Flag.AllReleDown)
+	{
+		LCDPrintString(TWO, CENTER_ALIGN, "Non ci sono");
+		LCDPrintString(THREE, CENTER_ALIGN, "prese attive!");
+		delay(2000);
+		ClearLCD();
 	}
+	else
+	{
+		LCDPrintString(TWO, CENTER_ALIGN, "Assegna un timer");
+		LCDPrintString(THREE, CENTER_ALIGN, "a massimo 2 prese");
+		delay(2000);
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Premi Up o Down");
+		LCDPrintString(THREE, CENTER_ALIGN, "per scegliere");
+		LCDPrintString(FOUR, CENTER_ALIGN, "il rele");
+		delay(2000);
+		ClearLCD();
+		LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
+		LCDPrintString(TWO, CENTER_ALIGN, "per confermare");
+		LCDPrintString(THREE, CENTER_ALIGN, "o per disabilitare");
+		LCDPrintString(FOUR, CENTER_ALIGN, "un timer");
+		delay(2000);
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Premi Left/Back");
+		LCDPrintString(THREE, CENTER_ALIGN, "per tornare al");
+		LCDPrintString(FOUR, CENTER_ALIGN, "Menu Principale");
+		delay(2000);
+		ClearLCD();
+		CheckEvents();
+		while(!ExitAssignReleTimer)
+		{		
+			CheckEvents();
+			if(Rele[ReleNumber].IsActive)
+			{
+				LCDPrintString(ONE, CENTER_ALIGN, "Assegna il timer");
+				LCDPrintString(TWO, CENTER_ALIGN, "alla presa numero:");
+				LCDPrintValue(THREE, CENTER_ALIGN, ReleNumber + 1);
+			}
+			else
+			{
+				LCDPrintString(ONE, CENTER_ALIGN, "Presa numero:");
+				LCDPrintValue(TWO, CENTER_ALIGN, ReleNumber + 1);
+				LCDPrintString(THREE, CENTER_ALIGN, "spenta");
+			}
+			if(Rele[ReleNumber].HaveTimer)
+			{
+				LCDPrintString(FOUR, CENTER_ALIGN, "Timer abilitato");
+			}
+			else
+			{
+				LCDPrintLineVoid(FOUR);
+			}
+			ButtonPress = CheckButtons();
+			switch(ButtonPress)
+			{
+				case BUTTON_UP:
+					BlinkLed(BUTTON_LED);
+					if(ReleNumber > RELE_1)
+						ReleNumber--;
+					else
+						ReleNumber = RELE_MAX - 1;
+					ClearLCD();
+					break;
+				case BUTTON_DOWN:
+					BlinkLed(BUTTON_LED);
+					if(ReleNumber < RELE_MAX - 1)
+						ReleNumber++;
+					else
+						ReleNumber = RELE_1;
+					ClearLCD();
+					break;
+				case BUTTON_SET:
+					BlinkLed(BUTTON_LED);
+					if(Rele[ReleNumber].HaveTimer)
+					{
+						ClearLCD();
+						LCDPrintString(THREE, CENTER_ALIGN, "Timer disabilitato");
+						delay(2000);
+						ClearLCD();
+						Rele[ReleNumber].HaveTimer = false;
+						Rele[ReleNumber].TimerTime = SetTimeVarRele(0,0,0,0);
+						TimerAssignedCnt--;
+					}
+					else if(TimerAssignedCnt == 1)
+					{
+						ClearLCD();
+						LCDPrintString(ONE, CENTER_ALIGN, "Raggiunto il");
+						LCDPrintString(TWO, CENTER_ALIGN, "numero massimo");
+						LCDPrintString(THREE, CENTER_ALIGN, "di timer assegnati");	
+						delay(3000);
+						ClearLCD();	
+						LCDPrintString(ONE, CENTER_ALIGN, "Disabilitare");
+						LCDPrintString(TWO, CENTER_ALIGN, "un timer");
+						LCDPrintString(THREE, CENTER_ALIGN, "o uscire");	
+						delay(3000);
+						ClearLCD();						
+					}
+					else if(!Rele[ReleNumber].HaveTimer && Rele[ReleNumber].IsActive)
+					{
+						ClearLCD();
+						LCDPrintString(TWO, CENTER_ALIGN, "Timer abilitato");
+						delay(2000);
+						ClearLCD();
+						Rele[ReleNumber].HaveTimer = SetTimerRele(ReleNumber);
+						ON(ReleIdx2Pin(ReleNumber));
+						Flag.AllReleDown = false;
+						CheckEvents();
+						TimerAssignedCnt++;	
+					}
+
+					break;
+				case BUTTON_LEFT:
+					ExitAssignReleTimer = true;
+					break;
+				default:
+					break;
+			}
+			ButtonPress = NO_PRESS;
+			delay(60);
+		}
+	}
+	return true;
 }
 
 
