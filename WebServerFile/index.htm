@@ -3,229 +3,61 @@
     <head>
         <title>Smart Power-Strip</title>
 		<meta charset="UTF-8">
-        <script>
-		Rele1Str = "";
-		Rele2Str = "";
-		Rele3Str = "";
-		Rele4Str = "";
-		Rele5Str = "";
-		Rele6Str = "";
-		Rele7Str = "";
-		Rele8Str = "";
-		
-		var RELE1State = 0;
-		var RELE2State = 0;
-		var RELE3State = 0;
-		var RELE4State = 0;
-		var RELE5State = 0;
-		var RELE6State = 0;
-		var RELE7State = 0;
-		var RELE8State = 0;
-		function GetArduinoIO()
+        <script>		
+		function SetRele1(Status)
 		{
-			nocache = "&nocache=" + Math.random() * 1000000;
-			var request = new XMLHttpRequest();
-			request.onreadystatechange = function()
-			{
-				if (this.readyState == 4) {
-					if (this.status == 200) {
-						if (this.responseXML != null) {
-							// XML file received - contains analog values, switch values and LED states
-							var count;
-							// RELE 1
-							if (this.responseXML.getElementsByTagName('RELE')[0].childNodes[0].nodeValue === "on") 
-							{
-								document.getElementById("RELE1").innerHTML = "Accesa";
-								RELE1State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE1").innerHTML = "Spenta";
-								RELE1State = 0;
-							}
-							// RELE 2
-							if (this.responseXML.getElementsByTagName('RELE')[1].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE2").innerHTML = "RELE 2 is ON";
-								RELE2State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE2").innerHTML = "RELE 2 is OFF";
-								RELE2State = 0;
-							}
-							 // RELE 3
-							if (this.responseXML.getElementsByTagName('RELE')[2].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE3").innerHTML = "RELE 3 is ON";
-								RELE3State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE3").innerHTML = "RELE 3 is OFF";
-								RELE3State = 0;
-							}
-							  // RELE 4
-							if (this.responseXML.getElementsByTagName('RELE')[3].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE4").innerHTML = "RELE 4 is ON";
-								RELE4State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE4").innerHTML = "RELE 4 is OFF";
-								RELE4State = 0;
-							}
-							 // RELE 5
-							if (this.responseXML.getElementsByTagName('RELE')[4].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE5").innerHTML = "RELE 5 is ON";
-								RELE5State = 1;
-							}
-							else
-							{
-								document.getElementById("RELE5").innerHTML = "RELE 5 is OFF";
-								RELE5State = 0;
-							}
-							 // RELE 6
-							if (this.responseXML.getElementsByTagName('RELE')[5].childNodes[0].nodeValue === "on") 
-							{
-								document.getElementById("RELE6").innerHTML = "RELE 6 is ON";
-								RELE6State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE6").innerHTML = "RELE 6 is OFF";
-								RELE6State = 0;
-							}
-							 // RELE 7
-							if (this.responseXML.getElementsByTagName('RELE')[6].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE7").innerHTML = "RELE 7 is ON";
-								RELE7State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE7").innerHTML = "RELE 7 is OFF";
-								RELE7State = 0;
-							}
-							 // RELE 8
-							if (this.responseXML.getElementsByTagName('RELE')[7].childNodes[0].nodeValue === "on")
-							{
-								document.getElementById("RELE8").innerHTML = "RELE 8 is ON";
-								RELE8State = 1;
-							}
-							else 
-							{
-								document.getElementById("RELE8").innerHTML = "RELE 8 is OFF";
-								RELE8State = 0;
-							}
-						}
-					}
+			 var xhttp = new XMLHttpRequest();
+			 xhttp.onreadystatechange = function() 
+			 {
+				if (this.readyState == 4 && this.status == 200) 
+				{
+				  document.getElementById("STATUS_RELE1").innerHTML =
+				  this.responseText;
 				}
+			  };
+			 xhttp.open("GET", "SetRele1?STATUS_RELE1="+Status, true);
+			 xhttp.send();
+		}
+		setInterval(function() 
+		{
+		  // Call a function repetatively with 2 Second interval
+		  GetTurnOnRele1();
+		}, 125); //125mSeconds update rate
+		 
+		function GetTurnOnRele1()
+		{
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById("TURN_ON_RELE1").innerHTML =
+			  this.responseText;
 			}
-			// send HTTP GET request with LEDs to switch on/off if any
-			request.open("GET", "ajax_inputs" + Rele1Str + Rele2Str + Rele3Str + Rele4Str + Rele5Str +
-                		Rele6Str + Rele7Str + Rele8Str + nocache, true);
-			request.send(null);
-			setTimeout('GetArduinoIO()', 500);
-			Rele1Str = "";
-			Rele2Str = "";			
-			Rele3Str = "";			
-			Rele4Str = "";			
-			Rele5Str = "";			
-			Rele6Str = "";			
-			Rele7Str = "";			
-			Rele8Str = "";			
+		  };
+		  xhttp.open("GET", "TurnOnRele1", true);
+		  xhttp.send();
 		}
 		
-		function GetRele1()
+		setInterval(function() 
 		{
-			if (RELE1State === 1) {
-				RELE1State = 0;
-				Rele1Str = "&RELE1=0";
-			}
-			else {
-				RELE1State = 1;
-				Rele1Str = "&RELE1=1";
-			}
-		}
-		function GetRele2()
+		  // Call a function repetatively with 2 Second interval
+		  GetTimerTimeRele1();
+		}, 125); //125mSeconds update rate
+		 
+		function GetTimerTimeRele1()
 		{
-			if (RELE2State === 1) {
-				RELE2State = 0;
-				Rele2Str = "&RELE2=0";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById("TIMER_RELE1").innerHTML =
+			  this.responseText;
 			}
-			else {
-				RELE2State = 1;
-				Rele2Str = "&RELE2=1";
-			}
-		}
-		function GetRele3()
-		{
-			if (RELE3State === 1) {
-				RELE3State = 0;
-				Rele3Str = "&RELE3=0";
-			}
-			else {
-				RELE3State = 1;
-				Rele3Str = "&RELE3=1";
-			}
-		}
-		function GetRele4()
-		{
-			if (RELE4State === 1) {
-				RELE4State = 0;
-				Rele4Str = "&RELE4=0";
-			}
-			else {
-				RELE4State = 1;
-				Rele4Str = "&RELE4=1";
-			}
-		}
-		function GetRele5()
-		{
-			if (RELE5State === 1) {
-				RELE5State = 0;
-				Rele5Str = "&RELE5=0";
-			}
-			else {
-				RELE5State = 1;
-				Rele5Str = "&RELE5=1";
-			}
-		}
-		function GetRele6()
-		{
-			if (RELE6State === 1) {
-				RELE6State = 0;
-				Rele6Str = "&RELE6=0";
-			}
-			else {
-				RELE6State = 1;
-				Rele6Str = "&RELE6=1";
-			}
-		}
-		function GetRele7()
-		{
-			if (RELE7State === 1) {
-				RELE7State = 0;
-				Rele7Str = "&RELE7=0";
-			}
-			else {
-				RELE7State = 1;
-				Rele7Str = "&RELE7=1";
-			}
-		}
-		function GetRele8()
-		{
-			if (RELE8State === 1) {
-				RELE8State = 0;
-				Rele8Str = "&RELE8=0";
-			}
-			else {
-				RELE8State = 1;
-				Rele8Str = "&RELE8=1";
-			}
+		  };
+		  xhttp.open("GET", "TimerRele1", true);
+		  xhttp.send();
 		}
 	</script>
 	<style>
@@ -301,17 +133,17 @@
         <h1>Smart Power-Strip</h1>
 		<h2>Gestione delle prese e controllo tempi</h2>
 		<table style="width:100%;" border="1px solid black;">
-			<tr style="background-color:LightSkyBlue ;"><th>NOME PRESA</th><th>Accensione / Spegnimento</th><th>Tempo Accensione</th><th>Timer Presa</th></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 1</th><td><button class="button" id="RELE1" onclick="GetRele1()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 2</th><td><button class="button" id="RELE2" onclick="GetRele2()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 3</th><td><button class="button" id="RELE3" onclick="GetRele3()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 4</th><td><button class="button" id="RELE4" onclick="GetRele4()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 5</th><td><button class="button" id="RELE5" onclick="GetRele5()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 6</th><td><button class="button" id="RELE6" onclick="GetRele6()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" id="RELE7" onclick="GetRele7()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" id="RELE8" onclick="GetRele8()">Spenta</button></td><td>0g 0h 0m</td><td>0h 0m</td></tr>
+			<tr style="background-color:LightSkyBlue ;"><th>NOME PRESA</th><th>Accensione / Spegnimento</th><th>Stato Presa</th><th>Tempo Accensione</th><th>Timer Presa</th></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 1</th><td><button class="button" onclick="SetRele1(1)">Accesa</button><button class="button" onclick="SetRele1(0)">Spenta</button></td><td id="STATUS_RELE1" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE1">0g 0h 0m</td><td id="TIMER_RELE1">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 2</th><td><button class="button" onclick="SetRele2(1)">Accesa</button><button class="button" onclick="SetRele2(0)">Spenta</button></td><td id="STATUS_RELE2" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE2">0g 0h 0m</td><td id="TIMER_RELE2">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 3</th><td><button class="button" onclick="SetRele3(1)">Accesa</button><button class="button" onclick="SetRele3(0)">Spenta</button></td><td id="STATUS_RELE3" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE3">0g 0h 0m</td><td id="TIMER_RELE3">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 4</th><td><button class="button" onclick="SetRele4(1)">Accesa</button><button class="button" onclick="SetRele4(0)">Spenta</button></td><td id="STATUS_RELE4" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE4">0g 0h 0m</td><td id="TIMER_RELE4">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 5</th><td><button class="button" onclick="SetRele5(1)">Accesa</button><button class="button" onclick="SetRele5(0)">Spenta</button></td><td id="STATUS_RELE5" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE5">0g 0h 0m</td><td id="TIMER_RELE5">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 6</th><td><button class="button" onclick="SetRele6(1)">Accesa</button><button class="button" onclick="SetRele6(0)">Spenta</button></td><td id="STATUS_RELE6" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE6">0g 0h 0m</td><td id="TIMER_RELE6">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" onclick="SetRele7(1)">Accesa</button><button class="button" onclick="SetRele7(0)">Spenta</button></td><td id="STATUS_RELE7" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE7">0g 0h 0m</td><td id="TIMER_RELE7">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" onclick="SetRele8(1)">Accesa</button><button class="button" onclick="SetRele8(0)">Spenta</button></td><td id="STATUS_RELE8" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE8">0g 0h 0m</td><td id="TIMER_RELE8">0h 0m</td></tr>
 		</table>
-		<p style="background-color: hsl(0, 0%, 85%); border-bottom: 6px solid DodgerBlue; color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria: <b style="color:MediumSeaGreen;">Disattivata</b> </p>
+		<p style="color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria:</p> <p id="BAND_ACTIVE"> <b style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:35px;">Disattivata</b> </p>
 		<br>
 		<br>
 		<footer style="text-align:center;">&copy Dario Cavedale</footer>
