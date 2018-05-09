@@ -50,13 +50,15 @@ void TurnOnAllRele()
 		Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 		Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 		Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
-		Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 		WriteMemory(Rele[ReleIndx].EepromAddr, STATUS_ON);
 		delay(500);
 	}
 	Flag.AllReleDown = false;
 	Flag.AllReleUp = true;
 }
+
+static short TmpMinute;
+static bool NewMinute = false;
 
 void TakeReleTime()
 {
@@ -68,57 +70,24 @@ void TakeReleTime()
 			TakePresentTime();
 			if(Rele[ReleIndx].IsActive)
 			{
-				// if(PresentTime.day - Rele[ReleIndx].TurnOnTime.day < 0)
-			    // {
-					// Rele[ReleIndx].ActiveTime = SetTimeVarRele(0,0,0,0);
-				// }
-				// else
-				// {
-					// Rele[ReleIndx].ActiveTime.day = PresentTime.day - Rele[ReleIndx].TurnOnTime.day;
-				// }
-				// if((PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour) < 0)
-				// {
-					// Rele[ReleIndx].ActiveTime.hour = Rele[ReleIndx].TurnOnTime.hour + PresentTime.hour;
-				// }
-				// else
-				// {
-					// Rele[ReleIndx].ActiveTime.hour = PresentTime.hour - Rele[ReleIndx].TurnOnTime.hour;
-				// }
-				// if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) < 0)
-				// {
-					// Rele[ReleIndx].ActiveTime.minute = Rele[ReleIndx].TurnOnTime.minute + PresentTime.minute;
-					// if(Rele[ReleIndx].ActiveTime.minute > 59)
-					// {
-						
-					// }
-				// }
-				// else
-				// {
-					// Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
-				// }
-				if(PresentTime.second >= Rele[ReleIndx].TurnOnTime.second && Rele[ReleIndx].TurnOnTime.second != 0)
+				if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) <= 0)
 				{
-					Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
+					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute;
+					if(Rele[ReleIndx].ActiveTime.minute == 59)
+					{
+						if(NewMinute)
+						{
+							Rele[ReleIndx].ActiveTime.hour += 1;
+							NewMinute = false;
+						}
+					}
 				}
-				else if(PresentTime.second < Rele[ReleIndx].TurnOnTime.second && Rele[ReleIndx].TurnOnTime.second != 0)
+				else
 				{
-					Rele[ReleIndx].ActiveTime.second += (Rele[ReleIndx].TurnOnTime.second - (Rele[ReleIndx].TurnOnTime.second - PresentTime.second));
-				}
-				else if(Rele[ReleIndx].TurnOnTime.second == 0)
-				{
-					Rele[ReleIndx].ActiveTime.second = PresentTime.second - Rele[ReleIndx].TurnOnTime.second;
-				}
-				if(Rele[ReleIndx].ActiveTime.second > 59)
-				{
-					Rele[ReleIndx].ActiveTime.second = 0;
-					Rele[ReleIndx].ActiveTime.minute++;
-				}
-				
-				if(Rele[ReleIndx].ActiveTime.minute > 59)
-				{
-					Rele[ReleIndx].ActiveTime.hour += 1;
-					Rele[ReleIndx].ActiveTime.minute = 0;
-				}
+					Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
+					TmpMinute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
+					NewMinute = true;
+				}				
 				if(Rele[ReleIndx].ActiveTime.hour > 24)
 				{
 					Rele[ReleIndx].ActiveTime.day += 1;
@@ -199,7 +168,6 @@ void ReleReStart()
 			Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 			Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 			Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
-			Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 			CheckEvents();
 		}
 
@@ -330,19 +298,29 @@ bool SetTimerRele(short ReleNbr)
 						if(Hour > 0)
 							Hour--;
 						else
-							Hour = 3;
+							Hour = 4;
 						break;
 					case 1:
-						if(Minute_1 > 0)
-							Minute_1--;
+						if(Hour != 4)
+						{
+							if(Minute_1 > 0)
+								Minute_1--;
+							else
+								Minute_1 = 5;
+						}
 						else
-							Minute_1 = 5;
+							Minute_1 = 0;
 						break;
 					case 2:
-						if(Minute_2 > 1)
-							Minute_2--;
+						if(Hour != 4)
+						{
+							if(Minute_2 > 0)
+								Minute_2--;
+							else
+								Minute_2 = 9;
+						}
 						else
-							Minute_2 = 9;
+							Minute_2 = 0;
 						break;
 					default:
 						break;
@@ -353,22 +331,32 @@ bool SetTimerRele(short ReleNbr)
 				switch(Cursor)
 				{
 					case 0:
-						if(Hour < 3)
+						if(Hour < 4)
 							Hour++;
 						else
 							Hour = 0;
 						break;
 					case 1:
-						if(Minute_1 < 5)
-							Minute_1++;
+						if(Hour != 4)
+						{
+							if(Minute_1 < 5)
+								Minute_1++;
+							else
+								Minute_1 = 0;
+						}
 						else
 							Minute_1 = 0;
 						break;
 					case 2:
-						if(Minute_2 < 9)
-							Minute_2++;
+						if(Hour != 4)
+						{
+							if(Minute_2 < 9)
+								Minute_2++;
+							else
+								Minute_2 = 0;
+						}
 						else
-							Minute_2 = 1;
+							Minute_2 = 0;
 						break;
 					default:
 						break;
@@ -376,10 +364,17 @@ bool SetTimerRele(short ReleNbr)
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
-				if(Cursor < 2)
-					Cursor++;
+				if(Hour != 4)
+				{
+					if(Cursor < 2)
+						Cursor++;
+					else
+						Cursor = 0;
+				}
 				else
+				{
 					Cursor = 0;
+				}
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
@@ -411,7 +406,7 @@ bool SetTimerRele(short ReleNbr)
 				}
 				else if((PresentTime.hour + SetTimer.hour >= 24) && (PresentTime.minute + SetTimer.minute > 59))
 				{
-					Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23) - ((PresentTime.hour + SetTimer.hour) / 23));					
+					Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23));					
 					Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
 					ExitSetTimer = true;
 					LCDNoBlink();				
@@ -427,7 +422,7 @@ bool SetTimerRele(short ReleNbr)
 			default:
 				break;			
 		}
-		delay(70);
+		delay(250);
 		ButtonPress = NO_PRESS;
 	}
 	return ExitSetTimer;

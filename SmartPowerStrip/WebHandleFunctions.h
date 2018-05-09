@@ -1,0 +1,25 @@
+
+void HandleTimer1(); 
+void HandleTimer2(); 
+void HandleTimer3(); 
+void HandleTimer4(); 
+void HandleTimer5(); 
+void HandleTimer6(); 
+void HandleTimer7(); 
+void HandleTimer8(); 
+void HandleTurnOn1(); 
+void HandleTurnOn2(); 
+void HandleTurnOn3(); 
+void HandleTurnOn4(); 
+void HandleTurnOn5(); 
+void HandleTurnOn6(); 
+void HandleTurnOn7(); 
+void HandleTurnOn8(); 
+void HandleRele1(); 
+void HandleRele2(); 
+void HandleRele3();
+void HandleRele4();
+void HandleRele5();
+void HandleRele6();
+void HandleRele7();
+void HandleRele8();

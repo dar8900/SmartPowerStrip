@@ -375,7 +375,8 @@ bool ManualRele()
 			}	
 			OldStatus = Status;
 			while(!ReleSetted)
-			{				
+			{		
+				CheckEvents();
 				ButtonPress = CheckButtons();
 				LCDPrintString(TWO, CENTER_ALIGN, SelRele);
 				LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
@@ -419,7 +420,6 @@ bool ManualRele()
 							Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 							Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 							Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
-							Rele[ReleIndx].TurnOnTime.second = PresentTime.second;
 						}
 						WriteMemory(Rele[ReleIndx].EepromAddr, Status);
 						ReleSetted = true;
@@ -624,6 +624,7 @@ bool ChangeTime()
 	ClearLCD();
 	while(!ExitTimeChange)
 	{
+		CheckEvents();
 		LCDPrintString(ONE, CENTER_ALIGN, "Cambia orario");
 		ButtonPress = CheckButtons();
 		switch(TimeSM)
@@ -749,6 +750,7 @@ bool HelpInfo()
 			}
 		}
 	}
+	CheckEvents();
 	LCDPrintString(ONE, LEFT_ALIGN, "Timer attivi:");
 	if(!NoTimer)
 	{
@@ -797,14 +799,18 @@ bool HelpInfo()
 		LCDPrintValue(TWO, 14, ReleIndx+1);
 		if(Rele[ReleIndx].IsActive)
 		{
-			Day = String(Rele[ReleIndx].ActiveTime.day);
-			Hour = String(Rele[ReleIndx].ActiveTime.hour);
-			Minute = String(Rele[ReleIndx].ActiveTime.minute);
-			Second = String(Rele[ReleIndx].ActiveTime.second);
-			TotalTime = Day + "g " + Hour + "h " + Minute + "m " + Second + "s";
-			LCDPrintLineVoid(THREE);
-			LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
-			delay(3000);
+			short TimerShowTotalTime = 30;
+			while(TimerShowTotalTime > 0)
+			{
+				CheckEvents();
+				Day = String(Rele[ReleIndx].ActiveTime.day);
+				Hour = String(Rele[ReleIndx].ActiveTime.hour);
+				Minute = String(Rele[ReleIndx].ActiveTime.minute);
+				TotalTime = Day + "g " + Hour + "h " + Minute + "m";
+				LCDPrintString(THREE, CENTER_ALIGN, TotalTime);		
+				TimerShowTotalTime--;
+				delay(100);
+			}
 			LCDPrintLineVoid(THREE);
 		}
 		else
@@ -823,7 +829,6 @@ bool HelpInfo()
 	return true;
 }
 
-// Per ora mostro solo IP e Hostname, per il client aspettare parte WEB
 bool WiFiInfo() 
 {
 	bool ExitWifiInfo = false;
