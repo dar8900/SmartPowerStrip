@@ -23,7 +23,7 @@ extern ESP8266WebServer server;
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
 short WifiItemSsid;
-// WiFiServer server(80);
+WiFiServer ClientServer(80);
 WiFiClient client;
 
 WIFI_LIST List[] = 
@@ -163,6 +163,7 @@ void WebServerInit()
 	server.on("/TimerRele6", HandleTimer6);
 	server.on("/TimerRele7", HandleTimer7);
 	server.on("/TimerRele8", HandleTimer8);
+	server.onNotFound(HandleNotFound);
 	server.begin();    
 }
 
@@ -173,35 +174,41 @@ void WifiDisconnect()
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete:");
 	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].Ssid);
 	WiFi.disconnect(); 
+	server.close();
 	Flag.WifiActive = false;
 	delay(1500);
 	ClearLCD();
 }
 
-
+static bool ClientConnected()
+{
+	WiFiClient client = ClientServer.available();
+	if(client)
+		return true;
+	else
+		return false;
+}
 
 void WebClient()
 {
-    if (client) 
-	{  // got client?
-        bool currentLineIsBlank = true;
-		Flag.ClientConnected = true;
-		ClearLCD();
-		LCDShowPopUp("Client CONNESSO");
-		LCDPrintString(THREE, CENTER_ALIGN, "Client CONNESSO");
-        while (client.connected()) 
+	if(Flag.WifiActive)
+	{
+		if(ClientConnected())
 		{
-			TakeReleTime();
-            if (client.available()) 
-			{   // client data available to read
-		
+			ClearLCD();
+			LCDPrintString(THREE, CENTER_ALIGN, "Client CONNESSO");
+			while(ClientConnected())
+			{
+				TakePresentTime();
+				TakeReleTime();
+				server.handleClient();
+				delay(50);
 			}
+			LCDPrintLineVoid(THREE);
+			LCDPrintString(THREE, CENTER_ALIGN, "Client DISCONNESSO");
+			delay(1500);
+			ClearLCD();
+			CheckReleStatus();
 		}
-        client.stop(); // close the connection
-		LCDShowPopUp("Client DISCONNESSO");
-		delay(1000);
-		ClearLCD();
-		CheckReleStatus();
-		Flag.ClientConnected = false;
-    } // end if (client)
+	}
 }

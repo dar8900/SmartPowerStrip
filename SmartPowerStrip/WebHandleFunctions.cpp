@@ -52,7 +52,7 @@ const char WebPage[] PROGMEM = R"=====(
 				  this.responseText;
 				}
 			  };
-			 xhttp.open("GET", "SetRele2?STATUS_RELE2="+Status", true);
+			 xhttp.open("GET", "SetRele2?STATUS_RELE2="+Status, true);
 			 xhttp.send();
 		}
 		
@@ -173,7 +173,7 @@ const char WebPage[] PROGMEM = R"=====(
 		    };
 		    xhttp.open("GET", TurnOnReleFunc+i, true);
 		    xhttp.send();
-			setTimeout(vuota, 1000);
+			setTimeout(vuota, 2000);
 		  }		
 		}
 		
@@ -200,7 +200,7 @@ const char WebPage[] PROGMEM = R"=====(
 		    };
 		    xhttp.open("GET", TimeReleFunc+i, true);
 		    xhttp.send();
-			setTimeout(vuota, 1000);
+			setTimeout(vuota, 2000);
 		  }
 		}
 	
@@ -274,7 +274,7 @@ const char WebPage[] PROGMEM = R"=====(
 		}
 	</style>
     </head>
-    <body onload="GetArduinoIO();" style="background: linear-gradient(to top, #ffffff 80%, #ccffff 100%);">
+    <body style="background: linear-gradient(to top, #ffffff 80%, #ccffff 100%);">
         <h1>Smart Power-Strip</h1>
 		<h2>Gestione delle prese e controllo tempi</h2>
 		<table style="width:100%;" border="1px solid black;">
@@ -296,6 +296,22 @@ const char WebPage[] PROGMEM = R"=====(
 </html>
 
 )=====";
+
+void HandleNotFound() 
+{
+  String message = "File Not Found\n\n";
+  message += "URI: ";
+  message += server.uri();
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET) ? "GET" : "POST";
+  message += "\nArguments: ";
+  message += server.args();
+  message += "\n";
+  for (uint8_t i = 0; i < server.args(); i++) {
+    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+  }
+  server.send(404, "text/plain", message);
+}
 
 void HandleHomePage()
 {

@@ -80,11 +80,7 @@ void CheckEvents()
 {
 	TakePresentTime();
 	TakeReleTime();
-	if(Flag.WifiActive)
-	{
-		client = server.available();
-		WebClient();
-	}
+	WebClient();
 }
 
 void RebootESP()

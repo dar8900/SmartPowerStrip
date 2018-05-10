@@ -1,4 +1,5 @@
 
+void HandleNotFound(void); 
 void HandleHomePage(void);
 void HandleTimer1(void); 
 void HandleTimer2(void); 
