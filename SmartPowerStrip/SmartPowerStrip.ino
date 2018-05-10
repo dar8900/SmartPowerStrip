@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 #include "EEPROM_Ard.h"
 #include "LCDLib.h"
 #include "TimeLib.h"
@@ -16,7 +17,7 @@
 extern uint8_t AlarmIcon[];
 extern RELE Rele[];
 extern WiFiClient client;
-extern WiFiServer server;
+extern ESP8266WebServer server;
 
 uint8_t WifiConnectionOn[]
 {
@@ -129,8 +130,10 @@ void setup()
 	LCDInit();
 	RTCInit();
 	WifiInit();
-	WebServerInit();
-		
+	if(Flag.WifiActive)
+	{
+		WebServerInit();
+	}
 	LCDCreateIcon(WifiConnectionOn, WIFI_OK);
 	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
@@ -176,6 +179,14 @@ void setup()
 void loop() 
 {
 #ifndef FIRST_GO
-	MainScreen();
+
+	if(Flag.WifiActive)
+	{
+		server.handleClient();
+	}
+	else
+	{
+		MainScreen();
+	}
 #endif
 }

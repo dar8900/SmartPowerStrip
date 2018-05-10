@@ -25,7 +25,8 @@ const char WebPage[] PROGMEM = R"=====(
     <head>
         <title>Smart Power-Strip</title>
 		<meta charset="UTF-8">
-        <script>		
+        <script>	
+			
 		function SetRele1(Status)
 		{
 			 var xhttp = new XMLHttpRequest();
@@ -145,63 +146,378 @@ const char WebPage[] PROGMEM = R"=====(
 			 xhttp.send();
 		}
 		
-		function vuota()
-		{
-		
-		}
-		
 		setInterval(function() 
 		{
-		  GetTurnOnRele();
-		}, 30000); //30s Seconds update rate
+		  GetTurnOnRele1();
+		}, 65); //30s Seconds update rate
 		 
-		function GetTurnOnRele()
+		function GetTurnOnRele1()
 		{
 		  var i;
-		  var TurnOnReleId = "TURN_ON_RELE";
-		  var TurnOnReleFunc = "TurnOnRele";
-		  for (i = 1; i < 9; i++)
-		  { 
-		    var xhttp = new XMLHttpRequest();
-		    xhttp.onreadystatechange = function() 
-		    {
-			  if (this.readyState == 4 && this.status == 200) 
-			  {
-			    document.getElementById(TurnOnReleId+i).innerHTML =
-			    this.responseText;
-			  }
-		    };
-		    xhttp.open("GET", TurnOnReleFunc+i, true);
-		    xhttp.send();
-			setTimeout(vuota, 2000);
-		  }		
+		  var TurnOnReleId = "TURN_ON_RELE1";
+		  var TurnOnReleFunc = "TurnOnRele1";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
 		}
 		
 		setInterval(function() 
 		{
-		  GetTimerTimeRele();
-		}, 60000); // 60s Seconds update rate
-		 		
-		function GetTimerTimeRele()
+		  GetTurnOnRele2();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele2()
 		{
 		  var i;
-		  var TimerReleId = "TIMER_RELE";
-		  var TimeReleFunc = "TimerRele";
-		  for (i = 1; i < 9; i++)
-		  { 
-		    var xhttp = new XMLHttpRequest();
-		    xhttp.onreadystatechange = function() 
-		    {
+		  var TurnOnReleId = "TURN_ON_RELE2";
+		  var TurnOnReleFunc = "TurnOnRele2";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+		
+	    setInterval(function() 
+		{
+		  GetTurnOnRele3();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele3()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE3";
+		  var TurnOnReleFunc = "TurnOnRele3";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+				setInterval(function() 
+		{
+		  GetTurnOnRele4();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele4()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE4";
+		  var TurnOnReleFunc = "TurnOnRele4";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+				setInterval(function() 
+		{
+		  GetTurnOnRele5();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele5()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE5";
+		  var TurnOnReleFunc = "TurnOnRele5";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+				setInterval(function() 
+		{
+		  GetTurnOnRele6();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele6()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE6";
+		  var TurnOnReleFunc = "TurnOnRele6";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+				setInterval(function() 
+		{
+		  GetTurnOnRele7();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele7()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE7";
+		  var TurnOnReleFunc = "TurnOnRele7";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+				setInterval(function() 
+		{
+		  GetTurnOnRele8();
+		}, 65); //30s Seconds update rate
+		 
+		function GetTurnOnRele8()
+		{
+		  var i;
+		  var TurnOnReleId = "TURN_ON_RELE8";
+		  var TurnOnReleFunc = "TurnOnRele8";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(TurnOnReleId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", TurnOnReleFunc, true);
+		  xhttp.send();	
+		}
+		
+		setInterval(function() 
+		{
+		  GetTimerTimeRele1();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele1()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE1";
+		  var TimeReleFunc = "TimerRele1";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
 			  if (this.readyState == 4 && this.status == 200) 
-			  {
-			    document.getElementById(TimerReleId+i).innerHTML =
-			    this.responseText;
-			  }
-		    };
-		    xhttp.open("GET", TimeReleFunc+i, true);
-		    xhttp.send();
-			setTimeout(vuota, 2000);
-		  }
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+		
+		setInterval(function() 
+		{
+		  GetTimerTimeRele2();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele2()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE2";
+		  var TimeReleFunc = "TimerRele2";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+		
+				setInterval(function() 
+		{
+		  GetTimerTimeRele3();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele3()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE3";
+		  var TimeReleFunc = "TimerRele3";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+				setInterval(function() 
+		{
+		  GetTimerTimeRele4();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele4()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE4";
+		  var TimeReleFunc = "TimerRele4";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+				setInterval(function() 
+		{
+		  GetTimerTimeRele5();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele5()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE5";
+		  var TimeReleFunc = "TimerRele5";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+				setInterval(function() 
+		{
+		  GetTimerTimeRele6();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele6()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE6";
+		  var TimeReleFunc = "TimerRele6";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+				setInterval(function() 
+		{
+		  GetTimerTimeRele7();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele7()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE7";
+		  var TimeReleFunc = "TimerRele7";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
+		}
+				setInterval(function() 
+		{
+		  GetTimerTimeRele8();
+		}, 65); // 60s Seconds update rate
+		 		
+		function GetTimerTimeRele8()
+		{
+		  var i;
+		  var TimerReleId = "TIMER_RELE8";
+		  var TimeReleFunc = "TimerRele8";
+
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			  if (this.readyState == 4 && this.status == 200) 
+			  
+			   document.getElementById(TimerReleId).innerHTML =
+			   this.responseText;
+			  
+		  };
+		  xhttp.open("GET", TimeReleFunc, true);
+		  xhttp.send();
+		  
 		}
 	
 	</script>
@@ -274,7 +590,8 @@ const char WebPage[] PROGMEM = R"=====(
 		}
 	</style>
     </head>
-    <body style="background: linear-gradient(to top, #ffffff 80%, #ccffff 100%);">
+    <body 
+	style="background: linear-gradient(to top, #ffffff 80%, #ccffff 100%);">
         <h1>Smart Power-Strip</h1>
 		<h2>Gestione delle prese e controllo tempi</h2>
 		<table style="width:100%;" border="1px solid black;">
@@ -319,6 +636,96 @@ void HandleHomePage()
 	server.send(200, "text/html", Page); //Send web page
 }
 
+
+void HandleStatus1()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_1].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+
+void HandleStatus2()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_2].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus3()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_3].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus4()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_4].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus5()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_5].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus6()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_6].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus7()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_7].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+void HandleStatus8()
+{
+	CheckEvents();
+	String StatusStr;
+	if(Rele[RELE_8].IsActive)
+		StatusStr = "ACCESA";
+	else
+		StatusStr = "SPENTA";
+	
+	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
 
 void HandleTimer1() 
 {
@@ -421,7 +828,7 @@ void HandleTurnOn1()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_1].IsActive)
-		TurnOnStr = String(Rele[RELE_1].TurnOnTime.day) + "g " + String(Rele[RELE_1].TurnOnTime.hour) + "h " + String(Rele[RELE_1].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_1].ActiveTime.day) + "g " + String(Rele[RELE_1].ActiveTime.hour) + "h " + String(Rele[RELE_1].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -433,7 +840,7 @@ void HandleTurnOn2()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_2].IsActive)
-		TurnOnStr = String(Rele[RELE_2].TurnOnTime.day) + "g " + String(Rele[RELE_2].TurnOnTime.hour) + "h " + String(Rele[RELE_2].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_2].ActiveTime.day) + "g " + String(Rele[RELE_2].ActiveTime.hour) + "h " + String(Rele[RELE_2].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -444,7 +851,7 @@ void HandleTurnOn3()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_3].IsActive)
-		TurnOnStr = String(Rele[RELE_3].TurnOnTime.day) + "g " + String(Rele[RELE_3].TurnOnTime.hour) + "h " + String(Rele[RELE_3].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_3].ActiveTime.day) + "g " + String(Rele[RELE_3].ActiveTime.hour) + "h " + String(Rele[RELE_3].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -455,7 +862,7 @@ void HandleTurnOn4()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_4].IsActive)
-		TurnOnStr = String(Rele[RELE_4].TurnOnTime.day) + "g " + String(Rele[RELE_4].TurnOnTime.hour) + "h " + String(Rele[RELE_4].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_4].ActiveTime.day) + "g " + String(Rele[RELE_4].ActiveTime.hour) + "h " + String(Rele[RELE_4].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA"; 
 	
@@ -466,7 +873,7 @@ void HandleTurnOn5()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_5].IsActive)
-		TurnOnStr = String(Rele[RELE_5].TurnOnTime.day) + "g " + String(Rele[RELE_5].TurnOnTime.hour) + "h " + String(Rele[RELE_5].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_5].ActiveTime.day) + "g " + String(Rele[RELE_5].ActiveTime.hour) + "h " + String(Rele[RELE_5].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -477,7 +884,7 @@ void HandleTurnOn6()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_6].IsActive)
-		TurnOnStr = String(Rele[RELE_6].TurnOnTime.day) + "g " + String(Rele[RELE_6].TurnOnTime.hour) + "h " + String(Rele[RELE_6].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_6].ActiveTime.day) + "g " + String(Rele[RELE_6].ActiveTime.hour) + "h " + String(Rele[RELE_6].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA"; 
 	
@@ -488,7 +895,7 @@ void HandleTurnOn7()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_7].IsActive)
-		TurnOnStr = String(Rele[RELE_7].TurnOnTime.day) + "g " + String(Rele[RELE_7].TurnOnTime.hour) + "h " + String(Rele[RELE_7].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_7].ActiveTime.day) + "g " + String(Rele[RELE_7].ActiveTime.hour) + "h " + String(Rele[RELE_7].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -500,7 +907,7 @@ void HandleTurnOn8()
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_8].IsActive)
-		TurnOnStr = String(Rele[RELE_8].TurnOnTime.day) + "g " + String(Rele[RELE_8].TurnOnTime.hour) + "h " + String(Rele[RELE_8].TurnOnTime.minute) + "m";
+		TurnOnStr = String(Rele[RELE_8].ActiveTime.day) + "g " + String(Rele[RELE_8].ActiveTime.hour) + "h " + String(Rele[RELE_8].ActiveTime.minute) + "m";
 	else
 		TurnOnStr = "SPENTA";
 	
@@ -519,23 +926,26 @@ void HandleRele1()
 			Rele[RELE_1].IsActive = true;
 			Rele[RELE_1].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_1].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;	
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_1].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_1)); //LED OFF
-			Rele[RELE_1].IsActive = true;
+			Rele[RELE_1].IsActive = false;
 			Rele[RELE_1].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_1].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter 
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele2() 
@@ -550,23 +960,26 @@ void HandleRele2()
 			Rele[RELE_2].IsActive = true;
 			Rele[RELE_2].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_2].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;		
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_2].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_2)); //LED OFF
-			Rele[RELE_2].IsActive = true;
+			Rele[RELE_2].IsActive = false;
 			Rele[RELE_2].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_2].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter  
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 void HandleRele3() 
 {
@@ -580,23 +993,26 @@ void HandleRele3()
 			Rele[RELE_3].IsActive = true;
 			Rele[RELE_3].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_3].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;	
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_3].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_3)); //LED OFF
-			Rele[RELE_3].IsActive = true;
+			Rele[RELE_3].IsActive = false;
 			Rele[RELE_3].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_3].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter  
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele4() 
@@ -611,23 +1027,26 @@ void HandleRele4()
 			Rele[RELE_4].IsActive = true;
 			Rele[RELE_4].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_4].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;	
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_4].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_4)); //LED OFF
-			Rele[RELE_4].IsActive = true;
+			Rele[RELE_4].IsActive = false;
 			Rele[RELE_4].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_4].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter  
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele5() 
@@ -642,23 +1061,27 @@ void HandleRele5()
 			Rele[RELE_5].IsActive = true;
 			Rele[RELE_5].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_5].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_5].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_5].TurnOnTime.minute = PresentTime.minute;
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_5].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_5)); //LED OFF
-			Rele[RELE_5].IsActive = true;
+			Rele[RELE_5].IsActive = false;
 			Rele[RELE_5].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_5].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
+			
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter 
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele6()
@@ -673,23 +1096,26 @@ void HandleRele6()
 			Rele[RELE_6].IsActive = true;
 			Rele[RELE_6].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_6].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_6].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_6].TurnOnTime.minute = PresentTime.minute;	
+			LedStatus = "ACCESA"; //Feedback parameter
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_6].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_6)); //LED OFF
-			Rele[RELE_6].IsActive = true;
+			Rele[RELE_6].IsActive = false;
 			Rele[RELE_6].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_6].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter 
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele7() 
@@ -704,23 +1130,26 @@ void HandleRele7()
 			Rele[RELE_7].IsActive = true;
 			Rele[RELE_7].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_7].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_7].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_7].TurnOnTime.minute = PresentTime.minute;
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_7].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_7)); //LED OFF
-			Rele[RELE_7].IsActive = true;
+			Rele[RELE_7].IsActive = false;
 			Rele[RELE_7].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_7].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter 
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }
 
 void HandleRele8()
@@ -735,21 +1164,24 @@ void HandleRele8()
 			Rele[RELE_8].IsActive = true;
 			Rele[RELE_8].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_8].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_8].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_8].TurnOnTime.minute = PresentTime.minute;
+			LedStatus = "ACCESA"; //Feedback parameter			
 		}
-		LedStatus = "ACCESA"; //Feedback parameter
+		else
+			LedStatus = "GIA ACCESA"; //Feedback parameter
 	}
 	else
 	{
 		if(Rele[RELE_8].IsActive)
 		{
 			OFF(ReleIdx2Pin(RELE_8)); //LED OFF
-			Rele[RELE_8].IsActive = true;
+			Rele[RELE_8].IsActive = false;
 			Rele[RELE_8].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_8].TurnOnTime = SetTimeVarRele(0,0,0,0);
+			LedStatus = "SPENTA"; //Feedback parameter
 		}
-		LedStatus = "SPENTA"; //Feedback parameter  
+		else
+			LedStatus = "GIA SPENTA"; //Feedback parameter  
 	}
 	server.send(200, "text/plane", LedStatus); //Send web page	
-	delay(200);
 }

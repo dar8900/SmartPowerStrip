@@ -139,6 +139,16 @@ String WifiIP()
 void WebServerInit()
 {
 	server.on("/", HandleHomePage);      //Which routine to handle at root location. This is display page
+	
+	server.on("/GetStatusRele1", HandleStatus1);
+	server.on("/GetStatusRele2", HandleStatus2);
+	server.on("/GetStatusRele3", HandleStatus3);
+	server.on("/GetStatusRele4", HandleStatus4);
+	server.on("/GetStatusRele5", HandleStatus5);
+	server.on("/GetStatusRele6", HandleStatus6);
+	server.on("/GetStatusRele7", HandleStatus7);
+	server.on("/GetStatusRele8", HandleStatus8);
+	
 	server.on("/SetRele1", HandleRele1);
 	server.on("/SetRele2", HandleRele2);
 	server.on("/SetRele3", HandleRele3);
@@ -147,6 +157,7 @@ void WebServerInit()
 	server.on("/SetRele6", HandleRele6);
 	server.on("/SetRele7", HandleRele7);
 	server.on("/SetRele8", HandleRele8);
+	
 	server.on("/TurnOnRele1", HandleTurnOn1);
 	server.on("/TurnOnRele2", HandleTurnOn2);
 	server.on("/TurnOnRele3", HandleTurnOn3);
@@ -155,6 +166,7 @@ void WebServerInit()
 	server.on("/TurnOnRele6", HandleTurnOn6);
 	server.on("/TurnOnRele7", HandleTurnOn7);
 	server.on("/TurnOnRele8", HandleTurnOn8);
+	
 	server.on("/TimerRele1", HandleTimer1);
 	server.on("/TimerRele2", HandleTimer2);
 	server.on("/TimerRele3", HandleTimer3);
@@ -164,7 +176,11 @@ void WebServerInit()
 	server.on("/TimerRele7", HandleTimer7);
 	server.on("/TimerRele8", HandleTimer8);
 	server.onNotFound(HandleNotFound);
-	server.begin();    
+	server.begin();
+	ClearLCD();
+	LCDPrintString(TWO, CENTER_ALIGN, "Server Avviato");
+	delay(1000);
+	ClearLCD();
 }
 
 void WifiDisconnect()
