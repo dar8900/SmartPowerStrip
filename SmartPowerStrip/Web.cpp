@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>
-// #include <ESP8266WebServer.h>
+#include <ESP8266WebServer.h>
 #include <Arduino.h>
 #include "Web.h"
 #include "LCDLib.h"
@@ -18,12 +18,13 @@ extern FLAGS Flag;
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
 extern BAND_FORMAT Band;
+extern ESP8266WebServer server;
 
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
-
-char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
-char req_index = 0;              // index into HTTP_req buffer
+short WifiItemSsid;
+// WiFiServer server(80);
+WiFiClient client;
 
 WIFI_LIST List[] = 
 {
@@ -35,10 +36,7 @@ WIFI_LIST List[] =
 	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		},
 };
 
-short WifiItemSsid;
 
-// WiFiServer server(80);
-WiFiClient client;
 
 void WifiInit()
 {
@@ -140,7 +138,32 @@ String WifiIP()
 
 void WebServerInit()
 {
-    // server.begin();           // start to listen for clients
+	server.on("/", HandleHomePage);      //Which routine to handle at root location. This is display page
+	server.on("/SetRele1", HandleRele1);
+	server.on("/SetRele2", HandleRele2);
+	server.on("/SetRele3", HandleRele3);
+	server.on("/SetRele4", HandleRele4);
+	server.on("/SetRele5", HandleRele5);
+	server.on("/SetRele6", HandleRele6);
+	server.on("/SetRele7", HandleRele7);
+	server.on("/SetRele8", HandleRele8);
+	server.on("/TurnOnRele1", HandleTurnOn1);
+	server.on("/TurnOnRele2", HandleTurnOn2);
+	server.on("/TurnOnRele3", HandleTurnOn3);
+	server.on("/TurnOnRele4", HandleTurnOn4);
+	server.on("/TurnOnRele5", HandleTurnOn5);
+	server.on("/TurnOnRele6", HandleTurnOn6);
+	server.on("/TurnOnRele7", HandleTurnOn7);
+	server.on("/TurnOnRele8", HandleTurnOn8);
+	server.on("/TimerRele1", HandleTimer1);
+	server.on("/TimerRele2", HandleTimer2);
+	server.on("/TimerRele3", HandleTimer3);
+	server.on("/TimerRele4", HandleTimer4);
+	server.on("/TimerRele5", HandleTimer5);
+	server.on("/TimerRele6", HandleTimer6);
+	server.on("/TimerRele7", HandleTimer7);
+	server.on("/TimerRele8", HandleTimer8);
+	server.begin();    
 }
 
 void WifiDisconnect()
