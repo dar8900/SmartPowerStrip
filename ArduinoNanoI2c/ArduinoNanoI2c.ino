@@ -4,7 +4,6 @@
 #define  ON(pin)   digitalWrite(pin, HIGH)
 #define ARDUINO_ADDR	0x08
 
-#define YELLOW_LED 13
 
 typedef enum
 {
@@ -20,7 +19,8 @@ enum
 	UP = 2,
 	DOWN,
 	LEFT,
-	SET
+	SET,
+	BUTTON_LED
 };
 
 short ButtonPress = NO_PRESS;
@@ -81,7 +81,7 @@ void setup()
 	pinMode(DOWN, INPUT);
 	pinMode(LEFT, INPUT);
 	pinMode(SET, INPUT);
-	pinMode(YELLOW_LED, OUTPUT);
+	pinMode(BUTTON_LED, OUTPUT);
 	Wire.onRequest(SendButton);
 }
 
@@ -89,7 +89,7 @@ void loop()
 {
 	if(ChekButtons())
 	{
-		BlinkLed(YELLOW_LED);
+		BlinkLed(BUTTON_LED);
 		delay(200);
 	}
 }
