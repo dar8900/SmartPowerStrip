@@ -24,7 +24,7 @@ enum
 };
 
 bool SetupInterrupt(void);
-void MainScreen(void);
+void MainScreen(short EnterSetup);
 void MainMenu(void);
 bool ManualRele(void);
 bool ChangeTimeBand(void);

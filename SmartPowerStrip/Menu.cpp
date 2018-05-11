@@ -53,31 +53,28 @@ bool SetupInterrupt()
 	return EnterSetup;
 }
 
-void MainScreen()
+void MainScreen(short EnterSetup)
 {
 	String Time,Date;
 	short ReleIndx = 0;
 	int TimerMenu = 300; // 30s circa
-	short EnterSetup = NO_PRESS;
+	// short EnterSetup = NO_PRESS;
 	bool InBand = false, ExitFromBand = true;
 	ClearLCD();
+	CheckReleStatus();
 	CheckEvents();
-	LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
-	LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
-	LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
-	delay(2000);
-	ClearLCD();
-	while(1)
+	InBand = CheckBand();
+	if(InBand)
 	{
-		CheckReleStatus();
-		CheckEvents();
-		InBand = CheckBand();
-		if(InBand)
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Banda in attivazione");
+		delay(2500);
+		ClearLCD();
+		while(CheckBand())
 		{
-			ClearLCD();
-			LCDPrintString(TWO, CENTER_ALIGN, "Banda in attivazione");
-			delay(2500);
-			ClearLCD();
+			if(Flag.WifiActive)
+				WifiDisconnect();
+			
 			if(Flag.IsDisplayOn)
 			{
 				LCDDisplayOff();
@@ -95,76 +92,78 @@ void MainScreen()
 					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);				
 				}
 			}
-
-			EnterSetup = NO_PRESS;
-			ExitFromBand = false;
+		}
+		EnterSetup = NO_PRESS;
+		ExitFromBand = false;
+	}
+	else
+	{
+		if(!ExitFromBand)
+		{
+			LCDDisplayOn();
+			Flag.IsDisplayOn = true;
+			LCDPrintString(TWO, CENTER_ALIGN, "Uscita dalla banda");
+			delay(2000);
+			ClearLCD();
+			ReleReStart();
+			ExitFromBand = true;
+		}
+		// EnterSetup = CheckButtons(); 
+		// if(EnterSetup == BUTTON_SET)
+		// {
+			// break;
+		// }
+		// Scrittura data e ora
+		Time = String(PresentTime.hour);
+		if(PresentTime.minute < 10)
+		{
+			Time += ":0" + String(PresentTime.minute);
 		}
 		else
 		{
-			if(!ExitFromBand)
-			{
-				LCDDisplayOn();
-				Flag.IsDisplayOn = true;
-				LCDPrintString(TWO, CENTER_ALIGN, "Uscita dalla banda");
-				delay(2000);
-				ClearLCD();
-				ReleReStart();
-				ExitFromBand = true;
-			}
-			EnterSetup = CheckButtons(); 
-			if(EnterSetup == BUTTON_SET)
-			{
-				break;
-			}
-			// Scrittura data e ora
-			Time = String(PresentTime.hour);
-			if(PresentTime.minute < 10)
-			{
-				Time += ":0" + String(PresentTime.minute);
-			}
-			else
-			{
-				Time += ":" + String(PresentTime.minute);
-			}
-			Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
-			LCDPrintString(ONE, LEFT_ALIGN, Time);
-			LCDPrintString(ONE, RIGHT_ALIGN, Date);
-			// Stato relè
-			LCDPrintString(TWO, CENTER_ALIGN, "Prese attive:");
-			ShowReleIcons(THREE);
-			// Stato wifi
-			LCDPrintString(FOUR, LEFT_ALIGN, "Wifi status: ");
-			if(Flag.WifiActive)
-			{
-				LCDMoveCursor(FOUR, 14);
-				LCDShowIcon(WIFI_OK);
-			}
-			else
-			{
-				LCDMoveCursor(FOUR, 14);
-				LCDShowIcon(WIFI_NO);
-			}
-			
-			// GESTIONE PARTE WEB
-			
-			TimerMenu--;
-			if(TimerMenu == 0)
-			{
-				ClearLCD();
-				CheckEvents();
-				LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
-				LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
-				LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
-				delay(2000);
-				CheckEvents();
-				TimerMenu = 300;
-				ClearLCD();
-			}
+			Time += ":" + String(PresentTime.minute);
 		}
-		delay(60);
+		Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
+		LCDPrintString(ONE, LEFT_ALIGN, Time);
+		LCDPrintString(ONE, RIGHT_ALIGN, Date);
+		// Stato relè
+		LCDPrintString(TWO, CENTER_ALIGN, "Prese attive:");
+		ShowReleIcons(THREE);
+		// Stato wifi
+		LCDPrintString(FOUR, LEFT_ALIGN, "Wifi status: ");
+		if(Flag.WifiActive)
+		{
+			LCDMoveCursor(FOUR, 14);
+			LCDShowIcon(WIFI_OK);
+		}
+		else
+		{
+			LCDMoveCursor(FOUR, 14);
+			LCDShowIcon(WIFI_NO);
+		}
+		
+		// GESTIONE PARTE WEB
+		
+		// TimerMenu--;
+		// if(TimerMenu == 0)
+		// {
+			// ClearLCD();
+			// CheckEvents();
+			// LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
+			// LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
+			// LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
+			// delay(2000);
+			// CheckEvents();
+			// TimerMenu = 300;
+			// ClearLCD();
+		// }
 	}
-	MainMenu();
-	EnterSetup = NO_PRESS;
+	if(EnterSetup == BUTTON_SET)
+	{
+		MainMenu();
+		EnterSetup = NO_PRESS;		
+	}
+
 }
 
 void MainMenu()

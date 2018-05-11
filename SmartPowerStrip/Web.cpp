@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+
 #include <ESP8266WebServer.h>
 #include <Arduino.h>
 #include "Web.h"
@@ -23,8 +23,7 @@ extern ESP8266WebServer server;
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
 short WifiItemSsid;
-WiFiServer ClientServer(80);
-WiFiClient client;
+// WiFiServer ClientServer(80);
 
 WIFI_LIST List[] = 
 {
@@ -158,6 +157,8 @@ void WebServerInit()
 	server.on("/SetRele7", HandleRele7);
 	server.on("/SetRele8", HandleRele8);
 	
+	server.on("/BandStatus", HandleBandStatus);
+	
 	server.on("/TurnOnRele1", HandleTurnOn1);
 	server.on("/TurnOnRele2", HandleTurnOn2);
 	server.on("/TurnOnRele3", HandleTurnOn3);
@@ -196,35 +197,24 @@ void WifiDisconnect()
 	ClearLCD();
 }
 
-static bool ClientConnected()
-{
-	WiFiClient client = ClientServer.available();
-	if(client)
-		return true;
-	else
-		return false;
-}
+// static bool ClientConnected()
+// {
+	// WiFiClient client = ClientServer.available();
+	// if(client)
+	// {
+		// Flag.ClientConnected = true;
+		// client.stop();
+		// return true;
+	// }		
+	// else
+	// {	
+		// Flag.ClientConnected = false;
+		// return false;
+	// }
+
+// }
 
 void WebClient()
 {
-	if(Flag.WifiActive)
-	{
-		if(ClientConnected())
-		{
-			ClearLCD();
-			LCDPrintString(THREE, CENTER_ALIGN, "Client CONNESSO");
-			while(ClientConnected())
-			{
-				TakePresentTime();
-				TakeReleTime();
-				server.handleClient();
-				delay(50);
-			}
-			LCDPrintLineVoid(THREE);
-			LCDPrintString(THREE, CENTER_ALIGN, "Client DISCONNESSO");
-			delay(1500);
-			ClearLCD();
-			CheckReleStatus();
-		}
-	}
+	server.handleClient(); 
 }

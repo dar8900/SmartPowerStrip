@@ -2,6 +2,8 @@
 void HandleNotFound(void); 
 void HandleHomePage(void);
 
+void HandleBandStatus(void);
+
 void HandleStatus1(void);
 void HandleStatus2(void);
 void HandleStatus3(void);

@@ -15,6 +15,7 @@
 
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
+extern FLAGS Flag;
 ESP8266WebServer server(80);
 
 
@@ -145,11 +146,34 @@ const char WebPage[] PROGMEM = R"=====(
 			 xhttp.open("GET", "SetRele8?STATUS_RELE8="+Status, true);
 			 xhttp.send();
 		}
+
+		setInterval(function() 
+		{
+		  GetBandStatus();
+		}, 60000);
+		 
+		function GetBandStatus()
+		{
+		  var i;
+		  var BandStatusId = "BAND_ACTIVE";
+		  var BandStatusFunc = "BandStatus";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() 
+		  {
+			if (this.readyState == 4 && this.status == 200) 
+			{
+			  document.getElementById(BandStatusId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", BandStatusFunc, true);
+		  xhttp.send();	
+		}
 		
 		setInterval(function() 
 		{
 		  GetTurnOnRele1();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele1()
 		{
@@ -172,7 +196,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTurnOnRele2();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele2()
 		{
@@ -195,7 +219,7 @@ const char WebPage[] PROGMEM = R"=====(
 	    setInterval(function() 
 		{
 		  GetTurnOnRele3();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele3()
 		{
@@ -217,7 +241,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele4();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele4()
 		{
@@ -239,7 +263,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele5();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele5()
 		{
@@ -261,7 +285,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele6();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele6()
 		{
@@ -283,7 +307,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele7();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele7()
 		{
@@ -305,7 +329,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele8();
-		}, 65); //30s Seconds update rate
+		}, 15000); //30s Seconds update rate
 		 
 		function GetTurnOnRele8()
 		{
@@ -328,7 +352,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTimerTimeRele1();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele1()
 		{
@@ -353,7 +377,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTimerTimeRele2();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele2()
 		{
@@ -378,7 +402,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele3();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele3()
 		{
@@ -402,7 +426,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele4();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele4()
 		{
@@ -426,7 +450,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele5();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele5()
 		{
@@ -450,7 +474,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele6();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele6()
 		{
@@ -474,7 +498,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele7();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele7()
 		{
@@ -498,7 +522,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele8();
-		}, 65); // 60s Seconds update rate
+		}, 15000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele8()
 		{
@@ -725,6 +749,17 @@ void HandleStatus8()
 		StatusStr = "SPENTA";
 	
 	server.send(200, "text/plane", StatusStr); //Send to client ajax request
+}
+
+void HandleBandStatus()
+{
+	String BandStatusStr;
+	if(Flag.IsBandSetted)
+		BandStatusStr = "SETTATA";
+	else
+		BandStatusStr = "NON SETTATA";
+	
+	server.send(200, "text/plane", BandStatusStr); //Send to client ajax request	
 }
 
 void HandleTimer1() 

@@ -9,6 +9,7 @@
 #include "Menu.h"
 #include "Band.h"
 #include "Rele.h"
+#include "Buttons.h"
 
 
 #undef FIRST_GO
@@ -165,6 +166,12 @@ void setup()
 		ReleInit(false);	
 		BandInit();	
 	}
+	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
+	LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
+	LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
+	delay(1500);
+	ClearLCD();
 #else
 	Wire.begin(SDA, SCL);
 	EepromInit();
@@ -179,14 +186,12 @@ void setup()
 void loop() 
 {
 #ifndef FIRST_GO
-
+	short EnterSetup = NO_PRESS;
+	EnterSetup = CheckButtons();
 	if(Flag.WifiActive)
 	{
 		server.handleClient();
 	}
-	else
-	{
-		MainScreen();
-	}
+	MainScreen(EnterSetup);
 #endif
 }
