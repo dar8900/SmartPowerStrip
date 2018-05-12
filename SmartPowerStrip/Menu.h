@@ -1,3 +1,5 @@
+#define REFRESH_MAIN_SCREEN_TIMER	600
+
 typedef enum
 {
 	MANUAL_RELE = 0,
@@ -29,7 +31,6 @@ void MainMenu(void);
 bool ManualRele(void);
 bool ChangeTimeBand(void);
 bool WifiConnect(void);
-bool ChangeTime(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);

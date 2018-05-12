@@ -50,7 +50,7 @@ void TurnOnAllRele()
 		Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 		Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 		Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
-		WriteMemory(Rele[ReleIndx].EepromAddr, STATUS_ON);
+		SaveReleStatus(ReleIndx, STATUS_ON);
 		delay(500);
 	}
 	Flag.AllReleDown = false;
@@ -58,7 +58,7 @@ void TurnOnAllRele()
 }
 
 static short TmpMinute;
-static bool NewMinute = false;
+static bool NewMinute[RELE_MAX];
 
 void TakeReleTime()
 {
@@ -75,10 +75,10 @@ void TakeReleTime()
 					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute;
 					if(Rele[ReleIndx].ActiveTime.minute == 59)
 					{
-						if(NewMinute)
+						if(NewMinute[ReleIndx])
 						{
 							Rele[ReleIndx].ActiveTime.hour += 1;
-							NewMinute = false;
+							NewMinute[ReleIndx] = false;
 						}
 					}
 				}
@@ -86,7 +86,7 @@ void TakeReleTime()
 				{
 					Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
 					TmpMinute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
-					NewMinute = true;
+					NewMinute[ReleIndx] = true;
 				}				
 				if(Rele[ReleIndx].ActiveTime.hour > 24)
 				{
@@ -109,12 +109,17 @@ void TakeReleTime()
 					String ReleName;
 					ReleName = "Presa " + String(ReleIndx+1) + " spenta";
 					LCDShowPopUp(ReleName);
+					SaveReleStatus(ReleIndx, STATUS_OFF);
 				}
 			}
 		}
 	}
 }
 
+void SaveReleStatus(short ReleIndx, short Status)
+{
+	WriteMemory(Rele[ReleIndx].EepromAddr, Status);
+}
 
 bool ReleInit(bool FirstGo)
 {

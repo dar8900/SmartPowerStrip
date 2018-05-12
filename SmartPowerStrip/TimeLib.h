@@ -5,6 +5,8 @@
 #define HOUR_IN_DAY			  23
 #define MINUTE_IN_HOUR 	      59
 
+
+
 #define PRESENT_DAY_HOUR_MINUTE_SECOND ((PresentTime.day * SEC_IN_DAY) + (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second)
 
 typedef struct
@@ -17,7 +19,18 @@ typedef struct
 	short year;
 } TIME_DATE_FORMAT;
 
+enum
+{
+	CHANGE_HOUR = 0,
+	CHANGE_MINUTE,
+	CHANGE_DAY,
+	CHANGE_MONTH,
+	CHANGE_YEAR,
+	EXIT_CHANGE_TIME
+};
+
 
 void RTCInit(void);
-void TimeAdjust(short Hour, short Minute);
+bool ChangeTime(void);
+void TimeAdjust(short Hour, short Minute, short Day, short Month, short Year);
 void TakePresentTime(void);

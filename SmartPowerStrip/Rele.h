@@ -40,6 +40,8 @@ typedef struct
 	short EepromAddr;
 }RELE;
 
+void SaveReleStatus(short ReleIndx, short Status);
+
 bool ReleInit(bool FirstGo);
 void ReleReStart(void);
 void TakeReleTime(void);

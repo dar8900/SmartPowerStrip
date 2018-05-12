@@ -17,6 +17,8 @@ extern String HostName;
 extern WIFI_LIST List[];
 extern short WifiItemSsid;
 
+uint32_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+
 MENU_VOICES MainMenuItems[]
 {
 	{ManualRele		,	"Gestione Manuale"	},
@@ -57,10 +59,8 @@ void MainScreen(short EnterSetup)
 {
 	String Time,Date;
 	short ReleIndx = 0;
-	int TimerMenu = 300; // 30s circa
 	// short EnterSetup = NO_PRESS;
 	bool InBand = false, ExitFromBand = true;
-	ClearLCD();
 	CheckReleStatus();
 	CheckEvents();
 	InBand = CheckBand();
@@ -141,27 +141,35 @@ void MainScreen(short EnterSetup)
 			LCDMoveCursor(FOUR, 14);
 			LCDShowIcon(WIFI_NO);
 		}
+	
 		
-		// GESTIONE PARTE WEB
-		
-		// TimerMenu--;
-		// if(TimerMenu == 0)
-		// {
-			// ClearLCD();
-			// CheckEvents();
-			// LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
-			// LCDPrintString(TWO, CENTER_ALIGN, "per entrare nel");
-			// LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
-			// delay(2000);
-			// CheckEvents();
-			// TimerMenu = 300;
-			// ClearLCD();
-		// }
+		TimerRefreshMenu--;
+		if(TimerRefreshMenu == 0)
+		{
+			TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+			LCDDisplayOff();
+			Flag.IsDisplayOn = false;
+		}
 	}
 	if(EnterSetup == BUTTON_SET)
 	{
+		if(!Flag.IsDisplayOn)
+		{
+			LCDDisplayOn();
+			Flag.IsDisplayOn = true;
+		}
 		MainMenu();
+		ClearLCD();
 		EnterSetup = NO_PRESS;		
+	}
+	else
+	{
+		if(!Flag.IsDisplayOn)
+		{
+			Flag.IsDisplayOn = true;
+			LCDDisplayOn();	
+		}
+				
 	}
 
 }
@@ -341,7 +349,7 @@ bool ManualRele()
 			TurnOffAllRele();
 			for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 			{
-				WriteMemory(Rele[ReleIndx].EepromAddr, STATUS_OFF);
+				SaveReleStatus(ReleIndx, STATUS_OFF);
 			}
 			LCDShowPopUp("Tutte Spente");
 		}
@@ -420,7 +428,7 @@ bool ManualRele()
 							Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 							Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
 						}
-						WriteMemory(Rele[ReleIndx].EepromAddr, Status);
+						SaveReleStatus(ReleIndx, Status);
 						ReleSetted = true;
 						delay(1000);
 						ClearLCD();
@@ -613,94 +621,7 @@ bool WifiConnect()
 	return true;
 }
 
-bool ChangeTime()
-{
-	TakePresentTime();
-	short Hour = PresentTime.hour, Minute = PresentTime.minute, TimeSM = END_HOUR;
-	short ButtonPress = NO_PRESS;
-	bool ExitTimeChange = false;
-	String MinuteStr;
-	ClearLCD();
-	while(!ExitTimeChange)
-	{
-		CheckEvents();
-		LCDPrintString(ONE, CENTER_ALIGN, "Cambia orario");
-		ButtonPress = CheckButtons();
-		switch(TimeSM)
-		{
-			case END_HOUR:
-				LCDPrintString(TWO, CENTER_ALIGN, "Ora:");
-				LCDPrintValue(THREE, CENTER_ALIGN, Hour);
-				switch(ButtonPress)
-				{
-					case BUTTON_UP:	
-						if(Hour > 0)
-							Hour--;
-						else
-							Hour = HOUR_IN_DAY;
-						ClearLCD();
-						break;
-					case BUTTON_DOWN:
-						if(Hour < HOUR_IN_DAY)
-							Hour++;
-						else
-							Hour = 0;
-						ClearLCD();
-						break;
-					case BUTTON_SET:
-						TimeSM = END_MINUTE;
-						break;
-					case BUTTON_LEFT:
-					default:
-						break;
-				}
-				break;
-			case END_MINUTE:
-				LCDPrintString(TWO, CENTER_ALIGN, "Minuti:");
-				if(Minute < 10)
-				{
-					MinuteStr = "0" + String(Minute);
-				}
-				else
-				{
-					MinuteStr = String(Minute);
-				}
-				LCDPrintString(THREE, CENTER_ALIGN, MinuteStr);
-				switch(ButtonPress)
-				{
-					case BUTTON_UP:	
-						if(Minute > 0)
-							Minute--;
-						else
-							Minute = MINUTE_IN_HOUR;
-						ClearLCD();
-						break;
-					case BUTTON_DOWN:
-						if(Minute < MINUTE_IN_HOUR)
-							Minute++;
-						else
-							Minute = 0;
-						ClearLCD();
-						break;
-					case BUTTON_SET:
-						TimeSM = EXIT;
-						break;
-					case BUTTON_LEFT:
-					default:
-						break;
-				}
-				break;
-			case EXIT:
-				ExitTimeChange = true;
-				ClearLCD();
-				break;
-			default:
-				break;
-		}
-		delay(60);
-	}
-	TimeAdjust(Hour, Minute);
-}
+
 
 
 bool HelpInfo()

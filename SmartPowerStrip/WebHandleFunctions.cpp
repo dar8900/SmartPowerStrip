@@ -173,7 +173,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTurnOnRele1();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele1()
 		{
@@ -196,7 +196,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTurnOnRele2();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele2()
 		{
@@ -219,7 +219,7 @@ const char WebPage[] PROGMEM = R"=====(
 	    setInterval(function() 
 		{
 		  GetTurnOnRele3();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele3()
 		{
@@ -241,7 +241,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele4();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele4()
 		{
@@ -263,7 +263,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele5();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele5()
 		{
@@ -285,7 +285,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele6();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele6()
 		{
@@ -307,7 +307,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele7();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele7()
 		{
@@ -329,7 +329,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTurnOnRele8();
-		}, 15000); //30s Seconds update rate
+		}, 8000); //30s Seconds update rate
 		 
 		function GetTurnOnRele8()
 		{
@@ -352,7 +352,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTimerTimeRele1();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele1()
 		{
@@ -377,7 +377,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetTimerTimeRele2();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele2()
 		{
@@ -402,7 +402,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele3();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele3()
 		{
@@ -426,7 +426,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele4();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele4()
 		{
@@ -450,7 +450,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele5();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele5()
 		{
@@ -474,7 +474,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele6();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele6()
 		{
@@ -498,7 +498,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele7();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele7()
 		{
@@ -522,7 +522,7 @@ const char WebPage[] PROGMEM = R"=====(
 				setInterval(function() 
 		{
 		  GetTimerTimeRele8();
-		}, 15000); // 60s Seconds update rate
+		}, 8000); // 60s Seconds update rate
 		 		
 		function GetTimerTimeRele8()
 		{
@@ -619,7 +619,7 @@ const char WebPage[] PROGMEM = R"=====(
         <h1>Smart Power-Strip</h1>
 		<h2>Gestione delle prese e controllo tempi</h2>
 		<table style="width:100%;" border="1px solid black;">
-			<tr style="background-color:LightSkyBlue ;"><th>NOME PRESA</th><th>Accensione / Spegnimento</th><th>Stato Presa</th><th>Tempo Accensione</th><th>Tempo Spegnimento Timer</th></tr>
+			<tr style="background-color:LightSkyBlue ;"><th>NOME PRESA</th><th>Accensione / Spegnimento</th><th>Stato Presa</th><th>Tempo Accensione</th><th>Orario Spegnimento Timer</th></tr>
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 1</th><td><button class="button" onclick="SetRele1(1)">Accesa</button><button class="button" onclick="SetRele1(0)">Spenta</button></td><td id="STATUS_RELE1" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE1">0g 0h 0m</td><td id="TIMER_RELE1">0h 0m</td></tr>
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 2</th><td><button class="button" onclick="SetRele2(1)">Accesa</button><button class="button" onclick="SetRele2(0)">Spenta</button></td><td id="STATUS_RELE2" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE2">0g 0h 0m</td><td id="TIMER_RELE2">0h 0m</td></tr>
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 3</th><td><button class="button" onclick="SetRele3(1)">Accesa</button><button class="button" onclick="SetRele3(0)">Spenta</button></td><td id="STATUS_RELE3" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE3">0g 0h 0m</td><td id="TIMER_RELE3">0h 0m</td></tr>
@@ -629,7 +629,7 @@ const char WebPage[] PROGMEM = R"=====(
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" onclick="SetRele7(1)">Accesa</button><button class="button" onclick="SetRele7(0)">Spenta</button></td><td id="STATUS_RELE7" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE7">0g 0h 0m</td><td id="TIMER_RELE7">0h 0m</td></tr>
 			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" onclick="SetRele8(1)">Accesa</button><button class="button" onclick="SetRele8(0)">Spenta</button></td><td id="STATUS_RELE8" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE8">0g 0h 0m</td><td id="TIMER_RELE8">0h 0m</td></tr>
 		</table>
-		<p style="color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria:</p> <p id="BAND_ACTIVE"> <b style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:35px;">Disattivata</b> </p>
+		<p style="color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria:</p> <p style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:40px;" id="BAND_ACTIVE">Controllo in corso...</p>
 		<br>
 		<br>
 		<footer style="text-align:center;">&copy Dario Cavedale</footer>
@@ -767,7 +767,7 @@ void HandleTimer1()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_1].HaveTimer && Rele[RELE_1].IsActive)
-		TimerStr = String(Rele[RELE_1].TimerTime.hour) + "h " + String(Rele[RELE_1].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_1].TimerTime.hour) + ":" + String(Rele[RELE_1].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -779,7 +779,7 @@ void HandleTimer2()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_2].HaveTimer && Rele[RELE_2].IsActive)
-		TimerStr = String(Rele[RELE_2].TimerTime.hour) + "h " + String(Rele[RELE_2].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_2].TimerTime.hour) + ":" + String(Rele[RELE_2].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -791,7 +791,7 @@ void HandleTimer3()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_3].HaveTimer && Rele[RELE_3].IsActive)
-		TimerStr = String(Rele[RELE_3].TimerTime.hour) + "h " + String(Rele[RELE_3].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_3].TimerTime.hour) + ":" + String(Rele[RELE_3].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -803,7 +803,7 @@ void HandleTimer4()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_4].HaveTimer && Rele[RELE_4].IsActive)
-		TimerStr = String(Rele[RELE_4].TimerTime.hour) + "h " + String(Rele[RELE_4].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_4].TimerTime.hour) + ":" + String(Rele[RELE_4].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -815,7 +815,7 @@ void HandleTimer5()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_5].HaveTimer && Rele[RELE_5].IsActive)
-		TimerStr = String(Rele[RELE_5].TimerTime.hour) + "h " + String(Rele[RELE_5].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_5].TimerTime.hour) + ":" + String(Rele[RELE_5].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -827,7 +827,7 @@ void HandleTimer6()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_6].HaveTimer && Rele[RELE_6].IsActive)
-		TimerStr = String(Rele[RELE_6].TimerTime.hour) + "h " + String(Rele[RELE_6].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_6].TimerTime.hour) + ":" + String(Rele[RELE_6].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -839,7 +839,7 @@ void HandleTimer7()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_7].HaveTimer && Rele[RELE_7].IsActive)
-		TimerStr = String(Rele[RELE_7].TimerTime.hour) + "h " + String(Rele[RELE_7].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_7].TimerTime.hour) + ":" + String(Rele[RELE_7].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -851,7 +851,7 @@ void HandleTimer8()
 	CheckEvents();
 	String TimerStr;
 	if(Rele[RELE_8].HaveTimer && Rele[RELE_8].IsActive)
-		TimerStr = String(Rele[RELE_8].TimerTime.hour) + "h " + String(Rele[RELE_8].TimerTime.minute) + "m";
+		TimerStr = String(Rele[RELE_8].TimerTime.hour) + ":" + String(Rele[RELE_8].TimerTime.minute);
 	else
 		TimerStr = "NESSUN TIMER"; 
 	
@@ -962,7 +962,8 @@ void HandleRele1()
 			Rele[RELE_1].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_1].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;	
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter		
+			SaveReleStatus(RELE_1, STATUS_ON);			
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -976,6 +977,7 @@ void HandleRele1()
 			Rele[RELE_1].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_1].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter 
+			SaveReleStatus(RELE_1, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter
@@ -996,7 +998,8 @@ void HandleRele2()
 			Rele[RELE_2].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_2].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;		
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter		
+			SaveReleStatus(RELE_2, STATUS_ON);			
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1010,6 +1013,7 @@ void HandleRele2()
 			Rele[RELE_2].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_2].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_2, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter  
@@ -1029,7 +1033,8 @@ void HandleRele3()
 			Rele[RELE_3].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_3].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;	
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter
+			SaveReleStatus(RELE_3, STATUS_ON);
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1043,6 +1048,7 @@ void HandleRele3()
 			Rele[RELE_3].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_3].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_3, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter  
@@ -1063,7 +1069,8 @@ void HandleRele4()
 			Rele[RELE_4].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_4].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;	
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter
+			SaveReleStatus(RELE_4, STATUS_ON);
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1077,6 +1084,7 @@ void HandleRele4()
 			Rele[RELE_4].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_4].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_4, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter  
@@ -1097,7 +1105,8 @@ void HandleRele5()
 			Rele[RELE_5].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_5].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_5].TurnOnTime.minute = PresentTime.minute;
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter	
+			SaveReleStatus(RELE_5, STATUS_ON);
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1111,6 +1120,7 @@ void HandleRele5()
 			Rele[RELE_5].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_5].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_5, STATUS_OFF);
 			
 		}
 		else
@@ -1133,6 +1143,7 @@ void HandleRele6()
 			Rele[RELE_6].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_6].TurnOnTime.minute = PresentTime.minute;	
 			LedStatus = "ACCESA"; //Feedback parameter
+			SaveReleStatus(RELE_6, STATUS_ON);
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1146,6 +1157,7 @@ void HandleRele6()
 			Rele[RELE_6].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_6].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_6, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter 
@@ -1166,7 +1178,8 @@ void HandleRele7()
 			Rele[RELE_7].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_7].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_7].TurnOnTime.minute = PresentTime.minute;
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter
+			SaveReleStatus(RELE_7, STATUS_ON);
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1180,6 +1193,7 @@ void HandleRele7()
 			Rele[RELE_7].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_7].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_7, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter 
@@ -1200,7 +1214,8 @@ void HandleRele8()
 			Rele[RELE_8].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_8].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_8].TurnOnTime.minute = PresentTime.minute;
-			LedStatus = "ACCESA"; //Feedback parameter			
+			LedStatus = "ACCESA"; //Feedback parameter
+			SaveReleStatus(RELE_8, STATUS_ON);			
 		}
 		else
 			LedStatus = "GIA ACCESA"; //Feedback parameter
@@ -1214,6 +1229,7 @@ void HandleRele8()
 			Rele[RELE_8].ActiveTime = SetTimeVarRele(0,0,0,0);
 			Rele[RELE_8].TurnOnTime = SetTimeVarRele(0,0,0,0);
 			LedStatus = "SPENTA"; //Feedback parameter
+			SaveReleStatus(RELE_8, STATUS_OFF);
 		}
 		else
 			LedStatus = "GIA SPENTA"; //Feedback parameter  
