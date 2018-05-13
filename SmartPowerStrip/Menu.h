@@ -1,4 +1,4 @@
-#define REFRESH_MAIN_SCREEN_TIMER	600
+#define REFRESH_MAIN_SCREEN_TIMER	6000
 
 typedef enum
 {

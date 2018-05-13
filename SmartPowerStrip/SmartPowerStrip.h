@@ -34,6 +34,7 @@ typedef struct
 {
 	bool IsDisplayOn;
 	bool BandActive;
+	bool InBand;
 	bool IsBandSetted;
 	bool WifiActive;
 	bool ClientConnected;

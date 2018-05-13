@@ -18,6 +18,7 @@ extern WIFI_LIST List[];
 extern short WifiItemSsid;
 
 uint32_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+bool ExitFromBand = true;
 
 MENU_VOICES MainMenuItems[]
 {
@@ -59,12 +60,11 @@ void MainScreen(short EnterSetup)
 {
 	String Time,Date;
 	short ReleIndx = 0;
-	// short EnterSetup = NO_PRESS;
-	bool InBand = false, ExitFromBand = true;
+	// short EnterSetup = NO_PRESS
 	CheckReleStatus();
 	CheckEvents();
-	InBand = CheckBand();
-	if(InBand)
+	Flag.InBand = CheckBand();
+	if(Flag.InBand)
 	{
 		ClearLCD();
 		LCDPrintString(TWO, CENTER_ALIGN, "Banda in attivazione");
@@ -92,9 +92,11 @@ void MainScreen(short EnterSetup)
 					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);				
 				}
 			}
+			delay(50);
 		}
 		EnterSetup = NO_PRESS;
 		ExitFromBand = false;
+		Flag.InBand = false;
 	}
 	else
 	{
@@ -147,8 +149,11 @@ void MainScreen(short EnterSetup)
 		if(TimerRefreshMenu == 0)
 		{
 			TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
-			LCDDisplayOff();
-			Flag.IsDisplayOn = false;
+			if(Flag.IsDisplayOn)
+			{
+				LCDDisplayOff();
+				Flag.IsDisplayOn = false;	
+			}
 		}
 	}
 	if(EnterSetup == BUTTON_SET)
@@ -162,7 +167,7 @@ void MainScreen(short EnterSetup)
 		ClearLCD();
 		EnterSetup = NO_PRESS;		
 	}
-	else
+	else if(EnterSetup != NO_PRESS)
 	{
 		if(!Flag.IsDisplayOn)
 		{

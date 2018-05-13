@@ -16,6 +16,7 @@
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
 extern FLAGS Flag;
+extern BAND_FORMAT Band;
 ESP8266WebServer server(80);
 
 
@@ -150,7 +151,7 @@ const char WebPage[] PROGMEM = R"=====(
 		setInterval(function() 
 		{
 		  GetBandStatus();
-		}, 60000);
+		}, 30000);
 		 
 		function GetBandStatus()
 		{
@@ -620,14 +621,14 @@ const char WebPage[] PROGMEM = R"=====(
 		<h2>Gestione delle prese e controllo tempi</h2>
 		<table style="width:100%;" border="1px solid black;">
 			<tr style="background-color:LightSkyBlue ;"><th>NOME PRESA</th><th>Accensione / Spegnimento</th><th>Stato Presa</th><th>Tempo Accensione</th><th>Orario Spegnimento Timer</th></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 1</th><td><button class="button" onclick="SetRele1(1)">Accesa</button><button class="button" onclick="SetRele1(0)">Spenta</button></td><td id="STATUS_RELE1" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE1">0g 0h 0m</td><td id="TIMER_RELE1">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 2</th><td><button class="button" onclick="SetRele2(1)">Accesa</button><button class="button" onclick="SetRele2(0)">Spenta</button></td><td id="STATUS_RELE2" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE2">0g 0h 0m</td><td id="TIMER_RELE2">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 3</th><td><button class="button" onclick="SetRele3(1)">Accesa</button><button class="button" onclick="SetRele3(0)">Spenta</button></td><td id="STATUS_RELE3" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE3">0g 0h 0m</td><td id="TIMER_RELE3">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 4</th><td><button class="button" onclick="SetRele4(1)">Accesa</button><button class="button" onclick="SetRele4(0)">Spenta</button></td><td id="STATUS_RELE4" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE4">0g 0h 0m</td><td id="TIMER_RELE4">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 5</th><td><button class="button" onclick="SetRele5(1)">Accesa</button><button class="button" onclick="SetRele5(0)">Spenta</button></td><td id="STATUS_RELE5" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE5">0g 0h 0m</td><td id="TIMER_RELE5">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 6</th><td><button class="button" onclick="SetRele6(1)">Accesa</button><button class="button" onclick="SetRele6(0)">Spenta</button></td><td id="STATUS_RELE6" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE6">0g 0h 0m</td><td id="TIMER_RELE6">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" onclick="SetRele7(1)">Accesa</button><button class="button" onclick="SetRele7(0)">Spenta</button></td><td id="STATUS_RELE7" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE7">0g 0h 0m</td><td id="TIMER_RELE7">0h 0m</td></tr>
-			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" onclick="SetRele8(1)">Accesa</button><button class="button" onclick="SetRele8(0)">Spenta</button></td><td id="STATUS_RELE8" style = "text-align:center">SPENTA</td><td id="TURN_ON_RELE8">0g 0h 0m</td><td id="TIMER_RELE8">0h 0m</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 1</th><td><button class="button" onclick="SetRele1(1)">Accesa</button><button class="button" onclick="SetRele1(0)">Spenta</button></td><td id="STATUS_RELE1" style = "text-align:center"></td><td id="TURN_ON_RELE1">Attesa Dati</td><td id="TIMER_RELE1">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 2</th><td><button class="button" onclick="SetRele2(1)">Accesa</button><button class="button" onclick="SetRele2(0)">Spenta</button></td><td id="STATUS_RELE2" style = "text-align:center"></td><td id="TURN_ON_RELE2">Attesa Dati</td><td id="TIMER_RELE2">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 3</th><td><button class="button" onclick="SetRele3(1)">Accesa</button><button class="button" onclick="SetRele3(0)">Spenta</button></td><td id="STATUS_RELE3" style = "text-align:center"></td><td id="TURN_ON_RELE3">Attesa Dati</td><td id="TIMER_RELE3">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 4</th><td><button class="button" onclick="SetRele4(1)">Accesa</button><button class="button" onclick="SetRele4(0)">Spenta</button></td><td id="STATUS_RELE4" style = "text-align:center"></td><td id="TURN_ON_RELE4">Attesa Dati</td><td id="TIMER_RELE4">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 5</th><td><button class="button" onclick="SetRele5(1)">Accesa</button><button class="button" onclick="SetRele5(0)">Spenta</button></td><td id="STATUS_RELE5" style = "text-align:center"></td><td id="TURN_ON_RELE5">Attesa Dati</td><td id="TIMER_RELE5">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 6</th><td><button class="button" onclick="SetRele6(1)">Accesa</button><button class="button" onclick="SetRele6(0)">Spenta</button></td><td id="STATUS_RELE6" style = "text-align:center"></td><td id="TURN_ON_RELE6">Attesa Dati</td><td id="TIMER_RELE6">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 7</th><td><button class="button" onclick="SetRele7(1)">Accesa</button><button class="button" onclick="SetRele7(0)">Spenta</button></td><td id="STATUS_RELE7" style = "text-align:center"></td><td id="TURN_ON_RELE7">Attesa Dati</td><td id="TIMER_RELE7">Attesa Dati</td></tr>
+			<tr><th style="background-color:hsl(9, 100%, 80%);">PRESA 8</th><td><button class="button" onclick="SetRele8(1)">Accesa</button><button class="button" onclick="SetRele8(0)">Spenta</button></td><td id="STATUS_RELE8" style = "text-align:center"></td><td id="TURN_ON_RELE8">Attesa Dati</td><td id="TIMER_RELE8">Attesa Dati</td></tr>
 		</table>
 		<p style="color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria:</p> <p style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:40px;" id="BAND_ACTIVE">Controllo in corso...</p>
 		<br>
@@ -755,7 +756,23 @@ void HandleBandStatus()
 {
 	String BandStatusStr;
 	if(Flag.IsBandSetted)
+	{
 		BandStatusStr = "SETTATA";
+		BandStatusStr += "La fascia è dalle";
+		String BandTime1 = String(Band.InitHour) + ":";
+		String BandTime2 = String(Band.EndHour) + ":";
+		if(Band.InitMinute < 10)
+			BandTime1 += "0" + String(Band.InitMinute);
+		else
+			BandTime1 += String(Band.InitMinute);
+		if(Band.EndMinute < 10)
+			BandTime2 += "0" + String(Band.EndMinute);
+		else
+			BandTime2 += String(Band.EndMinute);	
+		
+		BandStatusStr += BandTime1 + " alle " + BandTime2;
+	}
+		
 	else
 		BandStatusStr = "NON SETTATA";
 	
