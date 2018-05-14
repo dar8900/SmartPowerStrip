@@ -24,6 +24,9 @@ RELE Rele[]
 	{false, {0,0,0,0}, {0,0,0,0}, false, {0,0,0,0}, RELE_8_ADDR},  // RELE_8
 };
 
+static short TmpMinute[RELE_MAX];
+static bool IsNewMinute[RELE_MAX];
+
 void TurnOffAllRele()
 {
 	short ReleIndx;
@@ -57,8 +60,6 @@ void TurnOnAllRele()
 	Flag.AllReleUp = true;
 }
 
-static short TmpMinute;
-static bool NewMinute[RELE_MAX];
 
 void TakeReleTime()
 {
@@ -72,21 +73,21 @@ void TakeReleTime()
 			{
 				if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) <= 0)
 				{
-					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute;
+					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
 					if(Rele[ReleIndx].ActiveTime.minute == 59)
 					{
-						if(NewMinute[ReleIndx])
+						if(!IsNewMinute[ReleIndx])
 						{
 							Rele[ReleIndx].ActiveTime.hour += 1;
-							NewMinute[ReleIndx] = false;
+							IsNewMinute[ReleIndx] = true;
 						}
 					}
 				}
 				else
 				{
 					Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
-					TmpMinute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
-					NewMinute[ReleIndx] = true;
+					TmpMinute[ReleIndx] = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
+					IsNewMinute[ReleIndx] = false;
 				}				
 				if(Rele[ReleIndx].ActiveTime.hour > 24)
 				{
@@ -155,10 +156,10 @@ void ReleReStart()
 {
 	short ReleIndx, TmpReleActive;
 	ClearLCD();
+	LCDPrintString(TWO, CENTER_ALIGN, "Sto ristabilendo");
+	LCDPrintString(THREE, CENTER_ALIGN, "i valori dei rele");
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{	
-		LCDPrintString(TWO, CENTER_ALIGN, "Sto ristabilendo");
-		LCDPrintString(THREE, CENTER_ALIGN, "i valori dei rele");
 		ReadMemory(Rele[ReleIndx].EepromAddr, 1, &TmpReleActive);
 		if(TmpReleActive == 0)
 		{
