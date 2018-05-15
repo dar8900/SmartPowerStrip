@@ -53,6 +53,7 @@ void TurnOnAllRele()
 		Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 		Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 		Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+		Rele[ReleIndx].ActiveTime.minute = 0;
 		SaveReleStatus(ReleIndx, STATUS_ON);
 		delay(500);
 	}
@@ -73,20 +74,13 @@ void TakeReleTime()
 			{
 				if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) <= 0)
 				{
-					if(((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) == 0) && (Rele[ReleIndx].ActiveTime.hour == 0))
+					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
+					if(Rele[ReleIndx].ActiveTime.minute == 59)
 					{
-						Rele[ReleIndx].ActiveTime.minute = 0;
-					}
-					else
-					{
-						Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
-						if(Rele[ReleIndx].ActiveTime.minute == 59)
+						if(!IsNewMinute[ReleIndx])
 						{
-							if(!IsNewMinute[ReleIndx])
-							{
-								Rele[ReleIndx].ActiveTime.hour += 1;
-								IsNewMinute[ReleIndx] = true;
-							}
+							Rele[ReleIndx].ActiveTime.hour += 1;
+							IsNewMinute[ReleIndx] = true;
 						}
 					}
 				}
@@ -188,6 +182,7 @@ void ReleReStart()
 			Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 			Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 			Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+			Rele[ReleIndx].ActiveTime.minute = 0;
 			CheckEvents();
 		}
 

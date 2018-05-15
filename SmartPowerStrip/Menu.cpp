@@ -134,6 +134,7 @@ void MainScreen(short EnterSetup)
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
+				ClearLCD();
 			}
 		}
 		// Stato relè
@@ -248,6 +249,7 @@ void MainMenu()
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
+				ClearLCD();
 			}
 		}
 		LCDPrintString(THREE, CENTER_ALIGN, MainMenuItems[Item].MenuTitle);
@@ -411,6 +413,7 @@ bool ManualRele()
 							Rele[ReleIndx].TurnOnTime.day = PresentTime.day;
 							Rele[ReleIndx].TurnOnTime.hour = PresentTime.hour;
 							Rele[ReleIndx].TurnOnTime.minute = PresentTime.minute;
+							Rele[ReleIndx].ActiveTime.minute = 0;
 						}
 						SaveReleStatus(ReleIndx, Status);
 						ReleSetted = true;

@@ -782,8 +782,8 @@ void HandleBandStatus()
 	String BandStatusStr;
 	if(Flag.IsBandSetted)
 	{
-		BandStatusStr = "SETTATA";
-		BandStatusStr += "La fascia è dalle";
+		BandStatusStr = "SETTATA ";
+		BandStatusStr += "La fascia è dalle ";
 		String BandTime1 = String(Band.InitHour) + ":";
 		String BandTime2 = String(Band.EndHour) + ":";
 		if(Band.InitMinute < 10)
@@ -902,6 +902,7 @@ void HandleTimer8()
 
 void HandleTurnOn1()
 {
+	Flag.ClientConnected = true;
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_1].IsActive)
@@ -936,6 +937,7 @@ void HandleTurnOn3()
 }
 void HandleTurnOn4()
 {
+	Flag.ClientConnected = true;
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_4].IsActive)
@@ -981,6 +983,7 @@ void HandleTurnOn7()
 
 void HandleTurnOn8()
 {
+	Flag.ClientConnected = true;
 	CheckEvents();
 	String TurnOnStr;
 	if(Rele[RELE_8].IsActive)
@@ -995,6 +998,7 @@ void HandleRele1()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE1"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_1].IsActive)
@@ -1004,6 +1008,7 @@ void HandleRele1()
 			Rele[RELE_1].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_1].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_1].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_1, STATUS_ON);
 		}
@@ -1031,6 +1036,7 @@ void HandleRele2()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE2"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_2].IsActive)
@@ -1040,6 +1046,7 @@ void HandleRele2()
 			Rele[RELE_2].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_2].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_2].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_2, STATUS_ON);
 		}
@@ -1066,6 +1073,7 @@ void HandleRele3()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE3"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_3].IsActive)
@@ -1075,6 +1083,7 @@ void HandleRele3()
 			Rele[RELE_3].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_3].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_3].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_3, STATUS_ON);
 		}
@@ -1102,6 +1111,7 @@ void HandleRele4()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE4"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_4].IsActive)
@@ -1111,6 +1121,7 @@ void HandleRele4()
 			Rele[RELE_4].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_4].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_4].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_4, STATUS_ON);
 		}
@@ -1138,6 +1149,7 @@ void HandleRele5()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE5"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_5].IsActive)
@@ -1147,6 +1159,7 @@ void HandleRele5()
 			Rele[RELE_5].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_5].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_5].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_5].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_5, STATUS_ON);
 		}
@@ -1175,6 +1188,7 @@ void HandleRele6()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE6"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_6].IsActive)
@@ -1184,6 +1198,7 @@ void HandleRele6()
 			Rele[RELE_6].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_6].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_6].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_6].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_6, STATUS_ON);
 		}
@@ -1211,6 +1226,7 @@ void HandleRele7()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE7"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_7].IsActive)
@@ -1220,6 +1236,7 @@ void HandleRele7()
 			Rele[RELE_7].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_7].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_7].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_7].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_7, STATUS_ON);
 		}
@@ -1247,6 +1264,7 @@ void HandleRele8()
 {
 	String LedStatus = "OFF";
 	String t_state = server.arg("STATUS_RELE8"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
+	Flag.ClientConnected = true;
 	if(t_state == "1")
 	{
 		if(!Rele[RELE_8].IsActive)
@@ -1256,6 +1274,7 @@ void HandleRele8()
 			Rele[RELE_8].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_8].TurnOnTime.hour = PresentTime.hour;
 			Rele[RELE_8].TurnOnTime.minute = PresentTime.minute;
+			Rele[RELE_8].ActiveTime.minute = 0;
 			LedStatus = "ACCESA"; //Feedback parameter
 			SaveReleStatus(RELE_8, STATUS_ON);
 		}
