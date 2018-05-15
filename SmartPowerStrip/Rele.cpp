@@ -133,23 +133,30 @@ bool ReleInit(bool FirstGo)
 {
 	short ReleIndx;
 	ClearLCD();
-	LCDPrintString(ONE, CENTER_ALIGN, "Test diagnostico");
-	LCDPrintString(TWO, CENTER_ALIGN, "attendere...");
-	TurnOffAllRele();
-	ShowReleIcons(THREE);
-	delay(1000);
-	Flag.AllReleDown = false;
-	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+	LCDPrintString(TWO, CENTER_ALIGN, "Effettuare test");
+	LCDPrintString(THREE, CENTER_ALIGN, "diagnostico?");
+	if(CheckYesNo())
 	{
-		ON(ReleIdx2Pin(ReleIndx));
-		Rele[ReleIndx].IsActive = true;
+		ClearLCD();
+		LCDPrintString(ONE, CENTER_ALIGN, "Test in corso");
+		LCDPrintString(TWO, CENTER_ALIGN, "attendere...");
+		TurnOffAllRele();
 		ShowReleIcons(THREE);
-		delay(500);
-		OFF(ReleIdx2Pin(ReleIndx));
-		Rele[ReleIndx].IsActive = false;
-		ShowReleIcons(THREE);
-		delay(500);
+		delay(1000);
+		Flag.AllReleDown = false;
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+		{
+			ON(ReleIdx2Pin(ReleIndx));
+			Rele[ReleIndx].IsActive = true;
+			ShowReleIcons(THREE);
+			delay(500);
+			OFF(ReleIdx2Pin(ReleIndx));
+			Rele[ReleIndx].IsActive = false;
+			ShowReleIcons(THREE);
+			delay(500);
+		}
 	}
+
 	Flag.AllReleDown = true;
 	TakePresentTime();
 	if(!FirstGo)
