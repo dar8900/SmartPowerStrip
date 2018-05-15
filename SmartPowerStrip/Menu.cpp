@@ -15,7 +15,6 @@ extern FLAGS Flag;
 extern String HostName;
 
 extern WIFI_LIST List[];
-extern short WifiItemSsid;
 
 uint16_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
 short TimerClientConnected = DELAY_CLIENT_CONNECTION;
@@ -302,9 +301,8 @@ void MainMenu()
 
 bool ManualRele()
 {
-	short ReleIndx = RELE_1, YesNoChoice = 0;
-	bool ReleSetted = false, OnOffAll = false, ExitYesNo = false, ExitAll = false;
-	String YesNo[] = {"No", "Si"};
+	short ReleIndx = RELE_1;
+	bool ReleSetted = false, OnOffAll = false,  ExitAll = false;
 	String SelRele;
 	short ButtonPress = 0, Status = 0, OldStatus = 0;
 	if(Flag.AllReleUp)
@@ -324,46 +322,7 @@ bool ManualRele()
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
 	LCDPrintString(TWO, CENTER_ALIGN, "per confermare");
-	while(!ExitYesNo)
-	{
-		CheckEvents();
-		LCDPrintString(THREE, CENTER_ALIGN, YesNo[YesNoChoice]);
-		ButtonPress = CheckButtons();
-		switch(ButtonPress)
-		{
-			case BUTTON_UP:
-				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
-					YesNoChoice = 1;
-				else
-					YesNoChoice = 0;
-				break;
-			case BUTTON_DOWN:
-				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
-					YesNoChoice = 1;
-				else
-					YesNoChoice = 0;
-				break;
-			case BUTTON_SET:
-				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
-				{
-					OnOffAll = false;
-					ExitYesNo = true;
-				}
-				else
-				{
-					OnOffAll = true;
-					ExitYesNo = true;
-				}
-				break;
-			default:
-				break;
-		}
-		ButtonPress = NO_PRESS;
-		delay(80);
-	}
+	OnOffAll = CheckYesNo();
 	if(OnOffAll)
 	{
 		ClearLCD();
@@ -581,10 +540,7 @@ bool ChangeTimeBand()
 
 bool WifiConnect()
 {
-	short ButtonPress = NO_PRESS;
-	short YesNoChoice = 0;
-	bool ExitWifiConnect = false, WifiDisconnectChoice = false;
-	String YesNo[] = {"Si", "No"};
+	bool WifiDisconnectChoice = false;
 	if(Flag.WifiActive)
 	{
 		ClearLCD();
@@ -592,51 +548,12 @@ bool WifiConnect()
 		LCDPrintString(TWO, CENTER_ALIGN, "ad una rete WiFi!");
 		LCDPrintString(THREE, CENTER_ALIGN, "Disconnettere?");
 		delay(2000);
-		while(!ExitWifiConnect)
-		{
-			CheckEvents();
-			LCDPrintString(FOUR, CENTER_ALIGN, YesNo[YesNoChoice]);
-			ButtonPress = CheckButtons();
-			switch(ButtonPress)
-			{
-				case BUTTON_UP:
-					BlinkLed(BUTTON_LED);
-					if(YesNoChoice == 0)
-						YesNoChoice = 1;
-					else
-						YesNoChoice = 0;
-					LCDPrintLineVoid(FOUR);
-					break;
-				case BUTTON_DOWN:
-					BlinkLed(BUTTON_LED);
-					if(YesNoChoice == 0)
-						YesNoChoice = 1;
-					else
-						YesNoChoice = 0;
-						LCDPrintLineVoid(FOUR);
-					break;
-				case BUTTON_SET:
-					BlinkLed(BUTTON_LED);
-					if(YesNoChoice == 0)
-					{
-						ExitWifiConnect = true;
-						WifiDisconnectChoice = true;
-					}
-					else
-					{
-						ExitWifiConnect = true;
-						WifiDisconnectChoice = false;
-					}
-					break;
-				default:
-					break;
-			}
-			ButtonPress = NO_PRESS;
-			delay(80);
-		}
+		CheckEvents();
+		WifiDisconnectChoice = CheckYesNo();
 		ClearLCD();
 		if(WifiDisconnectChoice)
 			WifiDisconnect();
+
 	}
 	else
 	{
@@ -778,12 +695,14 @@ bool WiFiInfo()
 {
 	bool ExitWifiInfo = false;
 	short ButtonPress = 0;
+	short WifiItemSsid = 0;
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Wifi Info");
 	LCDPrintString(TWO  , CENTER_ALIGN, "Premere Left/Back");
 	LCDPrintString(THREE, CENTER_ALIGN, "per tornare al");
 	LCDPrintString(FOUR , CENTER_ALIGN, "Menu Principale");
 	delay(3000);
+	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItemSsid);
 	CheckEvents();
 	ClearLCD();
 	while(1)
@@ -953,4 +872,57 @@ bool AssignReleTimer()
 		}
 	}
 	return true;
+}
+
+
+bool CheckYesNo()
+{
+	bool Exit = false, Choice = false;
+	String YesNo[] = {"Si", "No"};
+	short ButtonPress = NO_PRESS;
+	short YesNoChoice = 1;
+	while(!Exit)
+	{
+		CheckEvents();
+		LCDPrintString(FOUR, CENTER_ALIGN, YesNo[YesNoChoice]);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+					YesNoChoice = 1;
+				else
+					YesNoChoice = 0;
+				LCDPrintLineVoid(FOUR);
+				break;
+			case BUTTON_DOWN:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+					YesNoChoice = 1;
+				else
+					YesNoChoice = 0;
+					LCDPrintLineVoid(FOUR);
+				break;
+			case BUTTON_SET:
+				BlinkLed(BUTTON_LED);
+				if(YesNoChoice == 0)
+				{
+					Exit = true;
+					Choice = true;
+				}
+				else
+				{
+					Exit = true;
+					Choice = false;
+				}
+				break;
+			case BUTTON_LEFT:
+			default:
+				break;
+		}
+		ButtonPress = NO_PRESS;
+		delay(80);
+	}
+	return Choice;
 }

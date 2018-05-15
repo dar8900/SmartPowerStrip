@@ -14,18 +14,18 @@
 #define MAX_EEPROM_DIM_NODEMCU			  512
 
 #define MAX_CELL_EEPROM	                  254
-#define EMPTY_MEMORY_VALUE				  255	
+#define EMPTY_MEMORY_VALUE				  255
 
 typedef enum
 {
-	RELE_1_ADDR = 0,					
-	RELE_2_ADDR,					
-	RELE_3_ADDR,					
-	RELE_4_ADDR,								
-	RELE_5_ADDR,                    
-	RELE_6_ADDR,                    
-	RELE_7_ADDR,                    
-	RELE_8_ADDR                     
+	RELE_1_ADDR = 0,
+	RELE_2_ADDR,
+	RELE_3_ADDR,
+	RELE_4_ADDR,
+	RELE_5_ADDR,
+	RELE_6_ADDR,
+	RELE_7_ADDR,
+	RELE_8_ADDR
 }RELE_EEPROM_ADDR;
 
 #define BAND_INIT_HOUR_ADDR					   10
@@ -33,6 +33,8 @@ typedef enum
 #define BAND_END_HOUR_ADDR					   12
 #define BAND_END_MINUTE_ADDR				   13
 #define BAND_INVALIDATION_VALUE_ADDR		   14
+
+#define WIFI_SSID_ADDR						   20
 
 #define FLAG_VALUE_ADDR					 	   50
 

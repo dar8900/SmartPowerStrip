@@ -27,6 +27,7 @@ enum
 };
 
 // bool SetupInterrupt(void);
+bool CheckYesNo(void);
 void MainScreen(short EnterSetup);
 void MainMenu(void);
 bool ManualRele(void);

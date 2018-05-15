@@ -26,3 +26,4 @@ String WifiIP(void);
 void ShowClientConnected(void);
 void WebServerInit(void);
 void WebClient(void);
+void WifiConnectionChoice(short *WifiListItem, String *NomeWifi);

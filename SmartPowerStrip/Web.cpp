@@ -22,7 +22,6 @@ extern ESP8266WebServer server;
 
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
-short WifiItemSsid;
 // WiFiServer ClientServer(80);
 
 WIFI_LIST List[] =
@@ -42,47 +41,33 @@ void WifiInit()
 	short NumbPoint = 0;
 	short TimerNoConnection = 0;
 	bool ExitWifiInit = false;
-	short WifiListItem = 0;
+	short WifiListItem = NO_CONN;
 	short ButtonPress = NO_PRESS;
+	short OldWifiItem = 0;
 	String HostnameExtended = "http://", NomeWifi;
 	Flag.WifiActive = false;
 	ClearLCD();
 	WiFi.mode(WIFI_STA);
-	while(!ExitWifiInit)
+	ReadMemory(WIFI_SSID_ADDR, 1, &OldWifiItem);
+	if(OldWifiItem != NO_CONN && OldWifiItem < MAX_WIFI_ITEM)
 	{
-		LCDPrintString(ONE, CENTER_ALIGN, "Scegli a quale rete");
-		LCDPrintString(TWO, CENTER_ALIGN, "connettersi:");
-		LCDPrintString(THREE, CENTER_ALIGN, List[WifiListItem].Ssid);
-		ButtonPress = CheckButtons();
-		switch(ButtonPress)
+		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi riconnettere");
+		LCDPrintString(TWO, CENTER_ALIGN, "la rete:");
+		LCDPrintString(THREE, CENTER_ALIGN, List[OldWifiItem].Ssid);
+		if(CheckYesNo())
 		{
-			case BUTTON_UP:
-				if(WifiListItem > 0)
-					WifiListItem--;
-				else
-					WifiListItem = MAX_WIFI_ITEM - 1;
-				LCDPrintLineVoid(THREE);
-				break;
-			case BUTTON_DOWN:
-				if(WifiListItem < MAX_WIFI_ITEM - 1)
-					WifiListItem++;
-				else
-					WifiListItem = 0;
-				LCDPrintLineVoid(THREE);
-				break;
-			case BUTTON_SET:
-				NomeWifi = String(List[WifiListItem].RealSsid);
-				WifiItemSsid = WifiListItem;
-				ExitWifiInit = true;
-				ClearLCD();
-				break;
-			case BUTTON_LEFT:
-			default:
-				break;
+			WifiListItem = OldWifiItem;
 		}
-		ButtonPress = NO_PRESS;
-		delay(60);
+		else
+		{
+			WifiConnectionChoice(&WifiListItem, &NomeWifi);
+		}
 	}
+	else
+	{
+		WifiConnectionChoice(&WifiListItem, &NomeWifi);
+	}
+	ClearLCD();
 	if(NomeWifi != String(List[NO_CONN].RealSsid))
 	{
 		WiFi.hostname(Hostname);
@@ -119,7 +104,7 @@ void WifiInit()
 			HostnameExtended += String(Hostname);
 			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
 			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
-			delay(3000);
+			delay(2000);
 			ClearLCD();
 		}
 	}
@@ -192,6 +177,8 @@ void WebServerInit()
 void WifiDisconnect()
 {
 	ClearLCD();
+	short WifiItemSsid = 0;
+	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItemSsid);
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete:");
 	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].Ssid);
@@ -222,4 +209,48 @@ void WifiDisconnect()
 void WebClient()
 {
 	server.handleClient();
+}
+
+void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
+{
+	bool Exit = false;
+	short ListItem = *WifiListItem, ButtonPress = NO_PRESS;
+	String Nome = *NomeWifi;
+	while(!Exit)
+	{
+		LCDPrintString(ONE, CENTER_ALIGN, "Scegli a quale rete");
+		LCDPrintString(TWO, CENTER_ALIGN, "connettersi:");
+		LCDPrintString(THREE, CENTER_ALIGN, List[ListItem].Ssid);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				if(ListItem > 0)
+					ListItem--;
+				else
+					ListItem = MAX_WIFI_ITEM - 1;
+				LCDPrintLineVoid(THREE);
+				break;
+			case BUTTON_DOWN:
+				if(ListItem < MAX_WIFI_ITEM - 1)
+					ListItem++;
+				else
+					ListItem = 0;
+				LCDPrintLineVoid(THREE);
+				break;
+			case BUTTON_SET:
+				Nome = String(List[ListItem].RealSsid);
+				WriteMemory(WIFI_SSID_ADDR, ListItem);
+				*WifiListItem = ListItem;
+				*NomeWifi = Nome;
+				Exit = true;
+				ClearLCD();
+				break;
+			case BUTTON_LEFT:
+			default:
+				break;
+		}
+		ButtonPress = NO_PRESS;
+		delay(60);
+	}
 }
