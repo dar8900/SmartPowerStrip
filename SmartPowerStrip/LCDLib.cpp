@@ -2,21 +2,9 @@
 #include "SmartPowerStrip.h"
 LiquidCrystal_I2C lcd_main(0x27, 20,4);
 
-uint8_t AlarmIcon[]
-{
-	0x0E,
-	0x15,
-	0x15,
-	0x15,
-	0x11,
-	0x15,
-	0x11,
-	0x0E
-};
-
 void LCDInit()
 {
-	lcd_main.begin();	
+	lcd_main.begin();
 }
 
 void ClearLCD()
@@ -41,7 +29,7 @@ void BlinkDisplay(short NumTimes, short PulseTime)
 		LCDDisplayOn();
 		delay(Pulse);
 		LCDDisplayOff();
-		delay(Pulse);		
+		delay(Pulse);
 	}
 	LCDDisplayOn();
 }
@@ -65,7 +53,7 @@ void LcdTimeWrite(int Time2Write)
     delay(1000);
     ClearLCD();
     cnt--;
-  }  
+  }
 
   LCDPrintString(1, CENTER_ALIGN, "The light is going");
   LCDPrintString(2, CENTER_ALIGN, "to turn off");
@@ -74,23 +62,23 @@ void LcdTimeWrite(int Time2Write)
 }
 
 // Utilizzano un oggetto di tipo LCD
-void LCDPrintString(short row, short col, String string) 
+void LCDPrintString(short row, short col, String string)
 {
-  if(row > MAX_LCD_ROW || string.length() > 20) 
+  if(row > MAX_LCD_ROW || string.length() > 20)
   {
 	lcd_main.clear();
 	if(string.length() > 20)
 	{
 		col = CENTER_ALIGN;
-		string = "STRING TOO BIG";  		
+		string = "STRING TOO BIG";
 	}
 	else
 	{
 		col = CENTER_ALIGN;
 		row = 3;
-		string = "OVER DIMENSION"; 		
+		string = "OVER DIMENSION";
 	}
-  
+
   }
   switch(col)
   {
@@ -120,10 +108,10 @@ void LCDPrintValue(short row, short col, short value)
 	lcd_main.clear();
 	col = CENTER_ALIGN;
 	row = 3;
-    ValStr = "OVER DIMENSION"; 
+    ValStr = "OVER DIMENSION";
     return;
   }
-  
+
   switch(col)
   {
     case CENTER_ALIGN:
@@ -160,7 +148,7 @@ bool LCDCreateIcon(uint8_t Icon[], short IconNum)
 
 void LCDShowIcon(short IconNum)
 {
-	lcd_main.write(IconNum);	
+	lcd_main.write(IconNum);
 }
 
 void LCDPrintLineVoid(short row)

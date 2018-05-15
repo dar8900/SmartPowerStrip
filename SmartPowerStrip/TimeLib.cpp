@@ -13,7 +13,7 @@ TIME_DATE_FORMAT PresentTime;
 
 extern RELE Rele[];
 
-static const short TabDays4Month[] = 
+static const short TabDays4Month[] =
 {
   31,
   28,
@@ -27,11 +27,12 @@ static const short TabDays4Month[] =
   31,
   30,
   31,
+  29,
 };
 
 void RTCInit()
 {
-	if (!RTC.begin()) 
+	if (!RTC.begin())
 	{
 		while (1)
 		{
@@ -39,17 +40,16 @@ void RTCInit()
 		}
 	}
 
-	if (!RTC.isrunning()) 
+	if (!RTC.isrunning())
 	{
 		LCDDisplayOn();
 		ClearLCD();
-		LCDPrintString(0, CENTER_ALIGN, "RTC NOT running!");
+		LCDPrintString(ONE, CENTER_ALIGN, "Orario non impostato");
 		delay(1000);
 		ClearLCD();
-		// following line sets the RTC to the date & time this sketch was compiled
 		ChangeTime();
 		ClearLCD();
-	}	
+	}
 	return;
 }
 
@@ -73,7 +73,7 @@ bool ChangeTime()
 				LCDPrintValue(THREE, CENTER_ALIGN, Hour);
 				switch(ButtonPress)
 				{
-					case BUTTON_UP:	
+					case BUTTON_UP:
 						if(Hour > 0)
 							Hour--;
 						else
@@ -109,7 +109,7 @@ bool ChangeTime()
 				LCDPrintString(THREE, CENTER_ALIGN, MinuteStr);
 				switch(ButtonPress)
 				{
-					case BUTTON_UP:	
+					case BUTTON_UP:
 						if(Minute > 0)
 							Minute--;
 						else
@@ -124,7 +124,7 @@ bool ChangeTime()
 						ClearLCD();
 						break;
 					case BUTTON_SET:
-						TimeSM = CHANGE_MONTH;
+						TimeSM = CHANGE_YEAR;
 						ClearLCD();
 						break;
 					case BUTTON_LEFT:
@@ -137,7 +137,7 @@ bool ChangeTime()
 				LCDPrintValue(THREE, CENTER_ALIGN, Month);
 				switch(ButtonPress)
 				{
-					case BUTTON_UP:	
+					case BUTTON_UP:
 						if(Month > 1)
 							Month--;
 						else
@@ -165,22 +165,51 @@ bool ChangeTime()
 				LCDPrintValue(THREE, CENTER_ALIGN, Day);
 				switch(ButtonPress)
 				{
-					case BUTTON_UP:	
+					case BUTTON_UP:
 						if(Day > 1)
 							Day--;
 						else
-							Day = TabDays4Month[Month - 1];
+                        {
+                            if(Year % 100 == 0 && Year % 400 == 0 && Month == 2)
+                            {
+                                Day = TabDays4Month[12];
+                            }
+                            else if(Year % 100 != 0 && Year % 4 == 0 && Month == 2)
+                            {
+                                Day = TabDays4Month[12];
+                            }
+                            else
+                                Day = TabDays4Month[Month - 1];
+                        }
+
 						ClearLCD();
 						break;
 					case BUTTON_DOWN:
-						if(Day < TabDays4Month[Month - 1])
-							Day++;
-						else
-							Day = 1;
+                        if(Year % 100 == 0 && Year % 400 == 0 && Month == 2)
+                        {
+                            if(Day < TabDays4Month[12])
+                                Day++;
+                            else
+                                Day = 1;
+                        }
+                        else if(Year % 100 != 0 && Year % 4 == 0 && Month == 2)
+                        {
+                            if(Day < TabDays4Month[12])
+                                Day++;
+                            else
+                                Day = 1;
+                        }
+                        else
+                        {
+                            if(Day < TabDays4Month[Month - 1])
+                                Day++;
+                            else
+                                Day = 1;
+                        }
 						ClearLCD();
 						break;
 					case BUTTON_SET:
-						TimeSM = CHANGE_YEAR;
+						TimeSM = EXIT_CHANGE_TIME;
 						ClearLCD();
 						break;
 					case BUTTON_LEFT:
@@ -193,8 +222,8 @@ bool ChangeTime()
 				LCDPrintValue(THREE, CENTER_ALIGN, Year);
 				switch(ButtonPress)
 				{
-					case BUTTON_UP:	
-						if(Year > 2000)
+					case BUTTON_UP:
+						if(Year > 2018)
 							Year--;
 						else
 							Year = 2099;
@@ -204,11 +233,11 @@ bool ChangeTime()
 						if(Year < 2099)
 							Year++;
 						else
-							Year = 2000;
+							Year = 2018;
 						ClearLCD();
 						break;
 					case BUTTON_SET:
-						TimeSM = EXIT_CHANGE_TIME;
+						TimeSM = CHANGE_MONTH;
 						ClearLCD();
 						break;
 					case BUTTON_LEFT:

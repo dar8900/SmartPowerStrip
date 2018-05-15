@@ -14,8 +14,6 @@
 
 #undef FIRST_GO
 
-
-extern uint8_t AlarmIcon[];
 extern RELE Rele[];
 extern WiFiClient client;
 extern ESP8266WebServer server;
@@ -68,6 +66,17 @@ uint8_t OnRele[]
 	0x04
 };
 
+uint8_t ClientConnection[]
+{
+	0x02,
+	0x1F,
+	0x02,
+	0x00,
+	0x00,
+	0x08,
+	0x1F,
+	0x08
+};
 
 FLAGS Flag;
 
@@ -75,7 +84,7 @@ void BlinkLed(short pin)
 {
 	ON(pin);
 	delay(5);
-	OFF(pin);	
+	OFF(pin);
 }
 
 void CheckEvents()
@@ -106,11 +115,11 @@ bool IsRebooted()
 	{
 		IsESPRebboted = false;
 	}
-	
+
 	return IsESPRebboted;
 }
 
-void setup() 
+void setup()
 {
 #ifndef FIRST_GO
 	Serial.begin(115200);
@@ -122,9 +131,9 @@ void setup()
 	pinMode(RELE6, OUTPUT);
 	pinMode(RELE7, OUTPUT);
 	pinMode(RELE8, OUTPUT);
-	
+
 	pinMode(BUTTON_LED, OUTPUT);
-	
+
 	short FirstStart = 0;
 	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
 	EepromInit();
@@ -139,9 +148,9 @@ void setup()
 	LCDCreateIcon(WifiConnectionOff, WIFI_NO);
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
-	LCDCreateIcon(AlarmIcon, ALARM);
+	LCDCreateIcon(ClientConnection, CLIENT_CONN);
 	TakePresentTime();
-	
+
 	ReadMemory(FIRST_START_CHECK_ADDR, 1, &FirstStart);
 	if(FirstStart == EMPTY_MEMORY_VALUE)
 	{
@@ -155,7 +164,7 @@ void setup()
 		Flag.IsDisplayOn = false;
 		Flag.ReleRS = true;
 		LCDDisplayOn();
-		Flag.IsDisplayOn = true;	
+		Flag.IsDisplayOn = true;
 		ReleInit(true);
 	}
 	else
@@ -163,8 +172,8 @@ void setup()
 		LCDNoBlink();
 		LCDDisplayOn();
 		Flag.IsDisplayOn = true;
-		ReleInit(false);	
-		BandInit();	
+		ReleInit(false);
+		BandInit();
 	}
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
@@ -180,10 +189,10 @@ void setup()
 	if(IsMemoryEmpty())
 		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");
 
-#endif // FIRST_GO	
+#endif // FIRST_GO
 }
 
-void loop() 
+void loop()
 {
 #ifndef FIRST_GO
 	short EnterSetup = NO_PRESS;

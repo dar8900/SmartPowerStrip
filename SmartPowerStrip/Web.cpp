@@ -25,7 +25,7 @@ String HostName = "cavestrip";
 short WifiItemSsid;
 // WiFiServer ClientServer(80);
 
-WIFI_LIST List[] = 
+WIFI_LIST List[] =
 {
 	{"No Conn."     , "password"					, "NoConn" 					},
 	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				},
@@ -68,7 +68,7 @@ void WifiInit()
 					WifiListItem++;
 				else
 					WifiListItem = 0;
-				LCDPrintLineVoid(THREE);			
+				LCDPrintLineVoid(THREE);
 				break;
 			case BUTTON_SET:
 				NomeWifi = String(List[WifiListItem].RealSsid);
@@ -86,10 +86,10 @@ void WifiInit()
 	if(NomeWifi != String(List[NO_CONN].RealSsid))
 	{
 		WiFi.hostname(Hostname);
-		WiFi.begin(List[WifiListItem].RealSsid, List[WifiListItem].Password);	
+		WiFi.begin(List[WifiListItem].RealSsid, List[WifiListItem].Password);
 		LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
 		LCDPrintString(TWO, CENTER_ALIGN, List[WifiListItem].Ssid);
-		while (WiFi.status() != WL_CONNECTED) 
+		while (WiFi.status() != WL_CONNECTED)
 		{
 			delay(500);
 			if(NumbPoint > 19)
@@ -112,15 +112,15 @@ void WifiInit()
 				break;
 			}
 			Flag.WifiActive = true;
-		}	
+		}
 		if(Flag.WifiActive)
 		{
 			LCDShowPopUp("Connesso!");
 			HostnameExtended += String(Hostname);
-			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");	
+			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
 			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
 			delay(3000);
-			ClearLCD();		
+			ClearLCD();
 		}
 	}
 	return;
@@ -134,11 +134,16 @@ String WifiIP()
 	return IP;
 }
 
+void ShowClientConnected()
+{
+	LCDMoveCursor(ONE, 7);
+	LCDShowIcon(CLIENT_CONN);
+}
 
 void WebServerInit()
 {
 	server.on("/", HandleHomePage);      //Which routine to handle at root location. This is display page
-	
+
 	server.on("/GetStatusRele1", HandleStatus1);
 	server.on("/GetStatusRele2", HandleStatus2);
 	server.on("/GetStatusRele3", HandleStatus3);
@@ -147,7 +152,7 @@ void WebServerInit()
 	server.on("/GetStatusRele6", HandleStatus6);
 	server.on("/GetStatusRele7", HandleStatus7);
 	server.on("/GetStatusRele8", HandleStatus8);
-	
+
 	server.on("/SetRele1", HandleRele1);
 	server.on("/SetRele2", HandleRele2);
 	server.on("/SetRele3", HandleRele3);
@@ -156,9 +161,9 @@ void WebServerInit()
 	server.on("/SetRele6", HandleRele6);
 	server.on("/SetRele7", HandleRele7);
 	server.on("/SetRele8", HandleRele8);
-	
+
 	server.on("/BandStatus", HandleBandStatus);
-	
+
 	server.on("/TurnOnRele1", HandleTurnOn1);
 	server.on("/TurnOnRele2", HandleTurnOn2);
 	server.on("/TurnOnRele3", HandleTurnOn3);
@@ -167,7 +172,7 @@ void WebServerInit()
 	server.on("/TurnOnRele6", HandleTurnOn6);
 	server.on("/TurnOnRele7", HandleTurnOn7);
 	server.on("/TurnOnRele8", HandleTurnOn8);
-	
+
 	server.on("/TimerRele1", HandleTimer1);
 	server.on("/TimerRele2", HandleTimer2);
 	server.on("/TimerRele3", HandleTimer3);
@@ -190,7 +195,7 @@ void WifiDisconnect()
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete:");
 	LCDPrintString(THREE, CENTER_ALIGN, List[WifiItemSsid].Ssid);
-	WiFi.disconnect(); 
+	WiFi.disconnect();
 	server.close();
 	Flag.WifiActive = false;
 	delay(1500);
@@ -205,9 +210,9 @@ void WifiDisconnect()
 		// Flag.ClientConnected = true;
 		// client.stop();
 		// return true;
-	// }		
+	// }
 	// else
-	// {	
+	// {
 		// Flag.ClientConnected = false;
 		// return false;
 	// }
@@ -216,5 +221,5 @@ void WifiDisconnect()
 
 void WebClient()
 {
-	server.handleClient(); 
+	server.handleClient();
 }

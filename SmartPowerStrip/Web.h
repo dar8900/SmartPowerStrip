@@ -10,12 +10,12 @@ typedef enum
 	CAMERA_GRANDE,
 	MAX_WIFI_ITEM
 }WIFI_LIST_ITEM;
-	
+
 typedef struct
 {
 	String Ssid;
 	const char* Password;
-	const char* RealSsid;	
+	const char* RealSsid;
 }WIFI_LIST;
 
 
@@ -23,5 +23,6 @@ typedef struct
 void WifiInit(void);
 void WifiDisconnect(void);
 String WifiIP(void);
+void ShowClientConnected(void);
 void WebServerInit(void);
 void WebClient(void);

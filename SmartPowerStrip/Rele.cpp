@@ -73,13 +73,20 @@ void TakeReleTime()
 			{
 				if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) <= 0)
 				{
-					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
-					if(Rele[ReleIndx].ActiveTime.minute == 59)
+					if(((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) == 0) && (Rele[ReleIndx].ActiveTime.hour == 0))
 					{
-						if(!IsNewMinute[ReleIndx])
+						Rele[ReleIndx].ActiveTime.minute = 0;
+					}
+					else
+					{
+						Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
+						if(Rele[ReleIndx].ActiveTime.minute == 59)
 						{
-							Rele[ReleIndx].ActiveTime.hour += 1;
-							IsNewMinute[ReleIndx] = true;
+							if(!IsNewMinute[ReleIndx])
+							{
+								Rele[ReleIndx].ActiveTime.hour += 1;
+								IsNewMinute[ReleIndx] = true;
+							}
 						}
 					}
 				}
@@ -88,8 +95,8 @@ void TakeReleTime()
 					Rele[ReleIndx].ActiveTime.minute = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
 					TmpMinute[ReleIndx] = PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute;
 					IsNewMinute[ReleIndx] = false;
-				}				
-				if(Rele[ReleIndx].ActiveTime.hour > 24)
+				}
+				if(Rele[ReleIndx].ActiveTime.hour > 23)
 				{
 					Rele[ReleIndx].ActiveTime.day += 1;
 					Rele[ReleIndx].ActiveTime.hour = 0;
@@ -126,7 +133,7 @@ bool ReleInit(bool FirstGo)
 {
 	short ReleIndx;
 	ClearLCD();
-	LCDPrintString(ONE, CENTER_ALIGN, "Inizializzo i rele");
+	LCDPrintString(ONE, CENTER_ALIGN, "Test diagnostico");
 	LCDPrintString(TWO, CENTER_ALIGN, "attendere...");
 	TurnOffAllRele();
 	ShowReleIcons(THREE);
@@ -157,9 +164,9 @@ void ReleReStart()
 	short ReleIndx, TmpReleActive;
 	ClearLCD();
 	LCDPrintString(TWO, CENTER_ALIGN, "Sto ristabilendo");
-	LCDPrintString(THREE, CENTER_ALIGN, "i valori dei rele");
+	LCDPrintString(THREE, CENTER_ALIGN, "le prese");
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
-	{	
+	{
 		ReadMemory(Rele[ReleIndx].EepromAddr, 1, &TmpReleActive);
 		if(TmpReleActive == 0)
 		{
@@ -212,7 +219,7 @@ void CheckReleStatus()
 			Flag.AllReleUp = true;
 		}
 	}
-	
+
 }
 
 void ShowReleIcons(short Row)
@@ -223,7 +230,7 @@ void ShowReleIcons(short Row)
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
 			LCDMoveCursor(Row, 6 + ReleIndx);
-			LCDShowIcon(RELE_OFF);			
+			LCDShowIcon(RELE_OFF);
 		}
 	}
 	else
@@ -270,7 +277,7 @@ bool SetTimerRele(short ReleNbr)
 	LCDBlink();
 	while(!ExitSetTimer)
 	{
-		
+
 		LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
 		LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
 		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
@@ -282,7 +289,7 @@ bool SetTimerRele(short ReleNbr)
 		switch(Cursor)
 		{
 			case 0:
-				LCDMoveCursor(FOUR, 8);				
+				LCDMoveCursor(FOUR, 8);
 				break;
 			case 1:
 				LCDMoveCursor(FOUR, 10);
@@ -292,7 +299,7 @@ bool SetTimerRele(short ReleNbr)
 				break;
 			default:
 				break;
-		}	
+		}
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
 		{
@@ -399,23 +406,23 @@ bool SetTimerRele(short ReleNbr)
 				{
 					if(PresentTime.hour + SetTimer.hour >= 24)
 					{
-						Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23) - ((PresentTime.hour + SetTimer.hour) / 23));					
+						Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23) - ((PresentTime.hour + SetTimer.hour) / 23));
 						Rele[ReleNbr].TimerTime.minute = PresentTime.minute + SetTimer.minute;
 					}
 					else if(PresentTime.minute + SetTimer.minute > 59)
 					{
-						Rele[ReleNbr].TimerTime.hour = PresentTime.hour + 1;	
+						Rele[ReleNbr].TimerTime.hour = PresentTime.hour + 1;
 						Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
 					}
 					ExitSetTimer = true;
-					LCDNoBlink();				
+					LCDNoBlink();
 				}
 				else if((PresentTime.hour + SetTimer.hour >= 24) && (PresentTime.minute + SetTimer.minute > 59))
 				{
-					Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23));					
+					Rele[ReleNbr].TimerTime.hour = (((PresentTime.hour + SetTimer.hour) % 23));
 					Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
 					ExitSetTimer = true;
-					LCDNoBlink();				
+					LCDNoBlink();
 				}
 				else
 				{
@@ -426,7 +433,7 @@ bool SetTimerRele(short ReleNbr)
 				}
 				break;
 			default:
-				break;			
+				break;
 		}
 		delay(250);
 		ButtonPress = NO_PRESS;
@@ -453,7 +460,7 @@ short ReleIdx2Pin(short ReleIndx)
 	switch(ReleIndx)
 	{
 		case RELE_1:
-			PinNum = RELE1; 
+			PinNum = RELE1;
 			break;
 		case RELE_2:
 			PinNum = RELE2;
@@ -473,12 +480,12 @@ short ReleIdx2Pin(short ReleIndx)
 		case RELE_7:
 			PinNum = RELE7;
 			break;
-		case RELE_8: 
+		case RELE_8:
 			PinNum = RELE8;
 			break;
 		default:
 			PinNum = RELE1;
 			break;
 	}
-	return PinNum;	
+	return PinNum;
 }

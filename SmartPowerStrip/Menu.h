@@ -1,4 +1,5 @@
 #define REFRESH_MAIN_SCREEN_TIMER	6000
+#define DELAY_CLIENT_CONNECTION 	  60
 
 typedef enum
 {
@@ -16,7 +17,7 @@ typedef struct
 {
 	bool (*MenuFunc)(void);
 	String MenuTitle;
-	
+
 }MENU_VOICES;
 
 enum
@@ -25,7 +26,7 @@ enum
 	STATUS_ON
 };
 
-bool SetupInterrupt(void);
+// bool SetupInterrupt(void);
 void MainScreen(short EnterSetup);
 void MainMenu(void);
 bool ManualRele(void);
@@ -34,4 +35,3 @@ bool WifiConnect(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
-

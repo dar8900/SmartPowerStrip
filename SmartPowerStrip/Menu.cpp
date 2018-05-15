@@ -17,7 +17,8 @@ extern String HostName;
 extern WIFI_LIST List[];
 extern short WifiItemSsid;
 
-uint32_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+uint16_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+short TimerClientConnected = DELAY_CLIENT_CONNECTION;
 bool ExitFromBand = true;
 
 MENU_VOICES MainMenuItems[]
@@ -31,36 +32,35 @@ MENU_VOICES MainMenuItems[]
 	{AssignReleTimer,	"Assegna Timer"		},
 };
 
-static const String ONOFF[] = {"Off", "On"}; 
+static const String ONOFF[] = {"Off", "On"};
 
-bool SetupInterrupt()
-{
-	bool EnterSetup = false;
-	short ButtonPress = NO_PRESS, InterruptTimer = 10;
-	while(InterruptTimer > 0)
-	{
-		ButtonPress = CheckButtons();
-		if(ButtonPress == BUTTON_SET)
-		{
-			BlinkLed(BUTTON_LED);
-			EnterSetup = true;
-		}
-		else
-		{
-			EnterSetup = false;
-		}
-		InterruptTimer--;
-		delay(8);
-		ButtonPress = NO_PRESS;
-	}
-	return EnterSetup;
-}
+// bool SetupInterrupt()
+// {
+// 	bool EnterSetup = false;
+// 	short ButtonPress = NO_PRESS, InterruptTimer = 10;
+// 	while(InterruptTimer > 0)
+// 	{
+// 		ButtonPress = CheckButtons();
+// 		if(ButtonPress == BUTTON_SET)
+// 		{
+// 			BlinkLed(BUTTON_LED);
+// 			EnterSetup = true;
+// 		}
+// 		else
+// 		{
+// 			EnterSetup = false;
+// 		}
+// 		InterruptTimer--;
+// 		delay(8);
+// 		ButtonPress = NO_PRESS;
+// 	}
+// 	return EnterSetup;
+// }
 
 void MainScreen(short EnterSetup)
 {
 	String Time,Date;
 	short ReleIndx = 0;
-	// short EnterSetup = NO_PRESS
 	CheckReleStatus();
 	CheckEvents();
 	Flag.InBand = CheckBand();
@@ -74,11 +74,11 @@ void MainScreen(short EnterSetup)
 		{
 			if(Flag.WifiActive)
 				WifiDisconnect();
-			
+
 			if(Flag.IsDisplayOn)
 			{
 				LCDDisplayOff();
-				Flag.IsDisplayOn = false;				
+				Flag.IsDisplayOn = false;
 			}
 			if(!Flag.AllReleDown)
 			{
@@ -89,7 +89,7 @@ void MainScreen(short EnterSetup)
 				if(Rele[ReleIndx].HaveTimer == true)
 				{
 					Rele[ReleIndx].HaveTimer = false;
-					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);				
+					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);
 				}
 			}
 			delay(50);
@@ -110,11 +110,6 @@ void MainScreen(short EnterSetup)
 			ReleReStart();
 			ExitFromBand = true;
 		}
-		// EnterSetup = CheckButtons(); 
-		// if(EnterSetup == BUTTON_SET)
-		// {
-			// break;
-		// }
 		// Scrittura data e ora
 		Time = String(PresentTime.hour);
 		if(PresentTime.minute < 10)
@@ -128,11 +123,25 @@ void MainScreen(short EnterSetup)
 		Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
 		LCDPrintString(ONE, LEFT_ALIGN, Time);
 		LCDPrintString(ONE, RIGHT_ALIGN, Date);
+		// WebPage aperta
+		if(Flag.ClientConnected)
+		{
+			TimerClientConnected--;
+			if(TimerClientConnected > 0)
+			{
+				ShowClientConnected();
+			}
+			else
+			{
+				TimerClientConnected = DELAY_CLIENT_CONNECTION;
+				Flag.ClientConnected = false;
+			}
+		}
 		// Stato relè
 		LCDPrintString(TWO, CENTER_ALIGN, "Prese attive:");
 		ShowReleIcons(THREE);
 		// Stato wifi
-		LCDPrintString(FOUR, LEFT_ALIGN, "Wifi status: ");
+		LCDPrintString(FOUR, LEFT_ALIGN, "Stato WiFi: ");
 		if(Flag.WifiActive)
 		{
 			LCDMoveCursor(FOUR, 14);
@@ -143,8 +152,6 @@ void MainScreen(short EnterSetup)
 			LCDMoveCursor(FOUR, 14);
 			LCDShowIcon(WIFI_NO);
 		}
-	
-		
 		TimerRefreshMenu--;
 		if(TimerRefreshMenu == 0)
 		{
@@ -152,7 +159,7 @@ void MainScreen(short EnterSetup)
 			if(Flag.IsDisplayOn)
 			{
 				LCDDisplayOff();
-				Flag.IsDisplayOn = false;	
+				Flag.IsDisplayOn = false;
 			}
 		}
 	}
@@ -165,16 +172,16 @@ void MainScreen(short EnterSetup)
 		}
 		MainMenu();
 		ClearLCD();
-		EnterSetup = NO_PRESS;		
+		EnterSetup = NO_PRESS;
 	}
 	else if(EnterSetup != NO_PRESS)
 	{
 		if(!Flag.IsDisplayOn)
 		{
 			Flag.IsDisplayOn = true;
-			LCDDisplayOn();	
+			LCDDisplayOn();
 		}
-				
+
 	}
 
 }
@@ -198,7 +205,7 @@ void MainMenu()
 	delay(2000);
 	ClearLCD();
 	while(!ExitMainMenu)
-	{	
+	{
 		if(ReEnterMenu)
 		{
 			ClearLCD();
@@ -231,8 +238,21 @@ void MainMenu()
 		Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
 		LCDPrintString(ONE, LEFT_ALIGN, Time);
 		LCDPrintString(ONE, RIGHT_ALIGN, Date);
+		if(Flag.ClientConnected)
+		{
+			TimerClientConnected--;
+			if(TimerClientConnected > 0)
+			{
+				ShowClientConnected();
+			}
+			else
+			{
+				TimerClientConnected = DELAY_CLIENT_CONNECTION;
+				Flag.ClientConnected = false;
+			}
+		}
 		LCDPrintString(THREE, CENTER_ALIGN, MainMenuItems[Item].MenuTitle);
-		
+
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
 		{
@@ -252,7 +272,7 @@ void MainMenu()
 				BlinkLed(BUTTON_LED);
 				if(Item < MAX_MENU_ITEM - 1)
 				{
-					Item++;					
+					Item++;
 				}
 				else
 				{
@@ -269,10 +289,10 @@ void MainMenu()
 				ExitMainMenu = true;
 				break;
 			default:
-				break;			
+				break;
 		}
 		ButtonPress = NO_PRESS;
-		delay(100);
+		delay(10);
 		if(ReEnterMenu)
 		{
 			MainMenuItems[Item].MenuFunc();
@@ -292,7 +312,7 @@ bool ManualRele()
 		ClearLCD();
 		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi spegnere");
 		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
-		delay(1000);		
+		delay(1000);
 	}
 	else
 	{
@@ -331,7 +351,7 @@ bool ManualRele()
 				{
 					OnOffAll = false;
 					ExitYesNo = true;
-				}					
+				}
 				else
 				{
 					OnOffAll = true;
@@ -368,9 +388,9 @@ bool ManualRele()
 	{
 		ClearLCD();
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
-		{		
+		{
 			ClearLCD();
-			SelRele = "Impostare il Rele ";
+			SelRele = "Impostare la presa ";
 			SelRele += String(ReleIndx + 1);
 			CheckEvents();
 			ReleSetted = false;
@@ -384,10 +404,10 @@ bool ManualRele()
 			{
 				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_OFF]);
 				Status = STATUS_OFF;
-			}	
+			}
 			OldStatus = Status;
 			while(!ReleSetted)
-			{		
+			{
 				CheckEvents();
 				ButtonPress = CheckButtons();
 				LCDPrintString(TWO, CENTER_ALIGN, SelRele);
@@ -448,7 +468,7 @@ bool ManualRele()
 				ButtonPress = NO_PRESS;
 				if(ExitAll)
 					break; // Uscita while
-			}	
+			}
 			if(ExitAll)
 				break; // Uscita for
 		}
@@ -497,10 +517,10 @@ bool ChangeTimeBand()
 			LCDPrintString(THREE, CENTER_ALIGN, "Menu Principale");
 			delay(2000);
 
-			ClearLCD();	
+			ClearLCD();
 			OkBandSet = true;
 		}
-		
+
 		CheckEvents();
 		ButtonPress = CheckButtons();
 		LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
@@ -533,7 +553,7 @@ bool ChangeTimeBand()
 							ExitChangeBand = true;
 						}
 						else
-						{	
+						{
 							ClearLCD();
 							LCDPrintString(0, CENTER_ALIGN, "Banda");
 							LCDPrintString(1, CENTER_ALIGN, "non");
@@ -542,11 +562,11 @@ bool ChangeTimeBand()
 							ClearLCD();
 							CheckEvents();
 							SetBandInvalid();
-							ExitChangeBand = false;	
+							ExitChangeBand = false;
 							OkBandSet = false;
 						}
 					}
-				}					
+				}
 				else
 				{
 					SetBandInvalid();
@@ -601,7 +621,7 @@ bool WifiConnect()
 					{
 						ExitWifiConnect = true;
 						WifiDisconnectChoice = true;
-					}					
+					}
 					else
 					{
 						ExitWifiConnect = true;
@@ -612,16 +632,16 @@ bool WifiConnect()
 					break;
 			}
 			ButtonPress = NO_PRESS;
-			delay(80);			
+			delay(80);
 		}
 		ClearLCD();
-		if(WifiDisconnectChoice)		
+		if(WifiDisconnectChoice)
 			WifiDisconnect();
 	}
 	else
 	{
 		WifiInit();
-		WebServerInit();		
+		WebServerInit();
 	}
 	return true;
 }
@@ -660,7 +680,7 @@ bool HelpInfo()
 	for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 	{
 		if(Rele[ReleIndx].HaveTimer)
-		{	
+		{
 			if(NumTimer > 1)
 				break;
 			ReleTimer[NumTimer] = ReleIndx + 1;
@@ -683,7 +703,7 @@ bool HelpInfo()
 		LCDPrintString(TWO, LEFT_ALIGN, "Prese associate:");
 		LCDPrintValue(THREE, 5, ReleTimer[0]);
 		if(ReleTimer[1] <= 8)
-			LCDPrintValue(THREE, 15, ReleTimer[1]);				
+			LCDPrintValue(THREE, 15, ReleTimer[1]);
 	}
 	else
 	{
@@ -706,8 +726,8 @@ bool HelpInfo()
 		if(Band.EndMinute < 10)
 			BandTime2 += "0" + String(Band.EndMinute);
 		else
-			BandTime2 += String(Band.EndMinute);	
-		
+			BandTime2 += String(Band.EndMinute);
+
 		BandTime1 = BandTime1 + "  " + BandTime2;
 		LCDPrintString(FOUR, CENTER_ALIGN, BandTime1);
 	}
@@ -732,7 +752,7 @@ bool HelpInfo()
 				Hour = String(Rele[ReleIndx].ActiveTime.hour);
 				Minute = String(Rele[ReleIndx].ActiveTime.minute);
 				TotalTime = Day + "g " + Hour + "h " + Minute + "m";
-				LCDPrintString(THREE, CENTER_ALIGN, TotalTime);		
+				LCDPrintString(THREE, CENTER_ALIGN, TotalTime);
 				TimerShowTotalTime--;
 				delay(100);
 			}
@@ -744,7 +764,7 @@ bool HelpInfo()
 			delay(1000);
 			LCDPrintLineVoid(THREE);
 		}
-		
+
 	}
 	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
@@ -754,7 +774,7 @@ bool HelpInfo()
 	return true;
 }
 
-bool WiFiInfo() 
+bool WiFiInfo()
 {
 	bool ExitWifiInfo = false;
 	short ButtonPress = 0;
@@ -767,7 +787,7 @@ bool WiFiInfo()
 	CheckEvents();
 	ClearLCD();
 	while(1)
-	{		
+	{
 		CheckEvents();
 		ButtonPress = CheckButtons();
 		LCDPrintString(ONE, LEFT_ALIGN, "IP:");
@@ -795,7 +815,7 @@ bool WiFiInfo()
 			case BUTTON_SET:
 			default:
 				break;
-			
+
 		}
 		ButtonPress = NO_PRESS;
 		if(ExitWifiInfo)
@@ -841,7 +861,7 @@ bool AssignReleTimer()
 		ClearLCD();
 		CheckEvents();
 		while(!ExitAssignReleTimer)
-		{		
+		{
 			CheckEvents();
 			if(Rele[ReleNumber].IsActive)
 			{
@@ -899,14 +919,14 @@ bool AssignReleTimer()
 						ClearLCD();
 						LCDPrintString(ONE, CENTER_ALIGN, "Raggiunto il");
 						LCDPrintString(TWO, CENTER_ALIGN, "numero massimo");
-						LCDPrintString(THREE, CENTER_ALIGN, "di timer assegnati");	
+						LCDPrintString(THREE, CENTER_ALIGN, "di timer assegnati");
 						delay(3000);
-						ClearLCD();	
+						ClearLCD();
 						LCDPrintString(ONE, CENTER_ALIGN, "Disabilitare");
 						LCDPrintString(TWO, CENTER_ALIGN, "un timer");
-						LCDPrintString(THREE, CENTER_ALIGN, "o uscire");	
+						LCDPrintString(THREE, CENTER_ALIGN, "o uscire");
 						delay(3000);
-						ClearLCD();						
+						ClearLCD();
 					}
 					else if(!Rele[ReleNumber].HaveTimer && Rele[ReleNumber].IsActive)
 					{
@@ -918,7 +938,7 @@ bool AssignReleTimer()
 						ON(ReleIdx2Pin(ReleNumber));
 						Flag.AllReleDown = false;
 						CheckEvents();
-						TimerAssignedCnt++;	
+						TimerAssignedCnt++;
 					}
 
 					break;
@@ -934,10 +954,3 @@ bool AssignReleTimer()
 	}
 	return true;
 }
-
-
-
-
-
-
-
