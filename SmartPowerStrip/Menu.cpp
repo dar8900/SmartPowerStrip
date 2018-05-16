@@ -117,13 +117,13 @@ void MainScreen(short EnterSetup)
 			TimerClientConnected--;
 			if(TimerClientConnected > 0)
 			{
-				ShowClientConnected();
+				ShowClientConnected(ONE, 7, true);
 			}
 			else
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
-				ClearLCD();
+				ShowClientConnected(ONE, 7, false);
 			}
 		}
 		// Stato relè
@@ -131,16 +131,7 @@ void MainScreen(short EnterSetup)
 		ShowReleIcons(THREE);
 		// Stato wifi
 		LCDPrintString(FOUR, LEFT_ALIGN, "Stato WiFi: ");
-		if(Flag.WifiActive)
-		{
-			LCDMoveCursor(FOUR, 14);
-			LCDShowIcon(WIFI_OK);
-		}
-		else
-		{
-			LCDMoveCursor(FOUR, 14);
-			LCDShowIcon(WIFI_NO);
-		}
+		ShowWifiStatus(FOUR, 14, Flag.WifiActive);
 		TimerRefreshMenu--;
 		if(TimerRefreshMenu == 0)
 		{
@@ -221,13 +212,13 @@ void MainMenu()
 			TimerClientConnected--;
 			if(TimerClientConnected > 0)
 			{
-				ShowClientConnected();
+				ShowClientConnected(ONE, 7, true);
 			}
 			else
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
-				ClearLCD();
+				ShowClientConnected(ONE, 7, false);
 			}
 		}
 		LCDPrintString(THREE, CENTER_ALIGN, MainMenuItems[Item].MenuTitle);
@@ -561,16 +552,7 @@ bool HelpInfo()
 	LCDPrintString(ONE, CENTER_ALIGN, "Stato Prese:");
 	ShowReleIcons(TWO);
 	LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
-	if(Flag.WifiActive)
-	{
-		LCDMoveCursor(THREE, 16);
-		LCDShowIcon(WIFI_OK);
-	}
-	else
-	{
-		LCDMoveCursor(THREE, 16);
-		LCDShowIcon(WIFI_NO);
-	}
+	ShowWifiStatus(THREE, 16, Flag.WifiActive);
 	delay(3000);
 	CheckEvents();
 	ClearLCD();
@@ -696,8 +678,7 @@ bool WiFiInfo()
 		}
 		else
 		{
-			LCDMoveCursor(ONE, 4);
-			LCDShowIcon(WIFI_NO);
+			ShowWifiStatus(ONE, 4, false);
 		}
 		LCDPrintString(TWO, LEFT_ALIGN, "SSID:");
 		LCDPrintString(TWO, RIGHT_ALIGN, List[WifiItemSsid].Ssid);

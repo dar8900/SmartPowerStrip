@@ -235,6 +235,14 @@ void ShowReleIcons(short Row)
 			LCDShowIcon(RELE_OFF);
 		}
 	}
+	else if(Flag.AllReleUp)
+	{
+		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
+		{
+			LCDMoveCursor(Row, 6 + ReleIndx);
+			LCDShowIcon(RELE_ON);
+		}
+	}
 	else
 	{
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
@@ -287,20 +295,6 @@ bool SetTimerRele(short ReleNbr)
 		LCDPrintValue(FOUR, 10, Minute_1);
 		LCDPrintValue(FOUR, 11, Minute_2);
 		CheckEvents();
-		switch(Cursor)
-		{
-			case 0:
-				LCDMoveCursor(FOUR, 8);
-				break;
-			case 1:
-				LCDMoveCursor(FOUR, 10);
-				break;
-			case 2:
-				LCDMoveCursor(FOUR, 11);
-				break;
-			default:
-				break;
-		}
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
 		{
@@ -378,17 +372,10 @@ bool SetTimerRele(short ReleNbr)
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
-				if(Hour != 4)
-				{
-					if(Cursor < 2)
-						Cursor++;
-					else
-						Cursor = 0;
-				}
+				if(Cursor < 2)
+					Cursor++;
 				else
-				{
 					Cursor = 0;
-				}
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
@@ -413,6 +400,10 @@ bool SetTimerRele(short ReleNbr)
 					else if(PresentTime.minute + SetTimer.minute > 59)
 					{
 						Rele[ReleNbr].TimerTime.hour = PresentTime.hour + 1;
+						if(PresentTime.hour + 1 == 24)
+						{
+							Rele[ReleNbr].TimerTime.hour = 0;
+						}
 						Rele[ReleNbr].TimerTime.minute = (((PresentTime.minute + SetTimer.minute) % 59) - ((PresentTime.minute + SetTimer.minute) / 59));
 					}
 					ExitSetTimer = true;
@@ -436,7 +427,21 @@ bool SetTimerRele(short ReleNbr)
 			default:
 				break;
 		}
-		delay(250);
+		switch(Cursor)
+		{
+			case 0:
+				LCDMoveCursor(FOUR, 8);
+				break;
+			case 1:
+				LCDMoveCursor(FOUR, 10);
+				break;
+			case 2:
+				LCDMoveCursor(FOUR, 11);
+				break;
+			default:
+				break;
+		}
+		delay(100);
 		ButtonPress = NO_PRESS;
 	}
 	return ExitSetTimer;

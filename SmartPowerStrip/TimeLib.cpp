@@ -132,6 +132,34 @@ bool ChangeTime()
 						break;
 				}
 				break;
+                case CHANGE_YEAR:
+                    LCDPrintString(TWO, CENTER_ALIGN, "Anno:");
+                    LCDPrintValue(THREE, CENTER_ALIGN, Year);
+                    switch(ButtonPress)
+                    {
+                        case BUTTON_UP:
+                            if(Year > 2018)
+                                Year--;
+                            else
+                                Year = 2099;
+                            ClearLCD();
+                            break;
+                        case BUTTON_DOWN:
+                            if(Year < 2099)
+                                Year++;
+                            else
+                                Year = 2018;
+                            ClearLCD();
+                            break;
+                        case BUTTON_SET:
+                            TimeSM = CHANGE_MONTH;
+                            ClearLCD();
+                            break;
+                        case BUTTON_LEFT:
+                        default:
+                            break;
+                    }
+                    break;
 			case CHANGE_MONTH:
 				LCDPrintString(TWO, CENTER_ALIGN, "Mese:");
 				LCDPrintValue(THREE, CENTER_ALIGN, Month);
@@ -210,34 +238,6 @@ bool ChangeTime()
 						break;
 					case BUTTON_SET:
 						TimeSM = EXIT_CHANGE_TIME;
-						ClearLCD();
-						break;
-					case BUTTON_LEFT:
-					default:
-						break;
-				}
-				break;
-			case CHANGE_YEAR:
-				LCDPrintString(TWO, CENTER_ALIGN, "Anno:");
-				LCDPrintValue(THREE, CENTER_ALIGN, Year);
-				switch(ButtonPress)
-				{
-					case BUTTON_UP:
-						if(Year > 2018)
-							Year--;
-						else
-							Year = 2099;
-						ClearLCD();
-						break;
-					case BUTTON_DOWN:
-						if(Year < 2099)
-							Year++;
-						else
-							Year = 2018;
-						ClearLCD();
-						break;
-					case BUTTON_SET:
-						TimeSM = CHANGE_MONTH;
 						ClearLCD();
 						break;
 					case BUTTON_LEFT:

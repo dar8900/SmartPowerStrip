@@ -25,7 +25,8 @@ typedef enum
 	WIFI_NO,
 	RELE_OFF,
 	RELE_ON,
-	CLIENT_CONN
+	CLIENT_CONN,
+	EMPTY
 }ICON_NUMB;
 
 

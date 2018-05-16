@@ -23,7 +23,8 @@ typedef struct
 void WifiInit(void);
 void WifiDisconnect(void);
 String WifiIP(void);
-void ShowClientConnected(void);
+void ShowWifiStatus(short Row, short Col, bool Status);
+void ShowClientConnected(short Row, short Col, bool Status);
 void WebServerInit(void);
 void WebClient(void);
 void WifiConnectionChoice(short *WifiListItem, String *NomeWifi);

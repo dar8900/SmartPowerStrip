@@ -78,6 +78,19 @@ uint8_t ClientConnection[]
 	0x08
 };
 
+
+uint8_t EmptyIcon[]
+{
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00
+};
+
 FLAGS Flag;
 
 void BlinkLed(short pin)
@@ -149,6 +162,7 @@ void setup()
 	LCDCreateIcon(OffRele, RELE_OFF);
 	LCDCreateIcon(OnRele, RELE_ON);
 	LCDCreateIcon(ClientConnection, CLIENT_CONN);
+	LCDCreateIcon(EmptyIcon, EMPTY);
 	TakePresentTime();
 
 	ReadMemory(FIRST_START_CHECK_ADDR, 1, &FirstStart);

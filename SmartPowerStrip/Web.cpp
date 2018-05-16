@@ -12,7 +12,6 @@
 #include "Buttons.h"
 
 #include "WebHandleFunctions.h"
-#include "WebPage.h"
 
 extern FLAGS Flag;
 extern RELE Rele[];
@@ -120,10 +119,33 @@ String WifiIP()
 	return IP;
 }
 
-void ShowClientConnected()
+void ShowWifiStatus(short Row, short Col, bool Status)
 {
-	LCDMoveCursor(ONE, 7);
-	LCDShowIcon(CLIENT_CONN);
+	if(Status)
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(WIFI_OK);
+	}
+	else
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(WIFI_NO);
+	}
+}
+
+void ShowClientConnected(short Row, short Col, bool Status)
+{
+	if(Status)
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(CLIENT_CONN);
+	}
+	else
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(EMPTY);
+	}
+
 }
 
 void WebServerInit()
