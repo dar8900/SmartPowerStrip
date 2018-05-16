@@ -33,4 +33,5 @@ enum
 void RTCInit(void);
 bool ChangeTime(void);
 void TimeAdjust(short Hour, short Minute, short Day, short Month, short Year);
+void ShowDateTime(short Row);
 void TakePresentTime(void);

@@ -257,6 +257,25 @@ bool ChangeTime()
 	TimeAdjust(Hour, Minute, Day, Month, Year);
 }
 
+void ShowDateTime(short Row)
+{
+    String Time, Date;
+    TakePresentTime();
+    Time = String(PresentTime.hour);
+    if(PresentTime.minute < 10)
+    {
+        Time += ":0" + String(PresentTime.minute);
+    }
+    else
+    {
+        Time += ":" + String(PresentTime.minute);
+    }
+    Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year % 100);
+    LCDPrintString(Row, LEFT_ALIGN, Time);
+    LCDPrintString(Row, RIGHT_ALIGN, Date);
+}
+
+
 void TimeAdjust(short Hour, short Minute, short Day, short Month, short Year)
 {
 	DateTime AdjustTime(Year, Month, Day, Hour, Minute, 0 );

@@ -20,7 +20,8 @@ void BandInit()
 	ClearLCD();
 	if(BandValidationValue == VALID)
 	{
-		LCDPrintString(TWO, CENTER_ALIGN, "Ripristino banda");
+		LCDPrintString(TWO, CENTER_ALIGN, "Ripristino i valori");
+		LCDPrintString(THREE, CENTER_ALIGN, "della banda");
 		delay(1200);
 		for(ReadBandIndx = INIT_HOUR; ReadBandIndx <= END_MINUTE; ReadBandIndx++)
 		{

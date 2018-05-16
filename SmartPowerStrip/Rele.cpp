@@ -261,12 +261,12 @@ bool SetTimerRele(short ReleNbr)
 	bool ExitSetTimer = false;
 	TIME_DATE_FORMAT SetTimer;
 	short Hour = 0, Minute_1 = 0, Minute_2 = 0;
-	String TimerStr;
+	String TimerStr, ReleNmbrStr = "per la presa: ";
 	ClearLCD();
 	CheckEvents();
+	ReleNmbrStr += String(ReleNbr + 1);
 	LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
-	LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
-	LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
+	LCDPrintString(TWO, CENTER_ALIGN, ReleNmbrStr);
 	delay(2000);
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Tempo massimo");
@@ -279,10 +279,9 @@ bool SetTimerRele(short ReleNbr)
 	LCDBlink();
 	while(!ExitSetTimer)
 	{
-
-		LCDPrintString(ONE, CENTER_ALIGN, "Imposta il timer");
-		LCDPrintString(TWO, CENTER_ALIGN, "per la presa ");
-		LCDPrintValue(THREE, CENTER_ALIGN, ReleNbr + 1);
+		ShowDateTime(ONE);
+		LCDPrintString(TWO, CENTER_ALIGN, "Imposta il timer");
+		LCDPrintString(THREE, CENTER_ALIGN, ReleNmbrStr);
 		LCDPrintValue(FOUR, 8, Hour);
 		LCDPrintString(FOUR, 9, ":");
 		LCDPrintValue(FOUR, 10, Minute_1);

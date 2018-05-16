@@ -58,7 +58,6 @@ static const String ONOFF[] = {"Off", "On"};
 
 void MainScreen(short EnterSetup)
 {
-	String Time,Date;
 	short ReleIndx = 0;
 	CheckReleStatus();
 	CheckEvents();
@@ -106,23 +105,13 @@ void MainScreen(short EnterSetup)
 			LCDPrintString(TWO, CENTER_ALIGN, "Uscita dalla banda");
 			delay(2000);
 			ClearLCD();
+			BandInit();
 			ReleReStart();
 			ExitFromBand = true;
 		}
 		// Scrittura data e ora
-		Time = String(PresentTime.hour);
-		if(PresentTime.minute < 10)
-		{
-			Time += ":0" + String(PresentTime.minute);
-		}
-		else
-		{
-			Time += ":" + String(PresentTime.minute);
-		}
-		Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
-		LCDPrintString(ONE, LEFT_ALIGN, Time);
-		LCDPrintString(ONE, RIGHT_ALIGN, Date);
-		// WebPage aperta
+		ShowDateTime(ONE);
+		// Icona WebPage aperta
 		if(Flag.ClientConnected)
 		{
 			TimerClientConnected--;
@@ -191,7 +180,6 @@ void MainMenu()
 	bool ExitMainMenu = false;
 	bool ReEnterMenu = false;
 	short ButtonPress = 0, Item = MANUAL_RELE;
-	String Time,Date;
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Premere Up o Down");
 	LCDPrintString(TWO  , CENTER_ALIGN, "per scegliere");
@@ -226,18 +214,8 @@ void MainMenu()
 		}
 		CheckEvents();
 		// Scrittura data e ora
-		Time = String(PresentTime.hour);
-		if(PresentTime.minute < 10)
-		{
-			Time += ":0" + String(PresentTime.minute);
-		}
-		else
-		{
-			Time += ":" + String(PresentTime.minute);
-		}
-		Date = String(PresentTime.day) + "/" + String(PresentTime.month) + "/" + String(PresentTime.year);
-		LCDPrintString(ONE, LEFT_ALIGN, Time);
-		LCDPrintString(ONE, RIGHT_ALIGN, Date);
+		ShowDateTime(ONE);
+		// Icona WebPage aperta
 		if(Flag.ClientConnected)
 		{
 			TimerClientConnected--;
