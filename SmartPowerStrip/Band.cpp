@@ -111,7 +111,7 @@ bool CheckBand()
 				}
 				else
 				{
-					if(PresentTime.minute <= Band.minute)
+					if(PresentTime.minute <= Band.EndMinute)
 					{
 						InBand = true;
 						Flag.BandActive = true;
