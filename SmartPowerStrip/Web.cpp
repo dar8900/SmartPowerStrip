@@ -60,6 +60,7 @@ void WifiInit()
 		}
 		else
 		{
+			ClearLCD();
 			WifiConnectionChoice(&WifiListItem, &NomeWifi);
 		}
 	}

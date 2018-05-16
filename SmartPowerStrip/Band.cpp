@@ -34,44 +34,63 @@ bool CheckBand()
 	}
 	else
 	{
-		if((Band.InitHour <= PresentTime.hour) && (Band.InitMinute <= PresentTime.minute) && (Band.EndHour >= PresentTime.hour) && (Band.EndMinute >= PresentTime.minute)
-			&& (Band.EndMinute > Band.InitMinute))
+		if(Band.InitHour < Band.EndHour)
 		{
-			InBand = true;
-			Flag.BandActive = true;
-		}
-		if((Band.InitHour <= PresentTime.hour) && (Band.EndHour >= PresentTime.hour) && (Band.EndMinute >= PresentTime.minute)
-		   && (Band.EndMinute < Band.InitMinute))
-		{
-			InBand = true;
-			Flag.BandActive = true;			
-		}
-		else if(Band.InitHour > Band.EndHour)
-		{
-			if(Band.InitDay < PresentTime.day)
+			if((Band.InitHour <= PresentTime.hour) && (Band.EndHour > PresentTime.hour))
 			{
-				if((Band.InitHour <= PresentTime.hour) && (Band.InitMinute <= PresentTime.minute))
+				InBand = true;
+				Flag.BandActive = true;				
+			}
+			else if(Band.EndHour == PresentTime.hour)
+			{
+				if((Band.EndMinute >= PresentTime.minute))
 				{
 					InBand = true;
-					Flag.BandActive = true;
-				}
-				else if((PresentTime.hour >= 0 && PresentTime.minute >= 0) &&
-				  (Band.EndHour >= PresentTime.hour && Band.EndMinute >= PresentTime.minute))
-				{
-					InBand = true;
-					Flag.BandActive = true;						
+					Flag.BandActive = true;	
 				}
 				else
 				{
 					InBand = false;
-					Flag.BandActive = false;						
+					Flag.BandActive = false;	
 				}
+			}
+			else
+			{
+				InBand = false;
+				Flag.BandActive = false;	
+			}
+		}
+		else if(Band.InitHour == Band.EndHour)
+		{
+			if((Band.InitMinute <= PresentTime.minute) && (Band.EndMinute >= PresentTime.minute))
+			{
+				InBand = true;
+				Flag.BandActive = true;	
+			}
+			else
+			{
+				InBand = false;
+				Flag.BandActive = false;	
+			}
+		}
+		else if(Band.InitHour > Band.EndHour)
+		{
+			if((PresentTime.hour < 24) && (Band.InitHour <= PresentTime.hour))
+			{
+				InBand = true;
+				Flag.BandActive = true;
+			}
+			else if(PresentTime.hour <= Band.EndHour)
+			{
+				InBand = true;
+				Flag.BandActive = true;
 			}
 			else
 			{
 				InBand = false;
 				Flag.BandActive = false;
 			}
+				
 		}
 	}
 	return InBand;
@@ -104,7 +123,7 @@ bool IsBandCorrect()
 	else
 	{
 		TakePresentTime();
-		if(Band.InitDay < PresentTime.day)
+		if(Band.InitDay < Band.EndDay )
 		{
 			BandCorrect = true;
 			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
@@ -401,6 +420,7 @@ bool SetTimeBand()
 							SaveBandValues(END_HOUR, Hour);
 							Band.EndHour = Hour;
 							Band.InitDay = PresentTime.day;
+							Band.EndDay = PresentTime.day + 1;
 							TimeVar = END_MINUTE;
 							ClearLCD();							
 						}
