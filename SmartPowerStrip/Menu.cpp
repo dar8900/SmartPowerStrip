@@ -517,9 +517,8 @@ bool ChangeTimeBand()
 						else
 						{
 							ClearLCD();
-							LCDPrintString(0, CENTER_ALIGN, "Banda");
-							LCDPrintString(1, CENTER_ALIGN, "non");
-							LCDPrintString(2, CENTER_ALIGN, "corretta");
+							LCDPrintString(ONE, CENTER_ALIGN, "Banda");
+							LCDPrintString(TWO, CENTER_ALIGN, "non corretta");
 							delay(2000);
 							ClearLCD();
 							CheckEvents();

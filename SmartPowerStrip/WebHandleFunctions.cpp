@@ -52,6 +52,7 @@ const char WebPage[] PROGMEM = R"=====(
 	   // }
 
 
+//////////////////////////////////  FUNZIONI PER ACCENSIONE ///////////////////////////////////
 
 		function SetRele1(Status)
 		{
@@ -194,6 +195,8 @@ const char WebPage[] PROGMEM = R"=====(
 		  xhttp.open("GET", BandStatusFunc, true);
 		  xhttp.send();
 		}
+
+//////////////////////////////////  FUNZIONI PER TURN ON ///////////////////////////////////
 
 		setInterval(function()
 		{
@@ -373,6 +376,8 @@ const char WebPage[] PROGMEM = R"=====(
 		  xhttp.open("GET", TurnOnReleFunc, true);
 		  xhttp.send();
 		}
+
+//////////////////////////////////  FUNZIONI PER TIMER ///////////////////////////////////
 
 		setInterval(function()
 		{
