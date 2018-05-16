@@ -20,11 +20,11 @@ typedef struct
 
 }MENU_VOICES;
 
-enum
+typedef enum
 {
-	STATUS_OFF = 0,
-	STATUS_ON
-};
+	YES = 0,
+	NO
+} ANSWER_TYPE;
 
 // bool SetupInterrupt(void);
 bool CheckYesNo(void);

@@ -841,7 +841,7 @@ bool CheckYesNo()
 	bool Exit = false, Choice = false;
 	String YesNo[] = {"Si", "No"};
 	short ButtonPress = NO_PRESS;
-	short YesNoChoice = 1;
+	short YesNoChoice = NO;
 	while(!Exit)
 	{
 		CheckEvents();
@@ -851,23 +851,23 @@ bool CheckYesNo()
 		{
 			case BUTTON_UP:
 				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
-					YesNoChoice = 1;
+				if(YesNoChoice == YES)
+					YesNoChoice = NO;
 				else
-					YesNoChoice = 0;
+					YesNoChoice = YES;
 				LCDPrintLineVoid(FOUR);
 				break;
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
-					YesNoChoice = 1;
+				if(YesNoChoice == YES)
+					YesNoChoice = NO;
 				else
-					YesNoChoice = 0;
+					YesNoChoice = YES;
 					LCDPrintLineVoid(FOUR);
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
-				if(YesNoChoice == 0)
+				if(YesNoChoice == YES)
 				{
 					Exit = true;
 					Choice = true;

@@ -30,13 +30,19 @@ enum
 	TIMER_TIME
 };
 
+typedef enum
+{
+	STATUS_OFF = 0,
+	STATUS_ON
+} RELE_STATUS;
+
 typedef struct
 {
 	bool IsActive;
 	RELE_TIME_FORMAT TurnOnTime;
 	RELE_TIME_FORMAT ActiveTime;
 	bool HaveTimer;
-	RELE_TIME_FORMAT TimerTime;	
+	RELE_TIME_FORMAT TimerTime;
 	short EepromAddr;
 }RELE;
 
