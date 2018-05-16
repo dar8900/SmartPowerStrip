@@ -725,7 +725,7 @@ bool AssignReleTimer()
 		ClearLCD();
 		LCDPrintString(TWO, CENTER_ALIGN, "Premi Up o Down");
 		LCDPrintString(THREE, CENTER_ALIGN, "per scegliere");
-		LCDPrintString(FOUR, CENTER_ALIGN, "il rele");
+		LCDPrintString(FOUR, CENTER_ALIGN, "la presa");
 		delay(2000);
 		ClearLCD();
 		LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");

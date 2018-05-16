@@ -277,7 +277,8 @@ void HandleRele1()
 			Rele[RELE_1].IsActive = true;
 			Rele[RELE_1].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_1].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_1].TurnOnTime.minute = PresentTime.minute;
+			Rele[ReleIndx].ActiveTime.minute = 0;			
 		}
 		LedStatus = "ACCESA"; //Feedback parameter
 	}
@@ -308,7 +309,8 @@ void HandleRele2()
 			Rele[RELE_2].IsActive = true;
 			Rele[RELE_2].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_2].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_2].TurnOnTime.minute = PresentTime.minute;
+			Rele[ReleIndx].ActiveTime.minute = 0;			
 		}
 		LedStatus = "ACCESA"; //Feedback parameter
 	}
@@ -338,7 +340,8 @@ void HandleRele3()
 			Rele[RELE_3].IsActive = true;
 			Rele[RELE_3].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_3].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_3].TurnOnTime.minute = PresentTime.minute;	
+			Rele[ReleIndx].ActiveTime.minute = 0;			
 		}
 		LedStatus = "ACCESA"; //Feedback parameter
 	}
@@ -369,7 +372,8 @@ void HandleRele4()
 			Rele[RELE_4].IsActive = true;
 			Rele[RELE_4].TurnOnTime.day = PresentTime.day;
 			Rele[RELE_4].TurnOnTime.hour = PresentTime.hour;
-			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;			
+			Rele[RELE_4].TurnOnTime.minute = PresentTime.minute;	
+			Rele[ReleIndx].ActiveTime.minute = 0;			
 		}
 		LedStatus = "ACCESA"; //Feedback parameter
 	}

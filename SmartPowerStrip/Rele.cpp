@@ -444,6 +444,7 @@ bool SetTimerRele(short ReleNbr)
 		delay(100);
 		ButtonPress = NO_PRESS;
 	}
+	ClearLCD();
 	return ExitSetTimer;
 }
 
