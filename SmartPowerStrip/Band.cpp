@@ -32,6 +32,7 @@ void BandInit()
 			Band.InitDay = PresentTime.day;
 			Band.EndDay = PresentTime.day + 1;
 		}
+		Flag.IsBandSetted = true;
 		ClearLCD();
 	}
 	else

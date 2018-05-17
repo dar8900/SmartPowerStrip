@@ -117,13 +117,13 @@ void MainScreen(short EnterSetup)
 			TimerClientConnected--;
 			if(TimerClientConnected > 0)
 			{
-				ShowClientConnected(ONE, 7, true);
+				ShowClientConnected(ONE, 9, true);
 			}
 			else
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
-				ShowClientConnected(ONE, 7, false);
+				ShowClientConnected(ONE, 9, false);
 			}
 		}
 		// Stato relè
@@ -212,13 +212,13 @@ void MainMenu()
 			TimerClientConnected--;
 			if(TimerClientConnected > 0)
 			{
-				ShowClientConnected(ONE, 7, true);
+				ShowClientConnected(ONE, 9, true);
 			}
 			else
 			{
 				TimerClientConnected = DELAY_CLIENT_CONNECTION;
 				Flag.ClientConnected = false;
-				ShowClientConnected(ONE, 7, false);
+				ShowClientConnected(ONE, 9, false);
 			}
 		}
 		LCDPrintString(THREE, CENTER_ALIGN, MainMenuItems[Item].MenuTitle);
