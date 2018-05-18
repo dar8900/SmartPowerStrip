@@ -1,4 +1,4 @@
-#define REFRESH_MAIN_SCREEN_TIMER	6000
+#define MAIN_SCREEN_TIMER_DEFAULT	6000
 #define DELAY_CLIENT_CONNECTION 	  60
 
 typedef enum
@@ -6,12 +6,19 @@ typedef enum
 	MANUAL_RELE = 0,
 	CHANGE_TIME_BAND,
 	WIFI_CONNECT,
-	CHANGE_TIME,
 	HELP_INFO,
 	WIFI_INFO,
 	ASSIGN_RELE_TIMER,
+	SETUP,
 	MAX_MENU_ITEM
 }MENU_NUMBER;
+
+typedef enum
+ {
+	 CHANGE_TIME = 0,
+	 BACKLIGH_TIMER,
+	 MAX_SETUP_ITEM
+ }SETUP_NUMBER;
 
 typedef struct
 {
@@ -26,13 +33,33 @@ typedef enum
 	NO
 } ANSWER_TYPE;
 
+typedef enum
+{
+	ALWAYS_ON = 0,
+	TEN_MINUTES,
+	FIVE_MINUTES,
+	ONE_MINUTE,
+	HALF_MINUTE,
+	TEN_SECONDS,
+	MAX_DELAY_TIMERS
+}DELAY_TIMERS;
+
+typedef struct
+{
+	uint16_t DelayValue;
+	String DelayStr;
+}DELAY_TIMER_S;
+
 // bool SetupInterrupt(void);
 bool CheckYesNo(void);
 void MainScreen(short EnterSetup);
 void MainMenu(void);
+bool Setup(void);
 bool ManualRele(void);
 bool ChangeTimeBand(void);
 bool WifiConnect(void);
 bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
+bool ChangeTimerDisplay(void);
+void ScreenTimerRefresh(void);

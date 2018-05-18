@@ -92,6 +92,7 @@ uint8_t EmptyIcon[]
 };
 
 FLAGS Flag;
+short EnterSetup;
 
 void BlinkLed(short pin)
 {
@@ -209,7 +210,7 @@ void setup()
 void loop()
 {
 #ifndef FIRST_GO
-	short EnterSetup = NO_PRESS;
+	EnterSetup = NO_PRESS;
 	EnterSetup = CheckButtons();
 	if(Flag.WifiActive)
 	{

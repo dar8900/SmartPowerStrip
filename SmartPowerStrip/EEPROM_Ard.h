@@ -36,7 +36,10 @@ typedef enum
 
 #define WIFI_SSID_ADDR						   20
 
+#define TIMER_BACKLIGHT_ADDR				   21
+
 #define FLAG_VALUE_ADDR					 	   50
+#define NUMBER_REG_BACKLIGHT				   51	
 
 #define FIRST_START_CHECK_ADDR			      100
 

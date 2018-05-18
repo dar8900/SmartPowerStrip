@@ -16,51 +16,68 @@ extern String HostName;
 
 extern WIFI_LIST List[];
 
-uint16_t TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
+uint16_t TimerRefreshMenu;
 short TimerClientConnected = DELAY_CLIENT_CONNECTION;
 bool ExitFromBand = true;
 
-MENU_VOICES MainMenuItems[]
+const MENU_VOICES MainMenuItems[]
 {
 	{ManualRele		,	"Gestione Manuale"	},
 	{ChangeTimeBand	,	"Cambio Banda"		},
 	{WifiConnect	,	"Connetti WiFi"		},
-	{ChangeTime 	,	"Cambia ora"    	},
 	{HelpInfo		,	"Help e Info"		},
 	{WiFiInfo		,	"Wifi Info"			},
 	{AssignReleTimer,	"Assegna Timer"		},
+	{Setup       	,	"Impostazioni"    	},
+};
+
+const MENU_VOICES GeneralSetup[]
+{
+	{ChangeTime			, "Cambio ora"},
+	{ChangeTimerDisplay , "Timer display on"},
+};
+
+const DELAY_TIMER_S TimerDalays[]
+{
+	{1   , "Sempre Acceso"},
+	{6000, "10 min"},
+	{3000, "5 min"},
+	{1000, "1 min"},
+	{500,  "30 sec"},
+	{166,  "10 sec"},
 };
 
 static const String ONOFF[] = {"Off", "On"};
 
-// bool SetupInterrupt()
-// {
-// 	bool EnterSetup = false;
-// 	short ButtonPress = NO_PRESS, InterruptTimer = 10;
-// 	while(InterruptTimer > 0)
-// 	{
-// 		ButtonPress = CheckButtons();
-// 		if(ButtonPress == BUTTON_SET)
-// 		{
-// 			BlinkLed(BUTTON_LED);
-// 			EnterSetup = true;
-// 		}
-// 		else
-// 		{
-// 			EnterSetup = false;
-// 		}
-// 		InterruptTimer--;
-// 		delay(8);
-// 		ButtonPress = NO_PRESS;
-// 	}
-// 	return EnterSetup;
-// }
+void MenuInit()
+{
+	short Delay = MAIN_SCREEN_TIMER_DEFAULT;
+	ReadMemory(TIMER_BACKLIGHT_ADDR, 1, &Delay);
+	if(Delay > MAX_DELAY_TIMERS)
+	{
+		Delay = TEN_MINUTES;
+		WriteMemory(TIMER_BACKLIGHT_ADDR, Delay);
+		TimerRefreshMenu = TimerDalays[Delay].DelayValue;
+	}
+	else
+	{
+		TimerRefreshMenu = TimerDalays[Delay].DelayValue;
+	}
+	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Retroilluminazione");
+	LCDPrintString(TWO, CENTER_ALIGN, "impostata a:");
+	LCDPrintString(THREE, CENTER_ALIGN, TimerDalays[Delay].DelayStr);
+	delay(1500);
+	ClearLCD();
+	return;
+}
 
 void MainScreen(short EnterSetup)
 {
 	short ReleIndx = 0;
 	CheckReleStatus();
 	CheckEvents();
+	short RefreshDelayItem;
 	Flag.InBand = CheckBand();
 	if(Flag.InBand)
 	{
@@ -130,18 +147,9 @@ void MainScreen(short EnterSetup)
 		LCDPrintString(TWO, CENTER_ALIGN, "Prese attive:");
 		ShowReleIcons(THREE);
 		// Stato wifi
-		LCDPrintString(FOUR, LEFT_ALIGN, "Stato WiFi: ");
+		LCDPrintString(FOUR, LEFT_ALIGN, "Stato Wifi: ");
 		ShowWifiStatus(FOUR, 14, Flag.WifiActive);
-		TimerRefreshMenu--;
-		if(TimerRefreshMenu == 0)
-		{
-			TimerRefreshMenu = REFRESH_MAIN_SCREEN_TIMER;
-			if(Flag.IsDisplayOn)
-			{
-				LCDDisplayOff();
-				Flag.IsDisplayOn = false;
-			}
-		}
+		ScreenTimerRefresh();
 	}
 	if(EnterSetup == BUTTON_SET)
 	{
@@ -160,6 +168,7 @@ void MainScreen(short EnterSetup)
 		{
 			Flag.IsDisplayOn = true;
 			LCDDisplayOn();
+			EnterSetup = NO_PRESS;
 		}
 
 	}
@@ -267,6 +276,79 @@ void MainMenu()
 		{
 			MainMenuItems[Item].MenuFunc();
 		}
+	}
+}
+
+bool Setup()
+{
+	bool ExitSetup = false;
+	short ButtonPress = NO_PRESS;
+	short SetupItem = CHANGE_TIME;
+	ClearLCD();
+	LCDPrintString(TWO, CENTER_ALIGN, "Selezionare");
+	LCDPrintString(THREE, CENTER_ALIGN, "quale modificare");
+	delay(1500);
+	ClearLCD();
+	while(!ExitSetup)
+	{
+		ShowDateTime(ONE);
+		if(Flag.ClientConnected)
+		{
+			TimerClientConnected--;
+			if(TimerClientConnected > 0)
+			{
+				ShowClientConnected(ONE, 9, true);
+			}
+			else
+			{
+				TimerClientConnected = DELAY_CLIENT_CONNECTION;
+				Flag.ClientConnected = false;
+				ShowClientConnected(ONE, 9, false);
+			}
+		}
+		LCDPrintString(THREE, CENTER_ALIGN, GeneralSetup[SetupItem].MenuTitle);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				BlinkLed(BUTTON_LED);
+				if(SetupItem > 0)
+				{
+					SetupItem--;
+				}
+				else
+				{
+					SetupItem = MAX_SETUP_ITEM - 1;
+				}
+				ClearLCD();
+				break;
+			case BUTTON_DOWN:
+				BlinkLed(BUTTON_LED);
+				if(SetupItem < MAX_SETUP_ITEM - 1)
+				{
+					SetupItem++;
+				}
+				else
+				{
+					SetupItem = 0;
+				}
+				ClearLCD();
+				break;
+			case BUTTON_SET:
+				BlinkLed(BUTTON_LED);
+				GeneralSetup[SetupItem].MenuFunc();
+				ClearLCD();
+				ExitSetup = true;
+				break;
+			case BUTTON_LEFT:
+				BlinkLed(BUTTON_LED);
+				ClearLCD();
+				ExitSetup = true;
+				break;
+			default:
+				break;
+		}
+		delay(50);
 	}
 }
 
@@ -835,6 +917,52 @@ bool AssignReleTimer()
 	return true;
 }
 
+bool ChangeTimerDisplay()
+{
+	short ButtonPress = NO_PRESS;
+	short DelayItem = ALWAYS_ON;
+	bool ExitchangeDelay = false;
+	ClearLCD();
+	LCDPrintString(ONE, CENTER_ALIGN, "Scegliere il");
+	LCDPrintString(TWO, CENTER_ALIGN, "timer per la");
+	LCDPrintString(THREE, CENTER_ALIGN, "retroilluminazione: ");
+	while(!ExitchangeDelay)
+	{
+		LCDPrintString(FOUR, CENTER_ALIGN, TimerDalays[DelayItem].DelayStr);
+		ButtonPress	= CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				BlinkLed(BUTTON_LED);
+				if(DelayItem > ALWAYS_ON)
+					DelayItem--;
+				else
+					DelayItem = MAX_DELAY_TIMERS - 1;
+				LCDPrintLineVoid(FOUR);
+				break;
+			case BUTTON_DOWN:
+				BlinkLed(BUTTON_LED);
+				if(DelayItem < MAX_DELAY_TIMERS - 1)
+					DelayItem--;
+				else
+					DelayItem = ALWAYS_ON;
+					LCDPrintLineVoid(FOUR);
+				break;
+			case BUTTON_SET:
+				BlinkLed(BUTTON_LED);
+				WriteMemory(TIMER_BACKLIGHT_ADDR, DelayItem);
+				TimerRefreshMenu = TimerDalays[DelayItem].DelayValue;
+				ExitchangeDelay = true;
+				break;
+			case BUTTON_LEFT:
+				ExitchangeDelay = true;
+			default:
+				break;
+		}
+		delay(50);
+	}
+
+}
 
 bool CheckYesNo()
 {
@@ -886,4 +1014,24 @@ bool CheckYesNo()
 		delay(80);
 	}
 	return Choice;
+}
+
+void ScreenTimerRefresh()
+{
+	short DelayItem;
+	ReadMemory(TIMER_BACKLIGHT_ADDR, 1, &DelayItem);
+	if(DelayItem != ALWAYS_ON)
+	{
+		TimerRefreshMenu--;
+		if(TimerRefreshMenu == 0)
+		{
+			TimerRefreshMenu = TimerDalays[DelayItem].DelayValue;
+			if(Flag.IsDisplayOn)
+			{
+				LCDDisplayOff();
+				Flag.IsDisplayOn = false;
+			}
+		}
+	}
+	return;
 }

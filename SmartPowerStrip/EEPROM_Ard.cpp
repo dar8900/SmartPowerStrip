@@ -14,7 +14,7 @@ resto = 163
 
 void EepromInit()
 {
-	EEPROM.begin(MAX_EEPROM_DIM_NODEMCU);	
+	EEPROM.begin(MAX_EEPROM_DIM_NODEMCU);
 }
 
 
@@ -57,7 +57,7 @@ int WriteMemory(short address, short value)
         numReg = 0;
       }
     }
-    
+
     for(short idx = 0; idx < numReg; idx++)
     {
       if(numReg == 0)
@@ -79,16 +79,21 @@ int WriteMemory(short address, short value)
         }
         else
         {
-          EEPROM.write(address, value);     
-        }       
+          EEPROM.write(address, value);
+        }
       }
-    }   
+    }
   }
   else
   {
     numReg = 0;
   }
-  
+
+  if(numReg > 1)
+  {
+	  EepromUpdate(NUMBER_REG_BACKLIGHT, numReg);
+  }
+
   EEPROM.commit();
   return  numReg;
 }
@@ -98,26 +103,28 @@ bool ReadMemory(short address, short numReg, short *value)
   short ValueRead = 0;
   short FlagValueBig = 0;
   bool ReadOk = false;
+  short RealNumReg = numReg;
   FlagValueBig = EEPROM.read(FLAG_VALUE_ADDR);
-	  
+
   if(!FlagValueBig)
   {
 	 ValueRead = EEPROM.read(address);
-	 ReadOk = true;      
+	 ReadOk = true;
   }
   else
   {
-	for(short idx = 0; idx < numReg; idx++)
+	RealNumReg = EEPROM.read(NUMBER_REG_BACKLIGHT);
+	for(short idx = 0; idx < RealNumReg; idx++)
 	{
-	  ValueRead += EEPROM.read(address + idx);      
+	  ValueRead += EEPROM.read(address + idx);
 	}
 	ReadOk = true;
-  }	  
- 	  
+  }
+
 
   if(ReadOk)
   {
-    *value = ValueRead;   
+    *value = ValueRead;
   }
   return ReadOk;
 }
@@ -140,8 +147,8 @@ bool IsMemoryEmpty()
 	{
 		Value = EEPROM.read(i);
 		if(Value != EMPTY_MEMORY_VALUE)
-			Empty = false;		
-		
+			Empty = false;
+
 	}
 	return Empty;
 }
