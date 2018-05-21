@@ -25,12 +25,12 @@ String HostName = "cavestrip";
 
 WIFI_LIST List[] =
 {
-	{"No Conn."     , "password"					, "NoConn" 					, 0},
-	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				, 0},
-	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" , 0},
-	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					, 0},
-	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			, 0},
-	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		, 0},
+	{"No Conn."     , "password"					, "NoConn" 					, -100},
+	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				, -100},
+	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" , -100},
+	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					, -100},
+	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			, -100},
+	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		, -100},
 };
 
 
@@ -115,35 +115,48 @@ String GetWifiSignalPower()
 {
 	short NumberOfNetworks = WiFi.scanNetworks(false, true);
 	String ssid, SignalPower;
-	uint8_t encryptionType;
 	int32_t RSSI;
-	uint8_t* BSSID;
-	int32_t channel;
-	bool isHidden, Found = false;
+	bool Found = false;
 	short CurrentNetwork = 0;
 	short WifiItem = 0;
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItem);
 	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
 	{
-		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+		ssid = String(WiFi.SSID(CurrentNetwork));
+		RSSI = WiFi.RSSI(CurrentNetwork);
 		if(ssid == String(List[WifiItem].RealSsid))
+		{
+			Found = true;
+			List[WifiItem].SignalPower = RSSI;
 			break;
+		}
 	}
-	if(RSSI <= 0 && RSSI >= -25)
+	if(Found)
 	{
-		SignalPower = "Ottimo";
+		if(RSSI <= 0 && RSSI >= -25)
+		{
+			SignalPower = "Ottimo";
+		}
+		else if(RSSI <= -26 && RSSI >= -70)
+		{
+			SignalPower = "Buono";
+		}
+		else if(RSSI <= -71 && RSSI >= -80)
+		{
+			SignalPower = "Discreto";
+		}
+		else if(RSSI <= -81 && RSSI >= -96)
+		{
+			SignalPower = "Pessimo";
+		}
+		else if(RSSI < 97)
+		{
+			SignalPower = "No segnale";
+		}
 	}
-	else if(RSSI <= -26 && RSSI >= -70)
+	else
 	{
-		SignalPower = "Buono";
-	}
-	else if(RSSI <= -71 && RSSI >= -80)
-	{
-		SignalPower = "Discreto";
-	}
-	else if(RSSI <= -81 && RSSI >= -96)
-	{
-		SignalPower = "Pessimo";
+		SignalPower = "Error";
 	}
 	return SignalPower;
 }
@@ -196,20 +209,33 @@ void WifiScanForSignal()
 	int32_t RSSI;
 	uint8_t* BSSID;
 	int32_t channel;
-	bool isHidden;
+	bool isHidden, Found = false;
 
 	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
 	{
 		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 		if(ssid == String(List[WifiListItem].RealSsid))
+		{
+			Found = true;
+			List[WifiListItem].SignalPower = RSSI;
 			break;
-	}
-	if(RSSI < -96)
-	{
-		WiFi.disconnect();
-		WifiRiconnect();
-	}
+		}
 
+	}
+	if(Found)
+	{
+		if(RSSI < -96)
+		{
+			ClearLCD();
+			LCDPrintString(ONE, CENTER_ALIGN, "Rete debole");
+			LCDPrintString(TWO, CENTER_ALIGN, "mi connetto a");
+			LCDPrintString(THREE, CENTER_ALIGN, "un'altra rete");
+			delay(1500);
+			WiFi.disconnect();
+			Flag.WifiActive = false;
+			WifiRiconnect();
+		}
+	}
 }
 
 void WifiRiconnect()
@@ -240,7 +266,6 @@ void WifiRiconnect()
 			Connect = true;
 			break;
 		}
-
 	}
 	if(Connect)
 	{
@@ -254,8 +279,19 @@ void WifiRiconnect()
 			Flag.WifiActive = true;
 		}
 		LCDShowPopUp("Connesso!");
+		List[MyNetworks].SignalPower = RSSI;
 		WriteMemory(WIFI_SSID_ADDR, MyNetworks);
 		ClearLCD();
+	}
+	else
+	{
+		ClearLCD();
+		LCDPrintString(ONE, CENTER_ALIGN, "Connessione");
+		LCDPrintString(TWO, CENTER_ALIGN, "non riuscita");
+		delay(1500);
+		ClearLCD();
+		server.close();
+		Flag.WifiActive = false;
 	}
 }
 
