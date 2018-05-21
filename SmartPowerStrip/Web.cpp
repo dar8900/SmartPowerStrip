@@ -253,6 +253,7 @@ void WifiRiconnect()
 			LCDPrintString(TWO, CENTER_ALIGN, List[MyNetworks].Ssid);
 			Flag.WifiActive = true;
 		}
+		LCDShowPopUp("Connesso!");
 		WriteMemory(WIFI_SSID_ADDR, MyNetworks);
 		ClearLCD();
 	}

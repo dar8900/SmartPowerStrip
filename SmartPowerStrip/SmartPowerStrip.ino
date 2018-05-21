@@ -106,6 +106,8 @@ void CheckEvents()
 	TakePresentTime();
 	TakeReleTime();
 	WebClient();
+	if(Flag.WifiActive)
+		WifiScanForSignal();
 }
 
 void RebootESP()
