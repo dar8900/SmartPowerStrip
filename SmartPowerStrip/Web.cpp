@@ -25,12 +25,12 @@ String HostName = "cavestrip";
 
 WIFI_LIST List[] =
 {
-	{"No Conn."     , "password"					, "NoConn" 					},
-	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				},
-	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" },
-	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					},
-	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			},
-	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		},
+	{"No Conn."     , "password"					, "NoConn" 					, 0},
+	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				, 0},
+	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" , 0},
+	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					, 0},
+	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			, 0},
+	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		, 0},
 };
 
 
@@ -111,6 +111,43 @@ void WifiInit()
 	return;
 }
 
+String GetWifiSignalPower()
+{
+	short NumberOfNetworks = WiFi.scanNetworks(false, true);
+	String ssid, SignalPower;
+	uint8_t encryptionType;
+	int32_t RSSI;
+	uint8_t* BSSID;
+	int32_t channel;
+	bool isHidden, Found = false;
+	short CurrentNetwork = 0;
+	short WifiItem = 0;
+	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItem);
+	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
+	{
+		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+		if(ssid == String(List[WifiItem].RealSsid))
+			break;
+	}
+	if(RSSI <= 0 && RSSI >= -25)
+	{
+		SignalPower = "Ottimo";
+	}
+	else if(RSSI <= -26 && RSSI >= -70)
+	{
+		SignalPower = "Buono";
+	}
+	else if(RSSI <= -71 && RSSI >= -80)
+	{
+		SignalPower = "Discreto";
+	}
+	else if(RSSI <= -81 && RSSI >= -96)
+	{
+		SignalPower = "Pessimo";
+	}
+	return SignalPower;
+}
+
 String WifiIP()
 {
 	String IP;
@@ -146,6 +183,79 @@ void ShowClientConnected(short Row, short Col, bool Status)
 		LCDShowIcon(EMPTY);
 	}
 
+}
+
+void WifiScanForSignal()
+{
+	short NumberOfNetworks = WiFi.scanNetworks(false, true);
+	short WifiListItem = 0;
+	ReadMemory(WIFI_SSID_ADDR, 1, &WifiListItem);
+	short CurrentNetwork = 0;
+	String ssid;
+	uint8_t encryptionType;
+	int32_t RSSI;
+	uint8_t* BSSID;
+	int32_t channel;
+	bool isHidden;
+
+	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
+	{
+		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+		if(ssid == String(List[WifiListItem].RealSsid))
+			break;
+	}
+	if(RSSI < -96)
+	{
+		WiFi.disconnect();
+		WifiRiconnect();
+	}
+
+}
+
+void WifiRiconnect()
+{
+	String ssid;
+	uint8_t encryptionType;
+	int32_t RSSI;
+	uint8_t* BSSID;
+	int32_t channel;
+	bool isHidden;
+	short NumberOfNetworks = WiFi.scanNetworks(false, true);
+	short CurrentNetwork = 0, MyNetworks = 0;
+	bool Connect = false;
+	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
+	{
+		bool Exit = false;
+		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+		for(MyNetworks = DARIO_CELL; MyNetworks < MAX_WIFI_ITEM; MyNetworks++)
+		{
+			if(ssid == String(List[MyNetworks].RealSsid) && RSSI > -90)
+			{
+				Exit = true;
+				break;
+			}
+		}
+		if(Exit)
+		{
+			Connect = true;
+			break;
+		}
+
+	}
+	if(Connect)
+	{
+		ClearLCD();
+		WiFi.hostname(Hostname);
+		WiFi.begin(List[MyNetworks].RealSsid, List[MyNetworks].Password);
+		while (WiFi.status() != WL_CONNECTED)
+		{
+			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
+			LCDPrintString(TWO, CENTER_ALIGN, List[MyNetworks].Ssid);
+			Flag.WifiActive = true;
+		}
+		WriteMemory(WIFI_SSID_ADDR, MyNetworks);
+		ClearLCD();
+	}
 }
 
 void WebServerInit()

@@ -16,15 +16,19 @@ typedef struct
 	String Ssid;
 	const char* Password;
 	const char* RealSsid;
+	int32_t SignalPower;
 }WIFI_LIST;
 
 
 
 void WifiInit(void);
 void WifiDisconnect(void);
+String GetWifiSignalPower(void);
 String WifiIP(void);
 void ShowWifiStatus(short Row, short Col, bool Status);
 void ShowClientConnected(short Row, short Col, bool Status);
 void WebServerInit(void);
 void WebClient(void);
 void WifiConnectionChoice(short *WifiListItem, String *NomeWifi);
+void WifiScanForSignal(void);
+void WifiRiconnect(void);

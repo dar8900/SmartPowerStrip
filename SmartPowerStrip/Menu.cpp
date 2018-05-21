@@ -757,6 +757,8 @@ bool WiFiInfo()
 		if(Flag.WifiActive)
 		{
 			LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
+			LCDPrintString(FOUR, LEFT_ALIGN, "Segnale: ");
+			LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
 		}
 		else
 		{
