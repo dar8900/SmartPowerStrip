@@ -21,6 +21,7 @@ extern ESP8266WebServer server;
 
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
+short MyConnectionNumber;
 // WiFiServer ClientServer(80);
 
 WIFI_LIST List[] =
@@ -104,6 +105,8 @@ void WifiInit()
 			HostnameExtended += String(Hostname);
 			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
 			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
+			LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
+			LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
 			delay(2000);
 			ClearLCD();
 		}
@@ -128,6 +131,7 @@ String GetWifiSignalPower()
 		{
 			Found = true;
 			List[WifiItem].SignalPower = RSSI;
+			MyConnectionNumber = CurrentNetwork;
 			break;
 		}
 	}
@@ -200,27 +204,19 @@ void ShowClientConnected(short Row, short Col, bool Status)
 
 void WifiScanForSignal()
 {
-	short NumberOfNetworks = WiFi.scanNetworks(false, true);
 	short WifiListItem = 0;
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiListItem);
-	short CurrentNetwork = 0;
 	String ssid;
 	uint8_t encryptionType;
 	int32_t RSSI;
 	uint8_t* BSSID;
 	int32_t channel;
 	bool isHidden, Found = false;
-
-	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
+	WiFi.getNetworkInfo(MyConnectionNumber, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+	if(ssid == String(List[WifiListItem].RealSsid))
 	{
-		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
-		if(ssid == String(List[WifiListItem].RealSsid))
-		{
-			Found = true;
-			List[WifiListItem].SignalPower = RSSI;
-			break;
-		}
-
+		Found = true;
+		List[WifiListItem].SignalPower = RSSI;
 	}
 	if(Found)
 	{
@@ -264,6 +260,7 @@ void WifiRiconnect()
 		if(Exit)
 		{
 			Connect = true;
+			MyConnectionNumber = CurrentNetwork;
 			break;
 		}
 	}

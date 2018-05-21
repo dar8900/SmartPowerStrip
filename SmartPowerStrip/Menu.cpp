@@ -740,6 +740,7 @@ bool WiFiInfo()
 	bool ExitWifiInfo = false;
 	short ButtonPress = 0;
 	short WifiItemSsid = 0;
+	short RefreshSignal = 150;
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Wifi Info");
 	LCDPrintString(TWO  , CENTER_ALIGN, "Premere Left/Back");
@@ -758,7 +759,14 @@ bool WiFiInfo()
 		{
 			LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
 			LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
-			LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
+			if(RefreshSignal == 150)
+			{
+				LCDPrintLineVoid(FOUR);
+				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
+				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
+				RefreshSignal = 0;
+			}
+			
 		}
 		else
 		{
@@ -782,9 +790,10 @@ bool WiFiInfo()
 
 		}
 		ButtonPress = NO_PRESS;
+		RefreshSignal++;
 		if(ExitWifiInfo)
 			break;
-		delay(80);
+		delay(50);
 	}
 }
 
@@ -945,7 +954,7 @@ bool ChangeTimerDisplay()
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
 				if(DelayItem < MAX_DELAY_TIMERS - 1)
-					DelayItem--;
+					DelayItem++;
 				else
 					DelayItem = ALWAYS_ON;
 					LCDPrintLineVoid(FOUR);
