@@ -232,6 +232,11 @@ void WifiScanForSignal()
 			WifiRiconnect();
 		}
 	}
+	else
+	{
+		Flag.WifiActive = false;
+		WifiRiconnect();
+	}
 }
 
 void WifiRiconnect()
@@ -274,6 +279,7 @@ void WifiRiconnect()
 			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
 			LCDPrintString(TWO, CENTER_ALIGN, List[MyNetworks].Ssid);
 			Flag.WifiActive = true;
+			delay(20);
 		}
 		LCDShowPopUp("Connesso!");
 		List[MyNetworks].SignalPower = RSSI;

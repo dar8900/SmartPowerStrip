@@ -755,6 +755,10 @@ bool WiFiInfo()
 		CheckEvents();
 		ButtonPress = CheckButtons();
 		LCDPrintString(ONE, LEFT_ALIGN, "IP:");
+		LCDPrintString(TWO, LEFT_ALIGN, "SSID:");
+		LCDPrintString(TWO, RIGHT_ALIGN, List[WifiItemSsid].Ssid);
+		LCDPrintString(THREE, LEFT_ALIGN, "Hostname:");
+		LCDPrintString(THREE, RIGHT_ALIGN, HostName);
 		if(Flag.WifiActive)
 		{
 			LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
@@ -772,10 +776,6 @@ bool WiFiInfo()
 		{
 			ShowWifiStatus(ONE, 4, false);
 		}
-		LCDPrintString(TWO, LEFT_ALIGN, "SSID:");
-		LCDPrintString(TWO, RIGHT_ALIGN, List[WifiItemSsid].Ssid);
-		LCDPrintString(THREE, LEFT_ALIGN, "Hostname:");
-		LCDPrintString(THREE, RIGHT_ALIGN, HostName);
 		switch(ButtonPress)
 		{
 			case BUTTON_LEFT:
