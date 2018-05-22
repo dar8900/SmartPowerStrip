@@ -16,10 +16,9 @@ typedef struct
 	String Ssid;
 	const char* Password;
 	const char* RealSsid;
-	int32_t SignalPower;
 }WIFI_LIST;
 
-
+extern const WIFI_LIST MyNetworkList[];
 
 void WifiInit(void);
 void WifiDisconnect(void);

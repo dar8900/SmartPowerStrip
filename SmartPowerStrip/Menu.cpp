@@ -13,9 +13,6 @@ extern BAND_FORMAT Band;
 extern RELE Rele[];
 extern FLAGS Flag;
 extern String HostName;
-
-extern WIFI_LIST List[];
-
 uint16_t TimerRefreshMenu;
 short TimerClientConnected = DELAY_CLIENT_CONNECTION;
 bool ExitFromBand = true;
@@ -755,7 +752,7 @@ bool WiFiInfo()
 		{
 			LCDPrintString(ONE, LEFT_ALIGN, "IP:");
 			LCDPrintString(TWO, LEFT_ALIGN, "SSID:");
-			LCDPrintString(TWO, RIGHT_ALIGN, List[WifiItemSsid].Ssid);
+			LCDPrintString(TWO, RIGHT_ALIGN, MyNetworkList[WifiItemSsid].Ssid);
 			LCDPrintString(THREE, LEFT_ALIGN, "Hostname:");
 			LCDPrintString(THREE, RIGHT_ALIGN, HostName);
 			LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
