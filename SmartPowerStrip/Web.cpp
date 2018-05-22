@@ -137,11 +137,11 @@ String GetWifiSignalPower()
 	}
 	if(Found)
 	{
-		if(RSSI <= 0 && RSSI >= -25)
+		if(RSSI <= -26 && RSSI >= -60)
 		{
 			SignalPower = "Ottimo";
 		}
-		else if(RSSI <= -26 && RSSI >= -70)
+		else if(RSSI <= -61 && RSSI >= -70)
 		{
 			SignalPower = "Buono";
 		}
@@ -160,60 +160,23 @@ String GetWifiSignalPower()
 	}
 	else
 	{
-		SignalPower = "Error";
+		Flag.WifiActive = false;
+		SignalPower = "No rete";
 	}
 	return SignalPower;
-}
-
-String WifiIP()
-{
-	String IP;
-	//IP = String(WiFi.localIP());
-	IP = WiFi.localIP().toString();
-	return IP;
-}
-
-void ShowWifiStatus(short Row, short Col, bool Status)
-{
-	if(Status)
-	{
-		LCDMoveCursor(Row, Col);
-		LCDShowIcon(WIFI_OK);
-	}
-	else
-	{
-		LCDMoveCursor(Row, Col);
-		LCDShowIcon(WIFI_NO);
-	}
-}
-
-void ShowClientConnected(short Row, short Col, bool Status)
-{
-	if(Status)
-	{
-		LCDMoveCursor(Row, Col);
-		LCDShowIcon(CLIENT_CONN);
-	}
-	else
-	{
-		LCDMoveCursor(Row, Col);
-		LCDShowIcon(EMPTY);
-	}
-
 }
 
 void WifiScanForSignal()
 {
 	short WifiListItem = 0;
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiListItem);
-	String ssid;
-	uint8_t encryptionType;
+	String Ssid;
 	int32_t RSSI;
-	uint8_t* BSSID;
-	int32_t channel;
-	bool isHidden, Found = false;
-	WiFi.getNetworkInfo(MyConnectionNumber, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
-	if(ssid == String(List[WifiListItem].RealSsid))
+	bool Found = false;
+	Ssid = WiFi.SSID(MyConnectionNumber);
+	RSSI = WiFi.RSSI(MyConnectionNumber);
+	// WiFi.getNetworkInfo(MyConnectionNumber, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
+	if(Ssid == String(List[WifiListItem].RealSsid))
 	{
 		Found = true;
 		List[WifiListItem].SignalPower = RSSI;
@@ -248,7 +211,8 @@ void WifiRiconnect()
 	int32_t channel;
 	bool isHidden;
 	short NumberOfNetworks = WiFi.scanNetworks(false, true);
-	short CurrentNetwork = 0, MyNetworks = 0;
+	short CurrentNetwork = 0, MyNetworks = 0, NumbPoint = 0;
+	int ConnectionTimer = 0;
 	bool Connect = false;
 	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
 	{
@@ -278,13 +242,40 @@ void WifiRiconnect()
 		{
 			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
 			LCDPrintString(TWO, CENTER_ALIGN, List[MyNetworks].Ssid);
+			if(NumbPoint > 19)
+			{
+				NumbPoint = 0;
+				LCDPrintLineVoid(THREE);
+			}
+			LCDPrintString(THREE, 0 + NumbPoint, ".");
+			NumbPoint++;
+			ConnectionTimer++;
+			delay(200);
 			Flag.WifiActive = true;
-			delay(20);
+			if(ConnectionTimer == 200)
+			{
+				ClearLCD();
+				LCDPrintString(ONE, CENTER_ALIGN, "Connessione");
+				LCDPrintString(TWO, CENTER_ALIGN, "non riuscita");
+				delay(1500);
+				ClearLCD();
+				server.close();
+				Flag.WifiActive = false;
+				break;
+			}
+
 		}
-		LCDShowPopUp("Connesso!");
-		List[MyNetworks].SignalPower = RSSI;
-		WriteMemory(WIFI_SSID_ADDR, MyNetworks);
-		ClearLCD();
+		if(Flag.WifiActive)
+		{
+			LCDShowPopUp("Connesso!");
+			List[MyNetworks].SignalPower = RSSI;
+			WriteMemory(WIFI_SSID_ADDR, MyNetworks);
+			ClearLCD();
+		}
+		else
+		{
+			WriteMemory(WIFI_SSID_ADDR, NO_CONN);
+		}
 	}
 	else
 	{
@@ -295,7 +286,9 @@ void WifiRiconnect()
 		ClearLCD();
 		server.close();
 		Flag.WifiActive = false;
+		WriteMemory(WIFI_SSID_ADDR, NO_CONN);
 	}
+	return;
 }
 
 void WebServerInit()
@@ -362,23 +355,6 @@ void WifiDisconnect()
 	ClearLCD();
 }
 
-// static bool ClientConnected()
-// {
-	// WiFiClient client = ClientServer.available();
-	// if(client)
-	// {
-		// Flag.ClientConnected = true;
-		// client.stop();
-		// return true;
-	// }
-	// else
-	// {
-		// Flag.ClientConnected = false;
-		// return false;
-	// }
-
-// }
-
 void WebClient()
 {
 	server.handleClient();
@@ -426,4 +402,42 @@ void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
 		ButtonPress = NO_PRESS;
 		delay(60);
 	}
+}
+
+
+String WifiIP()
+{
+	String IP;
+	//IP = String(WiFi.localIP());
+	IP = WiFi.localIP().toString();
+	return IP;
+}
+
+void ShowWifiStatus(short Row, short Col, bool Status)
+{
+	if(Status)
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(WIFI_OK);
+	}
+	else
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(WIFI_NO);
+	}
+}
+
+void ShowClientConnected(short Row, short Col, bool Status)
+{
+	if(Status)
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(CLIENT_CONN);
+	}
+	else
+	{
+		LCDMoveCursor(Row, Col);
+		LCDShowIcon(EMPTY);
+	}
+
 }
