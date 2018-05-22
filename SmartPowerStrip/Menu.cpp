@@ -33,9 +33,12 @@ const MENU_VOICES MainMenuItems[]
 
 const MENU_VOICES GeneralSetup[]
 {
-	{ChangeTime			, "Cambio ora"},
+	{ChangeTime			, "Cambio ora"      },
 	{ChangeTimerDisplay , "Timer display on"},
+	{TurnOffWifi        , "Spegni Wifi"     },
 };
+
+// WiFi.mode(WIFI_OFF);
 
 const DELAY_TIMER_S TimerDalays[]
 {
@@ -285,10 +288,6 @@ bool Setup()
 	short ButtonPress = NO_PRESS;
 	short SetupItem = CHANGE_TIME;
 	ClearLCD();
-	LCDPrintString(TWO, CENTER_ALIGN, "Selezionare");
-	LCDPrintString(THREE, CENTER_ALIGN, "quale modificare");
-	delay(1500);
-	ClearLCD();
 	while(!ExitSetup)
 	{
 		ShowDateTime(ONE);
@@ -372,9 +371,6 @@ bool ManualRele()
 		LCDPrintString(TWO, CENTER_ALIGN, "tutte le prese?");
 		delay(1000);
 	}
-	ClearLCD();
-	LCDPrintString(ONE, CENTER_ALIGN, "Premi Ok/Set");
-	LCDPrintString(TWO, CENTER_ALIGN, "per confermare");
 	OnOffAll = CheckYesNo();
 	if(OnOffAll)
 	{
@@ -487,6 +483,7 @@ bool ManualRele()
 		}
 		CheckReleStatus();
 	}
+	return true;
 }
 
 bool ChangeTimeBand()
@@ -589,6 +586,7 @@ bool ChangeTimeBand()
 		delay(60);
 		ButtonPress = NO_PRESS;
 	}
+	return true;
 }
 
 bool WifiConnect()
@@ -801,6 +799,7 @@ bool WiFiInfo()
 			break;
 		delay(50);
 	}
+	return true;
 }
 
 bool AssignReleTimer()
@@ -978,7 +977,19 @@ bool ChangeTimerDisplay()
 		}
 		delay(50);
 	}
+	return true;
+}
 
+bool TurnOffWifi()
+{
+	bool TurnOff = false;
+	LCDPrintString(TWO, CENTER_ALIGN, "Spegnere il wifi?");
+	TurnOff = CheckYesNo();
+	if(TurnOff)
+	{
+		WifiTurnOff();
+	}
+	return true;
 }
 
 bool CheckYesNo()

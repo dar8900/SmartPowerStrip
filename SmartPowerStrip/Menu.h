@@ -17,6 +17,7 @@ typedef enum
  {
 	 CHANGE_TIME = 0,
 	 BACKLIGH_TIMER,
+	 TURN_OFF_WIFI,
 	 MAX_SETUP_ITEM
  }SETUP_NUMBER;
 
@@ -62,4 +63,5 @@ bool HelpInfo(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
 bool ChangeTimerDisplay(void);
+bool TurnOffWifi(void);
 void ScreenTimerRefresh(void);

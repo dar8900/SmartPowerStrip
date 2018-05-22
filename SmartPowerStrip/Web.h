@@ -23,6 +23,7 @@ typedef struct
 
 void WifiInit(void);
 void WifiDisconnect(void);
+void WifiTurnOff(void);
 String GetWifiSignalPower(void);
 String WifiIP(void);
 void ShowWifiStatus(short Row, short Col, bool Status);

@@ -111,6 +111,10 @@ void WifiInit()
 			ClearLCD();
 		}
 	}
+	else
+	{
+		WifiTurnOff();
+	}
 	return;
 }
 
@@ -353,6 +357,13 @@ void WifiDisconnect()
 	Flag.WifiActive = false;
 	delay(1500);
 	ClearLCD();
+}
+
+void WifiTurnOff()
+{
+	WiFi.mode(WIFI_OFF);
+	Flag.WifiActive = false;
+	LCDShowPopUp("Wifi Spento");
 }
 
 void WebClient()
