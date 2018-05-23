@@ -185,12 +185,12 @@ void MainMenu()
 	LCDPrintString(TWO  , CENTER_ALIGN, "per scegliere");
 	LCDPrintString(THREE, CENTER_ALIGN, "Premere Ok/Set");
 	LCDPrintString(FOUR , CENTER_ALIGN, "per confermare");
-	delay(2000);
+	delay(1000);
 	ClearLCD();
 	LCDPrintString(ONE  , CENTER_ALIGN, "Premere Left/Back");
 	LCDPrintString(TWO  , CENTER_ALIGN, "per tornare alla");
 	LCDPrintString(THREE, CENTER_ALIGN, "schermata iniziale");
-	delay(2000);
+	delay(1000);
 	ClearLCD();
 	while(!ExitMainMenu)
 	{
@@ -202,12 +202,12 @@ void MainMenu()
 			LCDPrintString(TWO  , CENTER_ALIGN, "per scegliere");
 			LCDPrintString(THREE, CENTER_ALIGN, "Premere Ok/Set");
 			LCDPrintString(FOUR , CENTER_ALIGN, "per confermare");
-			delay(2000);
+			delay(1000);
 			ClearLCD();
 			LCDPrintString(ONE  , CENTER_ALIGN, "Premere Left/Back");
 			LCDPrintString(TWO  , CENTER_ALIGN, "per tornare alla");
 			LCDPrintString(THREE, CENTER_ALIGN, "schermata iniziale");
-			delay(2000);
+			delay(1000);
 			ClearLCD();
 			CheckEvents();
 			ReEnterMenu = false;
@@ -334,7 +334,6 @@ bool Setup()
 				BlinkLed(BUTTON_LED);
 				GeneralSetup[SetupItem].MenuFunc();
 				ClearLCD();
-				ExitSetup = true;
 				break;
 			case BUTTON_LEFT:
 				BlinkLed(BUTTON_LED);
