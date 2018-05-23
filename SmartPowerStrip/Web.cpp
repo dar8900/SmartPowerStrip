@@ -110,9 +110,15 @@ void WifiInit()
 			delay(2000);
 			ClearLCD();
 		}
+		else
+		{
+			WriteMemory(WIFI_SSID_ADDR, NO_CONN);
+			WifiTurnOff();
+		}
 	}
 	else
 	{
+		WriteMemory(WIFI_SSID_ADDR, NO_CONN);
 		WifiTurnOff();
 	}
 	return;
@@ -276,6 +282,7 @@ void WifiRiconnect()
 		else
 		{
 			WriteMemory(WIFI_SSID_ADDR, NO_CONN);
+			WifiTurnOff();
 		}
 	}
 	else
@@ -358,6 +365,8 @@ void WifiDisconnect()
 
 void WifiTurnOff()
 {
+	WiFi.disconnect();
+	server.close();
 	WiFi.mode(WIFI_OFF);
 	Flag.WifiActive = false;
 	LCDShowPopUp("Wifi Spento");
