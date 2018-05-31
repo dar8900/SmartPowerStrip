@@ -53,6 +53,7 @@ typedef struct
 
 // bool SetupInterrupt(void);
 bool CheckYesNo(void);
+void MenuInit(void);
 void MainScreen(short EnterSetup);
 void MainMenu(void);
 bool Setup(void);

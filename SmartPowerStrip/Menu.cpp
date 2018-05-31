@@ -938,6 +938,7 @@ bool ChangeTimerDisplay()
 	LCDPrintString(ONE, CENTER_ALIGN, "Scegliere il");
 	LCDPrintString(TWO, CENTER_ALIGN, "timer per la");
 	LCDPrintString(THREE, CENTER_ALIGN, "retroilluminazione: ");
+	ReadMemory(TIMER_BACKLIGHT_ADDR, 1, &DelayItem);
 	while(!ExitchangeDelay)
 	{
 		LCDPrintString(FOUR, CENTER_ALIGN, TimerDalays[DelayItem].DelayStr);
@@ -979,6 +980,7 @@ bool ChangeTimerDisplay()
 bool TurnOffWifi()
 {
 	bool TurnOff = false;
+	ClearLCD();
 	LCDPrintString(TWO, CENTER_ALIGN, "Spegnere il wifi?");
 	TurnOff = CheckYesNo();
 	if(TurnOff)

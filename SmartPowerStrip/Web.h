@@ -31,4 +31,3 @@ void WebServerInit(void);
 void WebClient(void);
 void WifiConnectionChoice(short *WifiListItem, String *NomeWifi);
 void WifiScanForSignal(void);
-void WifiRiconnect(void);

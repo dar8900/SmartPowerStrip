@@ -49,7 +49,7 @@ void WifiInit()
 	ClearLCD();
 	WiFi.mode(WIFI_STA);
 	ReadMemory(WIFI_SSID_ADDR, 1, &OldWifiItem);
-	if(OldWifiItem != NO_CONN && OldWifiItem < MAX_WIFI_ITEM)
+	if(OldWifiItem != NO_CONN && OldWifiItem < MAX_WIFI_ITEM && !Flag.WifiReconnect)
 	{
 		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi riconnettere");
 		LCDPrintString(TWO, CENTER_ALIGN, "la rete:");
@@ -69,57 +69,114 @@ void WifiInit()
 		WifiConnectionChoice(&WifiListItem, &NomeWifi);
 	}
 	ClearLCD();
-	if(NomeWifi != String(MyNetworkList[NO_CONN].RealSsid))
+	if(Flag.WifiReconnect)
 	{
-		WiFi.hostname(Hostname);
-		WiFi.begin(MyNetworkList[WifiListItem].RealSsid, MyNetworkList[WifiListItem].Password);
-		LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
-		LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
-		while (WiFi.status() != WL_CONNECTED)
+		for(WifiListItem = DARIO_CELL; WifiListItem < MAX_WIFI_ITEM; WifiListItem++)
 		{
-			delay(500);
-			if(NumbPoint > 19)
+			ClearLCD();
+			WiFi.hostname(Hostname);
+			WiFi.begin(MyNetworkList[WifiListItem].RealSsid, MyNetworkList[WifiListItem].Password);
+			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			while (WiFi.status() != WL_CONNECTED)
 			{
-				NumbPoint = 0;
-				LCDPrintLineVoid(2);
+				delay(500);
+				if(NumbPoint > 19)
+				{
+					NumbPoint = 0;
+					LCDPrintLineVoid(2);
+				}
+				LCDPrintString(2, 0 + NumbPoint, ".");
+				NumbPoint++;
+				TimerNoConnection++;
+				if(TimerNoConnection == 25)
+				{
+					ClearLCD();
+					LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
+					LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
+					LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+					delay(2000);
+					ClearLCD();
+					Flag.WifiActive = false;
+					break;
+				}
+				Flag.WifiActive = true;
 			}
-			LCDPrintString(2, 0 + NumbPoint, ".");
-			NumbPoint++;
-			TimerNoConnection++;
-			if(TimerNoConnection == 25)
+			if(Flag.WifiActive)
 			{
+				LCDShowPopUp("Connesso!");
+				HostnameExtended += String(Hostname);
+				LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
+				LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
+				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
+				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
+				WriteMemory(WIFI_SSID_ADDR, WifiListItem);
+				delay(1000);
 				ClearLCD();
-				LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
-				LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
-				LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+				Flag.WifiReconnect = false;
+				break; //Uscita for
+			}		
+		}
+		if(!Flag.WifiActive && Flag.WifiReconnect)
+		{
+			WifiTurnOff();
+		}
+	}
+	else
+	{
+		if(NomeWifi != String(MyNetworkList[NO_CONN].RealSsid))
+		{
+			WiFi.hostname(Hostname);
+			WiFi.begin(MyNetworkList[WifiListItem].RealSsid, MyNetworkList[WifiListItem].Password);
+			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			while (WiFi.status() != WL_CONNECTED)
+			{
+				delay(500);
+				if(NumbPoint > 19)
+				{
+					NumbPoint = 0;
+					LCDPrintLineVoid(2);
+				}
+				LCDPrintString(2, 0 + NumbPoint, ".");
+				NumbPoint++;
+				TimerNoConnection++;
+				if(TimerNoConnection == 25)
+				{
+					ClearLCD();
+					LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
+					LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
+					LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+					delay(2000);
+					ClearLCD();
+					Flag.WifiActive = false;
+					break;
+				}
+				Flag.WifiActive = true;
+			}
+			if(Flag.WifiActive)
+			{
+				LCDShowPopUp("Connesso!");
+				HostnameExtended += String(Hostname);
+				LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
+				LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
+				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
+				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
+				Flag.WifiReconnect = false;
 				delay(2000);
 				ClearLCD();
-				Flag.WifiActive = false;
-				break;
 			}
-			Flag.WifiActive = true;
-		}
-		if(Flag.WifiActive)
-		{
-			LCDShowPopUp("Connesso!");
-			HostnameExtended += String(Hostname);
-			LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
-			LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
-			LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
-			LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
-			delay(2000);
-			ClearLCD();
+			else
+			{
+				WriteMemory(WIFI_SSID_ADDR, NO_CONN);
+				WifiTurnOff();
+			}
 		}
 		else
 		{
 			WriteMemory(WIFI_SSID_ADDR, NO_CONN);
 			WifiTurnOff();
 		}
-	}
-	else
-	{
-		WriteMemory(WIFI_SSID_ADDR, NO_CONN);
-		WifiTurnOff();
 	}
 	return;
 }
@@ -184,7 +241,6 @@ void WifiScanForSignal()
 	bool Found = false;
 	Ssid = WiFi.SSID(MyConnectionNumber);
 	RSSI = WiFi.RSSI(MyConnectionNumber);
-	// WiFi.getNetworkInfo(MyConnectionNumber, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 	if(Ssid == String(MyNetworkList[WifiListItem].RealSsid))
 	{
 		Found = true;
@@ -200,103 +256,19 @@ void WifiScanForSignal()
 			delay(1500);
 			WiFi.disconnect();
 			Flag.WifiActive = false;
-			WifiRiconnect();
+			Flag.WifiReconnect = true;
 		}
 	}
 	else
 	{
+		LCDPrintLineVoid(THREE);
 		Flag.WifiActive = false;
-		WifiRiconnect();
+		Flag.WifiReconnect = true;
 	}
-}
-
-void WifiRiconnect()
-{
-	String ssid;
-	uint8_t encryptionType;
-	int32_t RSSI;
-	uint8_t* BSSID;
-	int32_t channel;
-	bool isHidden;
-	short NumberOfNetworks = WiFi.scanNetworks(false, true);
-	short CurrentNetwork = 0, MyNetworks = 0, NumbPoint = 0;
-	int ConnectionTimer = 0;
-	bool Connect = false;
-	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
+	if(Flag.WifiReconnect)
 	{
-		bool Exit = false;
-		WiFi.getNetworkInfo(CurrentNetwork, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
-		for(MyNetworks = DARIO_CELL; MyNetworks < MAX_WIFI_ITEM; MyNetworks++)
-		{
-			if(ssid == String(MyNetworkList[MyNetworks].RealSsid) && RSSI > -90)
-			{
-				Exit = true;
-				break;
-			}
-		}
-		if(Exit)
-		{
-			Connect = true;
-			MyConnectionNumber = CurrentNetwork;
-			break;
-		}
+		WifiInit();
 	}
-	if(Connect)
-	{
-		ClearLCD();
-		WiFi.hostname(Hostname);
-		WiFi.begin(MyNetworkList[MyNetworks].RealSsid, MyNetworkList[MyNetworks].Password);
-		while (WiFi.status() != WL_CONNECTED)
-		{
-			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
-			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[MyNetworks].Ssid);
-			if(NumbPoint > 19)
-			{
-				NumbPoint = 0;
-				LCDPrintLineVoid(THREE);
-			}
-			LCDPrintString(THREE, 0 + NumbPoint, ".");
-			NumbPoint++;
-			ConnectionTimer++;
-			delay(200);
-			Flag.WifiActive = true;
-			if(ConnectionTimer == 200)
-			{
-				ClearLCD();
-				LCDPrintString(ONE, CENTER_ALIGN, "Connessione");
-				LCDPrintString(TWO, CENTER_ALIGN, "non riuscita");
-				delay(1500);
-				ClearLCD();
-				server.close();
-				Flag.WifiActive = false;
-				break;
-			}
-
-		}
-		if(Flag.WifiActive)
-		{
-			LCDShowPopUp("Connesso!");
-			WriteMemory(WIFI_SSID_ADDR, MyNetworks);
-			ClearLCD();
-		}
-		else
-		{
-			WriteMemory(WIFI_SSID_ADDR, NO_CONN);
-			WifiTurnOff();
-		}
-	}
-	else
-	{
-		ClearLCD();
-		LCDPrintString(ONE, CENTER_ALIGN, "Connessione");
-		LCDPrintString(TWO, CENTER_ALIGN, "non riuscita");
-		delay(1500);
-		ClearLCD();
-		server.close();
-		Flag.WifiActive = false;
-		WriteMemory(WIFI_SSID_ADDR, NO_CONN);
-	}
-	return;
 }
 
 void WebServerInit()

@@ -191,6 +191,7 @@ void setup()
 		Flag.IsDisplayOn = true;
 		ReleInit(false);
 		BandInit();
+		MenuInit();
 	}
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok/Set");
