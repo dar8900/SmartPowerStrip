@@ -74,6 +74,10 @@ void TakeReleTime()
 			{
 				if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) <= 0)
 				{
+					if((PresentTime.minute - Rele[ReleIndx].TurnOnTime.minute) == 0)
+					{
+						TmpMinute[ReleIndx] = - Rele[ReleIndx].TurnOnTime.minute;
+					}
 					Rele[ReleIndx].ActiveTime.minute = (Rele[ReleIndx].TurnOnTime.minute - (Rele[ReleIndx].TurnOnTime.minute  - PresentTime.minute)) + TmpMinute[ReleIndx];
 					if(Rele[ReleIndx].ActiveTime.minute == 59)
 					{

@@ -22,6 +22,7 @@ extern ESP8266WebServer server;
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
 short MyConnectionNumber;
+uint16_t TimerScanWifi = 1000;
 // WiFiServer ClientServer(80);
 
 const WIFI_LIST MyNetworkList[] =
@@ -80,6 +81,8 @@ void WifiInit()
 			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
 			while (WiFi.status() != WL_CONNECTED)
 			{
+				TakePresentTime();
+				TakeReleTime();
 				delay(500);
 				if(NumbPoint > 19)
 				{
@@ -115,7 +118,7 @@ void WifiInit()
 				ClearLCD();
 				Flag.WifiReconnect = false;
 				break; //Uscita for
-			}		
+			}
 		}
 		if(!Flag.WifiActive && Flag.WifiReconnect)
 		{
@@ -133,6 +136,8 @@ void WifiInit()
 			while (WiFi.status() != WL_CONNECTED)
 			{
 				delay(500);
+				TakePresentTime();
+				TakeReleTime();
 				if(NumbPoint > 19)
 				{
 					NumbPoint = 0;
@@ -190,6 +195,8 @@ String GetWifiSignalPower()
 	short CurrentNetwork = 0;
 	short WifiItem = 0;
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItem);
+	TakePresentTime();
+	TakeReleTime();
 	for (CurrentNetwork = 0; CurrentNetwork < NumberOfNetworks; CurrentNetwork++)
 	{
 		ssid = String(WiFi.SSID(CurrentNetwork));
@@ -226,7 +233,6 @@ String GetWifiSignalPower()
 	}
 	else
 	{
-		Flag.WifiActive = false;
 		SignalPower = "No rete";
 	}
 	return SignalPower;
@@ -234,41 +240,57 @@ String GetWifiSignalPower()
 
 void WifiScanForSignal()
 {
-	short WifiListItem = 0;
+	short WifiListItem = 0, ConnectionNumbers = 0, CurrentNetwork = 0;
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiListItem);
 	String Ssid;
 	int32_t RSSI;
 	bool Found = false;
-	Ssid = WiFi.SSID(MyConnectionNumber);
-	RSSI = WiFi.RSSI(MyConnectionNumber);
-	if(Ssid == String(MyNetworkList[WifiListItem].RealSsid))
+	if(TimerScanWifi == 0)
 	{
-		Found = true;
-	}
-	if(Found)
-	{
-		if(RSSI < -96)
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Scan Wifi...");
+		delay(1000);
+		TimerScanWifi = 1000;
+		ConnectionNumbers = WiFi.scanNetworks(false, true);
+		TakePresentTime();
+		TakeReleTime();
+		ReadMemory(WIFI_SSID_ADDR, 1, &WifiListItem);
+		for (CurrentNetwork = 0; CurrentNetwork < ConnectionNumbers; CurrentNetwork++)
 		{
-			ClearLCD();
-			LCDPrintString(ONE, CENTER_ALIGN, "Rete debole");
-			LCDPrintString(TWO, CENTER_ALIGN, "mi connetto a");
-			LCDPrintString(THREE, CENTER_ALIGN, "un'altra rete");
+			Ssid = String(WiFi.SSID(CurrentNetwork));
+			RSSI = WiFi.RSSI(CurrentNetwork);
+			if(Ssid == String(MyNetworkList[WifiListItem].RealSsid))
+			{
+				Found = true;
+				MyConnectionNumber = CurrentNetwork;
+				break;
+			}
+		}
+		if(!Found)
+		{
+			LCDPrintLineVoid(TWO);
+			LCDPrintString(ONE, CENTER_ALIGN, "La rete");
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			LCDPrintString(THREE, CENTER_ALIGN, "risulta spenta.");
+			LCDPrintString(FOUR, CENTER_ALIGN, "Ne cerco un'altra");
 			delay(1500);
-			WiFi.disconnect();
+			ClearLCD();
 			Flag.WifiActive = false;
 			Flag.WifiReconnect = true;
 		}
+		else
+		{
+			LCDPrintLineVoid(TWO);
+			Flag.WifiReconnect = false;
+		}
+		if(Flag.WifiReconnect)
+		{
+			WifiInit();
+		}
+
 	}
-	else
-	{
-		LCDPrintLineVoid(THREE);
-		Flag.WifiActive = false;
-		Flag.WifiReconnect = true;
-	}
-	if(Flag.WifiReconnect)
-	{
-		WifiInit();
-	}
+
+	TimerScanWifi--;
 }
 
 void WebServerInit()
