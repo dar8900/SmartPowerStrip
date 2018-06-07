@@ -37,6 +37,7 @@ void TurnOffAllRele()
 		delay(500);
 		Rele[ReleIndx].TurnOnTime = SetTimeVarRele(0,0,0,0);
 		Rele[ReleIndx].ActiveTime = SetTimeVarRele(0,0,0,0);
+		SaveReleStatus(ReleIndx, STATUS_OFF);
 	}
 	Flag.AllReleDown = true;
 	Flag.AllReleUp = false;
@@ -445,7 +446,7 @@ bool SetTimerRele(short ReleNbr)
 			default:
 				break;
 		}
-		delay(100);
+		delay(WHILE_LOOP_DELAY*4); // 120ms per il blink
 		ButtonPress = NO_PRESS;
 	}
 	ClearLCD();

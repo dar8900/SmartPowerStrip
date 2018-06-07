@@ -107,7 +107,7 @@ void MainScreen(short EnterSetup)
 					Rele[ReleIndx].TimerTime = SetTimeVarRele(0,0,0,0);
 				}
 			}
-			delay(50);
+			delay(WHILE_LOOP_DELAY);
 		}
 		EnterSetup = NO_PRESS;
 		ExitFromBand = false;
@@ -271,7 +271,7 @@ void MainMenu()
 				break;
 		}
 		ButtonPress = NO_PRESS;
-		delay(10);
+		delay(WHILE_LOOP_DELAY);
 		if(ReEnterMenu)
 		{
 			MainMenuItems[Item].MenuFunc();
@@ -343,7 +343,7 @@ bool Setup()
 			default:
 				break;
 		}
-		delay(50);
+		delay(WHILE_LOOP_DELAY);
 	}
 }
 
@@ -469,7 +469,7 @@ bool ManualRele()
 					default:
 						break;
 				}
-				delay(50);
+				delay(WHILE_LOOP_DELAY);
 				ButtonPress = NO_PRESS;
 				if(ExitAll)
 					break; // Uscita while
@@ -579,7 +579,7 @@ bool ChangeTimeBand()
 				}
 				break;
 		}
-		delay(60);
+		delay(WHILE_LOOP_DELAY);
 		ButtonPress = NO_PRESS;
 	}
 	return true;
@@ -711,13 +711,13 @@ bool HelpInfo()
 				TimerShowTotalTime--;
 				delay(100);
 			}
-			LCDPrintLineVoid(THREE);
+			ClearLCDLine(THREE);
 		}
 		else
 		{
 			LCDPrintString(THREE, CENTER_ALIGN, "Non Attiva");
 			delay(1000);
-			LCDPrintLineVoid(THREE);
+			ClearLCDLine(THREE);
 		}
 
 	}
@@ -744,7 +744,7 @@ bool WiFiInfo()
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItemSsid);
 	CheckEvents();
 	ClearLCD();
-	while(1)
+	while(!ExitWifiInfo)
 	{
 		CheckEvents();
 		if(Flag.WifiActive)
@@ -756,9 +756,10 @@ bool WiFiInfo()
 			LCDPrintString(THREE, RIGHT_ALIGN, HostName);
 			LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
 			LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
+			// Ogni 4.5s
 			if(RefreshSignal == 150)
 			{
-				LCDPrintLineVoid(FOUR);
+				ClearLCDLine(FOUR);
 				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
 				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
 				if(!Flag.WifiActive)
@@ -791,9 +792,7 @@ bool WiFiInfo()
 		}
 		ButtonPress = NO_PRESS;
 		RefreshSignal++;
-		if(ExitWifiInfo)
-			break;
-		delay(50);
+		delay(WHILE_LOOP_DELAY);
 	}
 	return true;
 }
@@ -855,7 +854,7 @@ bool AssignReleTimer()
 			}
 			else
 			{
-				LCDPrintLineVoid(FOUR);
+				ClearLCDLine(FOUR);
 			}
 			ButtonPress = CheckButtons();
 			switch(ButtonPress)
@@ -923,7 +922,7 @@ bool AssignReleTimer()
 					break;
 			}
 			ButtonPress = NO_PRESS;
-			delay(60);
+			delay(WHILE_LOOP_DELAY);
 		}
 	}
 	return true;
@@ -951,7 +950,7 @@ bool ChangeTimerDisplay()
 					DelayItem--;
 				else
 					DelayItem = MAX_DELAY_TIMERS - 1;
-				LCDPrintLineVoid(FOUR);
+				ClearLCDLine(FOUR);
 				break;
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
@@ -959,7 +958,7 @@ bool ChangeTimerDisplay()
 					DelayItem++;
 				else
 					DelayItem = ALWAYS_ON;
-					LCDPrintLineVoid(FOUR);
+					ClearLCDLine(FOUR);
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
@@ -972,7 +971,7 @@ bool ChangeTimerDisplay()
 			default:
 				break;
 		}
-		delay(50);
+		delay(WHILE_LOOP_DELAY);
 	}
 	return true;
 }
@@ -1009,7 +1008,7 @@ bool CheckYesNo()
 					YesNoChoice = NO;
 				else
 					YesNoChoice = YES;
-				LCDPrintLineVoid(FOUR);
+				ClearLCDLine(FOUR);
 				break;
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
@@ -1017,7 +1016,7 @@ bool CheckYesNo()
 					YesNoChoice = NO;
 				else
 					YesNoChoice = YES;
-					LCDPrintLineVoid(FOUR);
+					ClearLCDLine(FOUR);
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
@@ -1037,7 +1036,7 @@ bool CheckYesNo()
 				break;
 		}
 		ButtonPress = NO_PRESS;
-		delay(80);
+		delay(WHILE_LOOP_DELAY);
 	}
 	return Choice;
 }

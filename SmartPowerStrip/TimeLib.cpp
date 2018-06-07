@@ -37,6 +37,7 @@ void RTCInit()
 		while (1)
 		{
 			BlinkLed(BUTTON_LED);
+            delay(5);
 		}
 	}
 
@@ -56,7 +57,8 @@ void RTCInit()
 bool ChangeTime()
 {
 	TakePresentTime();
-	short Hour = PresentTime.hour, Minute = PresentTime.minute, Month = PresentTime.month, Day = PresentTime.day, Year = PresentTime.year, TimeSM = CHANGE_HOUR;
+	short Hour = PresentTime.hour, Minute = PresentTime.minute, Month = PresentTime.month, Day = PresentTime.day, Year = PresentTime.year;
+    short TimeSM = CHANGE_HOUR;
 	short ButtonPress = NO_PRESS;
 	bool ExitTimeChange = false;
 	String MinuteStr;
@@ -78,14 +80,14 @@ bool ChangeTime()
 							Hour--;
 						else
 							Hour = HOUR_IN_DAY;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_DOWN:
 						if(Hour < HOUR_IN_DAY)
 							Hour++;
 						else
 							Hour = 0;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_SET:
 						TimeSM = CHANGE_MINUTE;
@@ -114,14 +116,14 @@ bool ChangeTime()
 							Minute--;
 						else
 							Minute = MINUTE_IN_HOUR;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_DOWN:
 						if(Minute < MINUTE_IN_HOUR)
 							Minute++;
 						else
 							Minute = 0;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_SET:
 						TimeSM = CHANGE_YEAR;
@@ -142,14 +144,14 @@ bool ChangeTime()
                                 Year--;
                             else
                                 Year = 2099;
-                            ClearLCD();
+                            ClearLCDLine(THREE);
                             break;
                         case BUTTON_DOWN:
                             if(Year < 2099)
                                 Year++;
                             else
                                 Year = 2018;
-                            ClearLCD();
+                            ClearLCDLine(THREE);
                             break;
                         case BUTTON_SET:
                             TimeSM = CHANGE_MONTH;
@@ -170,14 +172,14 @@ bool ChangeTime()
 							Month--;
 						else
 							Month = 12;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_DOWN:
 						if(Month < 12)
 							Month++;
 						else
 							Month = 1;
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_SET:
 						TimeSM = CHANGE_DAY;
@@ -210,7 +212,7 @@ bool ChangeTime()
                                 Day = TabDays4Month[Month - 1];
                         }
 
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_DOWN:
                         if(Year % 100 == 0 && Year % 400 == 0 && Month == 2)
@@ -234,7 +236,7 @@ bool ChangeTime()
                             else
                                 Day = 1;
                         }
-						ClearLCD();
+						ClearLCDLine(THREE);
 						break;
 					case BUTTON_SET:
 						TimeSM = EXIT_CHANGE_TIME;

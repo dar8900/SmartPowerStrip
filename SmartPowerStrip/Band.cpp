@@ -578,7 +578,7 @@ bool SetTimeBand()
 				break;
 
 		}
-		delay(80);
+		delay(WHILE_LOOP_DELAY);
 	}
 	return ValidSet;
 }

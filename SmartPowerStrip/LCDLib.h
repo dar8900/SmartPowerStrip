@@ -13,7 +13,7 @@ typedef enum
 	ONE = 0,
 	TWO,
 	THREE,
-	FOUR	
+	FOUR
 } LCD_ROWS;
 
 void LCDInit(void);
@@ -24,7 +24,7 @@ void LCDShowPopUp(String Avviso);
 void LcdTimeWrite(int Time2Write);
 void LCDPrintString(short row, short col, String string);
 void LCDPrintValue(short row, short col, short value);
-void LCDPrintLineVoid(short row);
+void ClearLCDLine(short row);
 bool LCDCreateIcon(uint8_t Icon[], short IconNum);
 void LCDShowIcon(short IconNum);
 void LCDDisplayOn(void);

@@ -38,8 +38,8 @@ void LCDShowPopUp(String Avviso)
 {
 	ClearLCD();
 	LCDPrintString(THREE, CENTER_ALIGN, Avviso);
-	BlinkDisplay(5, 300);
-	delay(2000);
+	BlinkDisplay(4, 300);
+	delay(1000);
 	ClearLCD();
 }
 
@@ -151,7 +151,7 @@ void LCDShowIcon(short IconNum)
 	lcd_main.write(IconNum);
 }
 
-void LCDPrintLineVoid(short row)
+void ClearLCDLine(short row)
 {
   lcd_main.setCursor(0, row);
   lcd_main.print("                    ");

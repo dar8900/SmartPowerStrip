@@ -87,7 +87,7 @@ void WifiInit()
 				if(NumbPoint > 19)
 				{
 					NumbPoint = 0;
-					LCDPrintLineVoid(2);
+					ClearLCDLine(2);
 				}
 				LCDPrintString(2, 0 + NumbPoint, ".");
 				NumbPoint++;
@@ -141,7 +141,7 @@ void WifiInit()
 				if(NumbPoint > 19)
 				{
 					NumbPoint = 0;
-					LCDPrintLineVoid(2);
+					ClearLCDLine(2);
 				}
 				LCDPrintString(2, 0 + NumbPoint, ".");
 				NumbPoint++;
@@ -268,7 +268,7 @@ void WifiScanForSignal()
 		}
 		if(!Found)
 		{
-			LCDPrintLineVoid(TWO);
+			ClearLCDLine(TWO);
 			LCDPrintString(ONE, CENTER_ALIGN, "La rete");
 			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
 			LCDPrintString(THREE, CENTER_ALIGN, "risulta spenta.");
@@ -280,7 +280,7 @@ void WifiScanForSignal()
 		}
 		else
 		{
-			LCDPrintLineVoid(TWO);
+			ClearLCDLine(TWO);
 			Flag.WifiReconnect = false;
 		}
 		if(Flag.WifiReconnect)
@@ -389,14 +389,14 @@ void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
 					ListItem--;
 				else
 					ListItem = MAX_WIFI_ITEM - 1;
-				LCDPrintLineVoid(THREE);
+				ClearLCDLine(THREE);
 				break;
 			case BUTTON_DOWN:
 				if(ListItem < MAX_WIFI_ITEM - 1)
 					ListItem++;
 				else
 					ListItem = 0;
-				LCDPrintLineVoid(THREE);
+				ClearLCDLine(THREE);
 				break;
 			case BUTTON_SET:
 				Nome = String(MyNetworkList[ListItem].RealSsid);
@@ -411,7 +411,7 @@ void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
 				break;
 		}
 		ButtonPress = NO_PRESS;
-		delay(60);
+		delay(WHILE_LOOP_DELAY);
 	}
 }
 
