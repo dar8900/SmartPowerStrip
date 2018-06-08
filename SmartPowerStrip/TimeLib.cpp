@@ -254,7 +254,7 @@ bool ChangeTime()
 			default:
 				break;
 		}
-		delay(60);
+		delay(WHILE_LOOP_DELAY);
 	}
 	TimeAdjust(Hour, Minute, Day, Month, Year);
 }
