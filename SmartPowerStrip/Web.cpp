@@ -89,7 +89,7 @@ void WifiInit()
 					NumbPoint = 0;
 					ClearLCDLine(2);
 				}
-				LCDPrintString(2, 0 + NumbPoint, ".");
+				LCDPrintString(THREE, 0 + NumbPoint, ".");
 				NumbPoint++;
 				TimerNoConnection++;
 				if(TimerNoConnection == 25)
@@ -143,7 +143,7 @@ void WifiInit()
 					NumbPoint = 0;
 					ClearLCDLine(2);
 				}
-				LCDPrintString(2, 0 + NumbPoint, ".");
+				LCDPrintString(THREE, 0 + NumbPoint, ".");
 				NumbPoint++;
 				TimerNoConnection++;
 				if(TimerNoConnection == 25)

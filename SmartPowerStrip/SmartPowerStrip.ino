@@ -205,7 +205,7 @@ void setup()
 	ClearMemory();
 	LCDInit();
 	if(IsMemoryEmpty())
-		LCDPrintString(1, CENTER_ALIGN, "Memoria Vuota");
+		LCDPrintString(TWO, CENTER_ALIGN, "Memoria Vuota");
 
 #endif // FIRST_GO
 }

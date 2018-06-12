@@ -401,12 +401,12 @@ bool ManualRele()
 			LCDPrintString(TWO, CENTER_ALIGN, SelRele);
 			if(Rele[ReleIndx].IsActive)
 			{
-				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_ON]);
+				LCDPrintString(THREE, CENTER_ALIGN, ONOFF[STATUS_ON]);
 				Status = STATUS_ON;
 			}
 			else
 			{
-				LCDPrintString(2, CENTER_ALIGN, ONOFF[STATUS_OFF]);
+				LCDPrintString(THREE, CENTER_ALIGN, ONOFF[STATUS_OFF]);
 				Status = STATUS_OFF;
 			}
 			OldStatus = Status;
@@ -415,7 +415,7 @@ bool ManualRele()
 				CheckEvents();
 				ButtonPress = CheckButtons();
 				LCDPrintString(TWO, CENTER_ALIGN, SelRele);
-				LCDPrintString(2, CENTER_ALIGN, ONOFF[Status]);
+				LCDPrintString(THREE, CENTER_ALIGN, ONOFF[Status]);
 				switch(ButtonPress)
 				{
 					case BUTTON_UP:
@@ -438,9 +438,9 @@ bool ManualRele()
 						BlinkLed(BUTTON_LED);
 						ClearLCD();
 						if(OldStatus != Status)
-							LCDPrintString(2, CENTER_ALIGN, "Valore Salvato");
+							LCDPrintString(THREE, CENTER_ALIGN, "Valore Salvato");
 						else
-							LCDPrintString(2, CENTER_ALIGN, "Valore non cambiato");
+							LCDPrintString(THREE, CENTER_ALIGN, "Valore non cambiato");
 						if(Status == 0)
 						{
 							Rele[ReleIndx].IsActive = false;
