@@ -1,0 +1,9 @@
+1) Testare i relè per vedere quali sono le porte da connettere
+2) Testare l'array di transistor con la NodeMCU per vedere se funziona (collegare i transistor ad una terra comune e ai 5V)
+3) Testare i due punti sopra e controllare che i relè rispondano correttamente
+4) Preparare i relè con i cavi necessari per la chiusura dell'interruttore (uno che va ai 5V dell'Arduino e uno che va all'uscita di una delle porte dei transistor)
+5) Preparare cavetti che dal gate dei transistor vadano ai pin dell NodeMCU; preparare anche i led, avranno una terra comune mentre gli altri pin
+6) Fare i buchi sopra le prese per i led
+7) Saldare le MCU sulle schede perforate
+8) Preparare tutti i collegamenti e usare una terza scheda perforata per unire i cavi 
+9) Fare i buchi per le prese usb delle due MCU
