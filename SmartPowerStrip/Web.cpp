@@ -98,7 +98,7 @@ void WifiInit()
 					LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
 					LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
 					LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
-					delay(2000);
+					delay(DELAY_INFO_MSG);
 					ClearLCD();
 					Flag.WifiActive = false;
 					break;
@@ -114,7 +114,7 @@ void WifiInit()
 				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
 				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
 				WriteMemory(WIFI_SSID_ADDR, WifiListItem);
-				delay(1000);
+				delay(DELAY_INFO_MSG);
 				ClearLCD();
 				Flag.WifiReconnect = false;
 				break; //Uscita for
@@ -152,7 +152,7 @@ void WifiInit()
 					LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
 					LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
 					LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
-					delay(2000);
+					delay(DELAY_INFO_MSG);
 					ClearLCD();
 					Flag.WifiActive = false;
 					break;
@@ -168,7 +168,7 @@ void WifiInit()
 				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
 				LCDPrintString(FOUR, RIGHT_ALIGN, GetWifiSignalPower());
 				Flag.WifiReconnect = false;
-				delay(2000);
+				delay(DELAY_INFO_MSG);
 				ClearLCD();
 			}
 			else
@@ -273,7 +273,7 @@ void WifiScanForSignal()
 			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
 			LCDPrintString(THREE, CENTER_ALIGN, "risulta spenta.");
 			LCDPrintString(FOUR, CENTER_ALIGN, "Ne cerco un'altra");
-			delay(1500);
+			delay(DELAY_INFO_MSG);
 			ClearLCD();
 			Flag.WifiActive = false;
 			Flag.WifiReconnect = true;
@@ -316,6 +316,7 @@ void WebServerInit()
 	server.on("/SetRele8", HandleRele8);
 
 	server.on("/BandStatus", HandleBandStatus);
+	server.on("/GetFWInfo", HandleFWInfo);
 
 	server.on("/TurnOnRele1", HandleTurnOn1);
 	server.on("/TurnOnRele2", HandleTurnOn2);
@@ -338,7 +339,7 @@ void WebServerInit()
 	server.begin();
 	ClearLCD();
 	LCDPrintString(TWO, CENTER_ALIGN, "Server Avviato");
-	delay(1000);
+	delay(DELAY_INFO_MSG);
 	ClearLCD();
 }
 
@@ -353,7 +354,7 @@ void WifiDisconnect()
 	WiFi.disconnect();
 	server.close();
 	Flag.WifiActive = false;
-	delay(1500);
+	delay(DELAY_INFO_MSG);
 	ClearLCD();
 }
 
@@ -419,7 +420,6 @@ void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
 String WifiIP()
 {
 	String IP;
-	//IP = String(WiFi.localIP());
 	IP = WiFi.localIP().toString();
 	return IP;
 }

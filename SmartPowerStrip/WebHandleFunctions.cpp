@@ -19,6 +19,8 @@ extern FLAGS Flag;
 extern BAND_FORMAT Band;
 ESP8266WebServer server(80);
 
+extern String VersionValue;
+extern String VersionDate;
 
 const char WebPage[] PROGMEM = R"=====(
 
@@ -193,6 +195,24 @@ const char WebPage[] PROGMEM = R"=====(
 			}
 		  };
 		  xhttp.open("GET", BandStatusFunc, true);
+		  xhttp.send();
+		}
+
+		function GetFWInfo()
+		{
+		  var i;
+		  var FWInfoId = "FW_INFO";
+		  var FWInfoFunc = "GetFWInfo";
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function()
+		  {
+			if (this.readyState == 4 && this.status == 200)
+			{
+			  document.getElementById(FWInfoId).innerHTML =
+			  this.responseText;
+			}
+		  };
+		  xhttp.open("GET", FWInfoFunc, true);
 		  xhttp.send();
 		}
 
@@ -662,6 +682,9 @@ const char WebPage[] PROGMEM = R"=====(
 		<p style="color:blue; text-align:center; font-family:Verdana; font-size:30px;">Banda Oraria:</p> <p style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:40px;" id="BAND_ACTIVE">Controllo in corso...</p>
 		<br>
 		<br>
+		<p style="color:blue; text-align:center; font-family:Verdana; font-size:20px;">Firmware Info: </p> <p style="color:MediumSeaGreen;text-align:center; font-family:Verdana; font-size:40px;" id="FW_INFO">Controllo in corso...</p>
+		<br>
+		<br>
 		<footer style="text-align:center;">&copy Dario Cavedale</footer>
     </body>
 </html>
@@ -807,6 +830,13 @@ void HandleBandStatus()
 		BandStatusStr = "NON SETTATA";
 
 	server.send(200, "text/plane", BandStatusStr); //Send to client ajax request
+}
+
+void HandleFWInfo()
+{
+	String FWStr;
+	FWStr = "Numero Versione: " + VersionValue + "   Data Rilascio: " + VersionDate;
+	server.send(200, "text/plane", FWStr); //Send to client ajax request
 }
 
 void HandleTimer1()

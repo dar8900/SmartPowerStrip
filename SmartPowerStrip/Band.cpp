@@ -150,7 +150,7 @@ bool IsBandCorrect()
 				{
 					SaveBandValues(BandSaveIdx);
 				}
-				WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
+				WriteMemory(BAND_INVALIDATION_VALUE_ADDR, VALID);
 			}
 			else
 			{
@@ -164,7 +164,7 @@ bool IsBandCorrect()
 			{
 				SaveBandValues(BandSaveIdx);
 			}
-			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
+			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, VALID);
 		}
 	}
 	else
@@ -177,7 +177,7 @@ bool IsBandCorrect()
 			{
 				SaveBandValues(BandSaveIdx);
 			}
-			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 0);
+			WriteMemory(BAND_INVALIDATION_VALUE_ADDR, VALID);
 		}
 		else
 		{
@@ -202,7 +202,7 @@ void SetBandInvalid()
 	CheckEvents();
 	ClearLCD();
 	Flag.IsBandSetted = false;
-	WriteMemory(BAND_INVALIDATION_VALUE_ADDR, 1);
+	WriteMemory(BAND_INVALIDATION_VALUE_ADDR, INVALID);
 }
 
 void SaveBandValues(short WichItem)

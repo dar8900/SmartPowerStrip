@@ -9,6 +9,9 @@
 
 #define PRESENT_DAY_HOUR_MINUTE_SECOND ((PresentTime.day * SEC_IN_DAY) + (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second)
 
+#define DELAY_INFO_MSG	 2000
+#define DELAY_MENU_MSG	 1200
+
 typedef struct
 {
 	short hour;
