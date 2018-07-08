@@ -635,7 +635,7 @@ bool HelpInfo()
 {
 	short NumTimer = 0, ReleIndx = 0, ReleTimer[2];
 	String BandTime1, BandTime2, Hour, Minute, Day, Second, TotalTime;
-	bool NoTimer = true, ExitInfo = false;
+	bool NoTimer = true;
 	CheckEvents();
 	ClearLCD();
 	LCDPrintString(ONE, CENTER_ALIGN, "Info e Aiuto");
@@ -644,17 +644,19 @@ bool HelpInfo()
 	delay(DELAY_INFO_MSG);
 	CheckEvents();
 	ClearLCD();
-	while(!ExitInfo)
+	while(1)
 	{
-		ExitInfo = BackPressed();
+		if(BackPressed())
+			break;
 		LCDPrintString(ONE, CENTER_ALIGN, "Stato Prese:");
 		ShowReleIcons(TWO);
 		LCDPrintString(THREE, CENTER_ALIGN, "Stato Wifi: ");
 		ShowWifiStatus(THREE, 16, Flag.WifiActive);
 		delay(DELAY_INFO_MSG);
 		CheckEvents();
+		if(BackPressed())
+			break;
 		ClearLCD();
-		ExitInfo = BackPressed();
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
 			if(Rele[ReleIndx].HaveTimer)
@@ -672,7 +674,6 @@ bool HelpInfo()
 					break;
 				}
 			}
-			ExitInfo = BackPressed();
 		}
 		CheckEvents();
 		LCDPrintString(ONE, LEFT_ALIGN, "Timer attivi:");
@@ -688,11 +689,13 @@ bool HelpInfo()
 		{
 			LCDPrintString(TWO, CENTER_ALIGN, "Nessuno");
 		}
-		ExitInfo = BackPressed();
+		if(BackPressed())
+			break;
 		delay(DELAY_INFO_MSG);
 		CheckEvents();
+		if(BackPressed())
+			break;
 		ClearLCD();
-		ExitInfo = BackPressed();
 		LCDPrintString(ONE, CENTER_ALIGN, "Stato Banda:");
 		if(Flag.IsBandSetted)
 		{
@@ -716,11 +719,13 @@ bool HelpInfo()
 		{
 			LCDPrintString(TWO, CENTER_ALIGN, "Non Settata");
 		}
-		ExitInfo = BackPressed();
+		if(BackPressed())
+			break;
 		delay(DELAY_INFO_MSG);
 		CheckEvents();
+		if(BackPressed())
+			break;
 		ClearLCD();
-		ExitInfo = BackPressed();
 		LCDPrintString(ONE, CENTER_ALIGN, "Tempo accensione");
 		for(ReleIndx = RELE_1; ReleIndx < RELE_MAX; ReleIndx++)
 		{
@@ -749,30 +754,32 @@ bool HelpInfo()
 				delay(DELAY_MENU_MSG);
 				ClearLCDLine(THREE);
 			}
-			ExitInfo = BackPressed();
+			if(BackPressed())
+				break;
 		}
-		ClearLCD();
 		delay(DELAY_INFO_MSG);
-		ExitInfo = BackPressed();
+		if(BackPressed())
+			break;
+		ClearLCD();
 		CheckEvents();
 		LCDPrintString(ONE, CENTER_ALIGN, "Firmware version:");
 		LCDPrintString(TWO, CENTER_ALIGN, VersionValue);
-		LCDPrintString(ONE, CENTER_ALIGN, "Release Date:");
-		LCDPrintString(TWO, CENTER_ALIGN, VersionDate);
-		ExitInfo = BackPressed();
+		LCDPrintString(THREE, CENTER_ALIGN, "Release Date:");
+		LCDPrintString(FOUR, CENTER_ALIGN, VersionDate);
+		if(BackPressed())
+			break;
 		delay(DELAY_INFO_MSG);
 		CheckEvents();
 		ClearLCD();
-		ExitInfo = BackPressed();
+		if(BackPressed())
+			break;
 	}
-	if(ExitInfo)
-	{
-		ClearLCD();
-		LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
-		delay(DELAY_INFO_MSG);
-		ClearLCD();
-		CheckEvents();
-	}
+	ClearLCD();
+	LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+	delay(DELAY_INFO_MSG);
+	ClearLCD();
+    CheckEvents();
+	
 	return true;
 }
 

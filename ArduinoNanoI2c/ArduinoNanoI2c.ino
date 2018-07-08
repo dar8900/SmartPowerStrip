@@ -20,7 +20,7 @@ enum
 	DOWN,
 	LEFT,
 	SET,
-	BUTTON_LED
+	BUTTON_LED = 13
 };
 
 short ButtonPress = NO_PRESS;

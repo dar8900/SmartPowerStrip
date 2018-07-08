@@ -13,6 +13,8 @@
 
 #include "WebHandleFunctions.h"
 
+#define TIMER_SCAN_WIFI		200
+
 extern FLAGS Flag;
 extern RELE Rele[];
 extern TIME_DATE_FORMAT PresentTime;
@@ -22,7 +24,7 @@ extern ESP8266WebServer server;
 const char* Hostname = "cavestrip";
 String HostName = "cavestrip";
 short MyConnectionNumber;
-uint16_t TimerScanWifi = 1000;
+uint16_t TimerScanWifi = TIMER_SCAN_WIFI;
 // WiFiServer ClientServer(80);
 
 const WIFI_LIST MyNetworkList[] =
@@ -67,7 +69,8 @@ void WifiInit()
 	}
 	else
 	{
-		WifiConnectionChoice(&WifiListItem, &NomeWifi);
+		if(!Flag.WifiReconnect)
+			WifiConnectionChoice(&WifiListItem, &NomeWifi);
 	}
 	ClearLCD();
 	if(Flag.WifiReconnect)
@@ -98,6 +101,8 @@ void WifiInit()
 					LCDPrintString(ONE, CENTER_ALIGN, "Nessuna rete");
 					LCDPrintString(TWO, CENTER_ALIGN, "rilevata.");
 					LCDPrintString(THREE, CENTER_ALIGN, "Uscita...");
+					TimerNoConnection = 0;
+					NumbPoint = 0;
 					delay(DELAY_INFO_MSG);
 					ClearLCD();
 					Flag.WifiActive = false;
@@ -250,7 +255,7 @@ void WifiScanForSignal()
 		ClearLCD();
 		LCDPrintString(TWO, CENTER_ALIGN, "Scan Wifi...");
 		delay(1000);
-		TimerScanWifi = 1000;
+		TimerScanWifi = TIMER_SCAN_WIFI;
 		ConnectionNumbers = WiFi.scanNetworks(false, true);
 		TakePresentTime();
 		TakeReleTime();

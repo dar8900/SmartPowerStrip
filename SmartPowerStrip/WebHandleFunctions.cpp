@@ -197,7 +197,12 @@ const char WebPage[] PROGMEM = R"=====(
 		  xhttp.open("GET", BandStatusFunc, true);
 		  xhttp.send();
 		}
-
+		
+		setInterval(function()
+		{
+		  GetFWInfo();
+		}, 30000);
+		
 		function GetFWInfo()
 		{
 		  var i;
