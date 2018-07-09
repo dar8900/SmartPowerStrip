@@ -4,11 +4,20 @@
 #define 	TENSIONE_LINEA	230.0
 #define 	MV_PER_A		100
 
+#define REAL_MEASURE		
+
 double 		       EnergyMeasured;
 static double      EnergyInst;
+
 static uint32_t    EnergyTimeCounter;
-static const float PowerMeasureTEST = TENSIONE_LINEA * 1.0;
-// float   	PowerMeasure;
+#ifndef REAL_MEASURE
+static const float PowerMeasureTEST = TENSIONE_LINEA * 0.5;
+#endif
+
+#ifdef REAL_MEASURE
+float   	PowerMeasure;
+#endif
+
 String		EnergyStr;
 
 static float CalcCurrent()
@@ -42,12 +51,18 @@ static float CalcCurrent()
 void CalcEnergy() // 200ms c.a.
 {
 	float 	CurrentCalculated;
+#ifdef REAL_MEASURE
 	CurrentCalculated = CalcCurrent();
-	// PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
+	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
+#endif
 	for(int cnt = 0; cnt < 15; cnt++)
 	{
 		EnergyTimeCounter++;
+#ifndef REAL_MEASURE
 		EnergyInst += PowerMeasureTEST;
+#else
+		EnergyInst += PowerMeasure;
+#endif
 		delay(10);
 	}
 }

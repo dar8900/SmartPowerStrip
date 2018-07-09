@@ -13,13 +13,18 @@ short CheckButtons()
 	short ButtonPress = NO_PRESS;
 	ReadFromNano(BUTTON);
 	ButtonPress = ButtonVal;
+	ButtonVal = NO_PRESS;
+	delayms(80);
 	return ButtonPress;
 }
 
 String EnergyValueStr()
 {
+	String TempEnergyStr;
 	ReadFromNano(ENERGY);
-	return EnergyStr;	
+	TempEnergyStr = EnergyStr;
+	EnergyStr = "";
+	return TempEnergyStr;	
 }
 
 void ReadFromNano(short WhatRead)

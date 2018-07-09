@@ -62,6 +62,7 @@ static void BlinkLed(short pin)
 
 void setup() 
 {
+	Serial.begin(9600);
 	Wire.begin(ARDUINO_ADDR); 
 	pinMode(UP, INPUT);
 	pinMode(DOWN, INPUT);
@@ -81,4 +82,6 @@ void loop()
 		TickSecond = 0;
 		EnergyValueSec();
 	}
+	delay(5);
+	
 }

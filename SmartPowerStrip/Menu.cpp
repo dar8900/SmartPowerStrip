@@ -8,6 +8,8 @@
 #include "Band.h"
 #include "Rele.h"
 
+#define  TIMER_REFRESH_ENERGY	15
+
 extern TIME_DATE_FORMAT PresentTime;
 extern BAND_FORMAT Band;
 extern RELE Rele[];
@@ -77,11 +79,7 @@ void MenuInit()
 		TimerRefreshMenu = TimerDalays[Delay].DelayValue;
 	}
 	ClearLCD();
-	ReadMemory(UDM_ENERGY_ADDR, 1, &EnergyUdm);
-	if(EnergyUdm == EMPTY_MEMORY_VALUE)
-	{
-		EepromUpdate(UDM_ENERGY_ADDR, WATT_ORA);
-	}
+	EepromUpdate(UDM_ENERGY_ADDR, WATT_ORA);
 	LCDPrintString(ONE, CENTER_ALIGN, "Retroilluminazione");
 	LCDPrintString(TWO, CENTER_ALIGN, "impostata a:");
 	LCDPrintString(THREE, CENTER_ALIGN, TimerDalays[Delay].DelayStr);
@@ -305,6 +303,7 @@ bool Setup()
 	ClearLCD();
 	while(!ExitSetup)
 	{
+		CheckEvents();
 		ShowDateTime(ONE);
 		if(Flag.ClientConnected)
 		{
@@ -801,8 +800,8 @@ bool HelpInfo()
 
 bool ShowEnergy()
 {
-	uint16_t TimerDisplay = 6000; // 60s con delay 10ms
-	short TimerRefreshEnergy = 200; // 2s 
+	uint16_t TimerDisplay = 3000; // 60s con delay 10ms
+	short TimerRefreshEnergy = TIMER_REFRESH_ENERGY; 
 	short ButtonPress = NO_PRESS;
 	short UdmEnergy = 0;
 	String EnergyStr;
@@ -820,9 +819,9 @@ bool ShowEnergy()
 		LCDPrintString(TWO, CENTER_ALIGN, "Energia Misurata:");
 		if(Flag.IsDisplayOn)
 		{
-			if(TimerRefreshEnergy == 200)
+			if(TimerRefreshEnergy == TIMER_REFRESH_ENERGY)
 			{
-				// ClearLCDLine(THREE);
+				ClearLCDLine(THREE);
 				EnergyStr = EnergyValueStr();
 				switch(UdmEnergy)
 				{
@@ -835,10 +834,13 @@ bool ShowEnergy()
 						EnergyStr = String(EnergyScaled);
 						break;
 					case WATT_ORA:
+						EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+						EnergyStr = String(EnergyScaled);
 						break;
 					default:
 						break;
 				}
+				EnergyStr +=  " " + UdmEnergyScale[UdmEnergy].UdmStr;
 				LCDPrintString(THREE, CENTER_ALIGN, EnergyStr);
 			}
 		}
@@ -848,7 +850,8 @@ bool ShowEnergy()
 			case BUTTON_UP:
 			case BUTTON_DOWN:
 			case BUTTON_SET:
-				TimerDisplay = 6000;
+				BlinkLed(BUTTON_LED);
+				TimerDisplay = 3000;
 				if(!Flag.IsDisplayOn)
 				{
 					LCDDisplayOn();
@@ -856,6 +859,7 @@ bool ShowEnergy()
 				}
 				break;
 			case BUTTON_LEFT:
+				BlinkLed(BUTTON_LED);
 				ExitShowEnergy = true;
 				if(!Flag.IsDisplayOn)
 				{
@@ -874,7 +878,7 @@ bool ShowEnergy()
 		TimerRefreshEnergy--;
 		if(TimerRefreshEnergy == 0)
 		{
-			TimerRefreshEnergy = 200;
+			TimerRefreshEnergy = TIMER_REFRESH_ENERGY;
 		}
 		delay(10);
 	}
@@ -1158,6 +1162,7 @@ bool ChangeUdmEnergy()
 		switch(ButtonPress)
 		{
 			case BUTTON_UP:
+				BlinkLed(BUTTON_LED);
 				if(UdmEnergyItem > 0)
 					UdmEnergyItem--;
 				else
@@ -1165,6 +1170,7 @@ bool ChangeUdmEnergy()
 				ClearLCDLine(THREE);
 				break;
 			case BUTTON_DOWN:
+				BlinkLed(BUTTON_LED);
 				if(UdmEnergyItem < MAX_UDM_ITEM - 1)
 					UdmEnergyItem++;
 				else
@@ -1172,9 +1178,11 @@ bool ChangeUdmEnergy()
 				ClearLCDLine(THREE);
 				break;
 			case BUTTON_LEFT:
+				BlinkLed(BUTTON_LED);
 				ExitChangeUdm = true;
 				break;
 			case BUTTON_SET:
+				BlinkLed(BUTTON_LED);
 				if(UdmEnergyItem != OldUdmEnergyItem)
 				{
 					ClearLCD();
@@ -1187,10 +1195,12 @@ bool ChangeUdmEnergy()
 					LCDPrintString(TWO, CENTER_ALIGN, "Uguale a prima");
 					EepromUpdate(UDM_ENERGY_ADDR, UdmEnergyItem);					
 				}
+				ExitChangeUdm = true;
 				break;
 			default:
 				break;
 		}
+		ButtonPress = NO_PRESS;
 		delay(WHILE_LOOP_DELAY);
 	}
 	ClearLCD();
