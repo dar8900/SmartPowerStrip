@@ -14,7 +14,7 @@ short CheckButtons()
 	ReadFromNano(BUTTON);
 	ButtonPress = ButtonVal;
 	ButtonVal = NO_PRESS;
-	delayms(80);
+	delayms(40);
 	return ButtonPress;
 }
 

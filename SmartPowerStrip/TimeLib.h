@@ -4,7 +4,7 @@
 #define SEC_IN_31_GG 	 2678400
 #define HOUR_IN_DAY			  23
 #define MINUTE_IN_HOUR 	      59
-#define WHILE_LOOP_DELAY	  60
+#define WHILE_LOOP_DELAY	  40
 
 
 #define PRESENT_DAY_HOUR_MINUTE_SECOND ((PresentTime.day * SEC_IN_DAY) + (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second)
