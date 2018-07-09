@@ -19,4 +19,5 @@ typedef enum
 }READ_ITEM;
 
 short CheckButtons(void);
+String EnergyValueStr(void);
 void ReadFromNano(short WhatRead);

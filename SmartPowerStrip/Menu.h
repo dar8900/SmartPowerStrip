@@ -7,6 +7,7 @@ typedef enum
 	CHANGE_TIME_BAND,
 	WIFI_CONNECT,
 	HELP_INFO,
+	SHOW_ENERGY,
 	WIFI_INFO,
 	ASSIGN_RELE_TIMER,
 	SETUP,
@@ -18,6 +19,7 @@ typedef enum
 	 CHANGE_TIME = 0,
 	 BACKLIGH_TIMER,
 	 TURN_OFF_WIFI,
+	 CHANGE_UDM_ENERGY,
 	 MAX_SETUP_ITEM
  }SETUP_NUMBER;
 
@@ -45,11 +47,25 @@ typedef enum
 	MAX_DELAY_TIMERS
 }DELAY_TIMERS;
 
+typedef enum
+{
+	WATT_ORA = 0,
+	WATT_MINUTO,
+	WATT_SECONDO,
+	MAX_UDM_ITEM
+}UDM_ENERGY_ITEM;
+
 typedef struct
 {
 	uint16_t DelayValue;
 	String DelayStr;
 }DELAY_TIMER_S;
+
+typedef struct
+{
+	float UdmValue;
+	String UdmStr;
+}UDM_ENERGY_MENU;
 
 // bool SetupInterrupt(void);
 bool CheckYesNo(void);
@@ -61,8 +77,11 @@ bool ManualRele(void);
 bool ChangeTimeBand(void);
 bool WifiConnect(void);
 bool HelpInfo(void);
+bool ShowEnergy(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
 bool ChangeTimerDisplay(void);
 bool TurnOffWifi(void);
+bool ChangeUdmEnergy(void);
 void ScreenTimerRefresh(void);
+

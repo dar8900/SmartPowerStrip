@@ -13,7 +13,7 @@
 
 #include "WebHandleFunctions.h"
 
-#define TIMER_SCAN_WIFI		200
+#define TIMER_SCAN_WIFI		200 // circa 16s
 
 extern FLAGS Flag;
 extern RELE Rele[];
