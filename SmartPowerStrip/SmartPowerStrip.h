@@ -49,3 +49,4 @@ typedef struct
 bool IsRebooted(void);
 void BlinkLed(short pin);
 void CheckEvents(void);
+void delayms(short ms);

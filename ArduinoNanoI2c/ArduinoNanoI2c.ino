@@ -1,29 +1,14 @@
 #include <Wire.h>
-
-#define  OFF(pin)  digitalWrite(pin, LOW)
-#define  ON(pin)   digitalWrite(pin, HIGH)
-#define ARDUINO_ADDR	0x08
+#include "ArduinoNanoI2c.h"
+#include "Measure.h"
 
 
-typedef enum
-{
-	BUTTON_UP = 0,
-	BUTTON_DOWN,
-	BUTTON_LEFT,
-	BUTTON_SET,
-	NO_PRESS
-}BUTTONS;
-
-enum
-{
-	UP = 2,
-	DOWN,
-	LEFT,
-	SET,
-	BUTTON_LED = 13
-};
 
 short ButtonPress = NO_PRESS;
+short TickSecond;
+
+String ButtonStr;
+extern String		EnergyStr;
 
 static bool ChekButtons()
 {
@@ -57,13 +42,14 @@ static bool ChekButtons()
 		ButtonPress = NO_PRESS;
 		Press = false;
 	}
-	
+	ButtonStr = String(ButtonPress);
 	return Press;
 }
 
-static void SendButton()
+static void SendInfo()
 {
-	Wire.write(ButtonPress);
+	String InfoStr = ButtonStr + " " + EnergyStr;
+	Wire.write(InfoStr.c_str());
 	ButtonPress = NO_PRESS;
 }
 
@@ -82,14 +68,17 @@ void setup()
 	pinMode(LEFT, INPUT);
 	pinMode(SET, INPUT);
 	pinMode(BUTTON_LED, OUTPUT);
-	Wire.onRequest(SendButton);
+	Wire.onRequest(SendInfo);
 }
 
 void loop() 
 {
-	if(ChekButtons())
+	ChekButtons();
+	CalcEnergy();
+	TickSecond++;
+	if(TickSecond == SECOND_TICK)
 	{
-		BlinkLed(BUTTON_LED);
-		delay(200);
+		TickSecond = 0;
+		EnergyValueSec();
 	}
 }

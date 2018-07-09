@@ -2,7 +2,7 @@
 #include "TimeLib.h"
 #include "SmartPowerStrip.h"
 #include "EEPROM_Ard.h"
-#include "Buttons.h"
+#include "I2CNano.h"
 #include "Menu.h"
 #include "Web.h"
 #include "Rele.h"

@@ -9,7 +9,7 @@
 #include "Menu.h"
 #include "Band.h"
 #include "Rele.h"
-#include "Buttons.h"
+#include "I2CNano.h"
 
 
 #undef FIRST_GO
@@ -102,6 +102,11 @@ void BlinkLed(short pin)
 	ON(pin);
 	delay(5);
 	OFF(pin);
+}
+
+void delayms(short ms)
+{
+	delay(ms);
 }
 
 void CheckEvents()
