@@ -6,8 +6,8 @@
 
 #define REAL_MEASURE		
 
-double 		       EnergyMeasured;
-static double      EnergyInst;
+float 		       EnergyMeasured;
+static float      EnergyInst;
 
 static uint32_t    EnergyTimeCounter;
 #ifndef REAL_MEASURE
@@ -69,7 +69,7 @@ void CalcEnergy() // 200ms c.a.
 
 void EnergyValueSec()
 {
-	EnergyMeasured += (EnergyInst / (double)EnergyTimeCounter);	
+	EnergyMeasured += (EnergyInst / (float)EnergyTimeCounter);	
 	EnergyInst = 0.0;
 	EnergyTimeCounter = 0;
 	EnergyStr = String(EnergyMeasured / 3600.0); // Invio la stringa già formattata per W/h
