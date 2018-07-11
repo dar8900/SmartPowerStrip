@@ -54,18 +54,20 @@ void ReadEnergy(String *EnergyStr)
 {
 	char ReadInfo[40];
 	short TotChar = 0;
-	short EnergyChars = FIRST_ENERGY_CHAR;
+	// short EnergyChars = FIRST_ENERGY_CHAR;
 	Wire.requestFrom(ARDUINO_ADDR, CHAR_FROM_NANO);
 	while(Wire.available())
 	{
    		ReadInfo[TotChar] = Wire.read();
+		if(TotChar >= 2)
+			*EnergyStr += String(ReadInfo[TotChar]);
  		TotChar++;
 	}
-	while(EnergyChars < TotChar)
-	{
-		*EnergyStr += String(ReadInfo[EnergyChars]);
-		EnergyChars++;
-	}	
+	// while(EnergyChars < TotChar)
+	// {
+		// *EnergyStr += String(ReadInfo[EnergyChars]);
+		// EnergyChars++;
+	// }	
 }
 
 // void ReadFromNano(short WhatRead)
