@@ -1,15 +1,13 @@
 #include "ArduinoNanoI2c.h"
 #include "Measure.h"
 
-#define 	TENSIONE_LINEA	230.0
-#define 	MV_PER_A		100
+
 
 #define REAL_MEASURE		
 
-float 		       EnergyMeasured;
-static float      EnergyInst;
+float 		      EnergyMeasured;
+static float      EnergyAcc;
 
-static uint32_t    EnergyTimeCounter;
 #ifndef REAL_MEASURE
 static const float PowerMeasureTEST = TENSIONE_LINEA * 0.5;
 #endif
@@ -22,28 +20,25 @@ String		EnergyStr;
 
 static float CalcCurrent()
 {
-	float Current = 0;
-	int ReadedValue = 0;
-	int MaxValue = 0;          // store max value here
-	int MinValue = 1024;       // store min value here
+	float Current = 0.0;
+	float mVolt = 0.0;
+	uint16_t ReadedValue = 0;
+	uint64_t RmsAnalog = 0;
 	
-	for(int cnt = 0; cnt < 500; cnt++) // legge per 50 ms
+	for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 80 ms (4 periodi di rete a 50 Hz)
 	{	
 		ReadedValue = analogRead(A0);
-		if (ReadedValue > MaxValue) 
+		if(ReadedValue < ZERO_CURRENT_ANALOG_VALUE)
 		{
-		   /*record the maximum sensor value*/
-		   MaxValue = ReadedValue;
+			ReadedValue = (1023 - ReadedValue);
 		}
-		if (ReadedValue < MinValue) 
-		{
-		   /*record the maximum sensor value*/
-		   MinValue = ReadedValue;
-		}
+		RmsAnalog += (ReadedValue * ReadedValue);
 	}
-	Current = ((MaxValue - MinValue) * 5.0) / 1024.0; // Conversione per uscita analogica
-	Current = (Current / 2.0) * 0.707; 	    // Calcolo per RMS
-	Current = (Current * 1000) / MV_PER_A;  // Conversione da volt ad ampere
+	RmsAnalog /= N_CAMPIONI_CORRENTE;
+	mVolt = sqrt(RmsAnalog);
+	
+	mVolt = (mVolt * 5.0) / 1023.0; // Conversione per uscita analogica
+	Current = (mVolt / MV_PER_A);  // Conversione da mVolt ad Ampere
 	return Current;
 }
 
@@ -55,22 +50,20 @@ void CalcEnergy() // 200ms c.a.
 	CurrentCalculated = CalcCurrent();
 	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
 #endif
-	for(int cnt = 0; cnt < 15; cnt++)
+	for(int cnt = 0; cnt < N_CAMPIONI_ENERGIA; cnt++)
 	{
-		EnergyTimeCounter++;
 #ifndef REAL_MEASURE
-		EnergyInst += PowerMeasureTEST;
+		EnergyAcc += PowerMeasureTEST;
 #else
-		EnergyInst += PowerMeasure;
+		EnergyAcc += PowerMeasure;
 #endif
-		delay(10);
+		delay(3);
 	}
 }
 
 void EnergyValueSec()
 {
-	EnergyMeasured += (EnergyInst / (float)EnergyTimeCounter);	
-	EnergyInst = 0.0;
-	EnergyTimeCounter = 0;
+	EnergyMeasured += (EnergyAcc / N_CAMPIONI_ENERGIA);	
+	EnergyAcc = 0.0;
 	EnergyStr = String(EnergyMeasured / 3600.0); // Invio la stringa già formattata per W/h
 }

@@ -72,15 +72,19 @@ void setup()
 	Wire.onRequest(SendInfo);
 }
 
+uint32_t TimeExec;
+
 void loop() 
 {
+	TimeExec = millis();
 	ChekButtons();
 	CalcEnergy();
 	TickSecond++;
-	if(TickSecond == SECOND_TICK)
+	TimeExec = (millis() - TimeExec);
+	Serial.println(TimeExec);
+	if(TickSecond == (1000 / TimeExec))
 	{
 		TickSecond = 0;
 		EnergyValueSec();
-	}
-	delay(5);	
+	}	
 }
