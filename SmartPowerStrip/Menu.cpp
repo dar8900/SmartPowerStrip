@@ -261,7 +261,7 @@ void MainMenu()
 				{
 					Item = MAX_MENU_ITEM - 1;
 				}
-				ClearLCD();
+				ClearLCDLine(THREE);
 				break;
 			case BUTTON_DOWN:
 				BlinkLed(BUTTON_LED);
@@ -273,7 +273,7 @@ void MainMenu()
 				{
 					Item = MANUAL_RELE;
 				}
-				ClearLCD();
+				ClearLCDLine(THREE);
 				break;
 			case BUTTON_SET:
 				BlinkLed(BUTTON_LED);
