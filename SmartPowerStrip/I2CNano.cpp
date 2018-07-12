@@ -12,7 +12,7 @@ short CheckButtons()
 {
 	short ButtonPress = NO_PRESS;
 	ReadButton(&ButtonPress);
-	// delayms(40);
+	// delayms(20);
 	return ButtonPress;
 }
 

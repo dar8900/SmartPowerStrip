@@ -76,15 +76,13 @@ uint32_t TimeExec;
 
 void loop() 
 {
-	TimeExec = millis();
 	ChekButtons();
 	CalcEnergy();
 	TickSecond++;
-	TimeExec = (millis() - TimeExec);
-	Serial.println(TimeExec);
-	if(TickSecond == (1000 / TimeExec))
+	if(TickSecond == (1000 / MAIN_DELAY))
 	{
 		TickSecond = 0;
-		EnergyValueSec();
+		EnergyValueSec();	
 	}	
+	
 }

@@ -23,11 +23,13 @@ static float CalcCurrent()
 	float Current = 0.0;
 	float mVolt = 0.0;
 	uint16_t ReadedValue = 0;
-	uint64_t RmsAnalog = 0;
+	uint32_t RmsAnalog = 0;
 	
 	for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 80 ms (4 periodi di rete a 50 Hz)
 	{	
-		ReadedValue = analogRead(A0);
+		//ReadedValue = analogRead(A0);
+		ReadedValue = 900;
+		delayMicroseconds(100);
 		if(ReadedValue < ZERO_CURRENT_ANALOG_VALUE)
 		{
 			ReadedValue = (1023 - ReadedValue);
@@ -36,7 +38,8 @@ static float CalcCurrent()
 	}
 	RmsAnalog /= N_CAMPIONI_CORRENTE;
 	mVolt = sqrt(RmsAnalog);
-	
+	// Serial.println(mVolt);
+	// delay(500);
 	mVolt = (mVolt * 5.0) / 1023.0; // Conversione per uscita analogica
 	Current = (mVolt / MV_PER_A);  // Conversione da mVolt ad Ampere
 	return Current;
@@ -48,6 +51,7 @@ void CalcEnergy() // 200ms c.a.
 	float 	CurrentCalculated;
 #ifdef REAL_MEASURE
 	CurrentCalculated = CalcCurrent();
+	// Serial.println(CurrentCalculated);
 	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
 #endif
 	for(int cnt = 0; cnt < N_CAMPIONI_ENERGIA; cnt++)
