@@ -1,4 +1,5 @@
-
+#ifndef RELE_H
+#define RELE_H
 #define MAX_TIME_TIMER		14401
 
 
@@ -58,3 +59,4 @@ void CheckReleStatus(void);
 bool SetTimerRele(short ReleNbr);
 RELE_TIME_FORMAT SetTimeVarRele(short Hour, short Minute, short Second, short Day);
 short ReleIdx2Pin(short ReleIndx);
+#endif

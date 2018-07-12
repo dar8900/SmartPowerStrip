@@ -23,3 +23,8 @@ enum
 	BUTTON_LED = 13
 };
 
+enum
+{
+	BUTTON = 0,
+	ENERGY
+};

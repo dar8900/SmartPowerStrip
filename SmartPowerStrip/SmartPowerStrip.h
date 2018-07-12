@@ -1,3 +1,5 @@
+#ifndef SMART_POWER_STRIP_H
+#define SMART_POWER_STRIP_H
 #include <stdint.h>
 #define  OFF(pin)  digitalWrite(pin, LOW)
 #define  ON(pin)   digitalWrite(pin, HIGH)
@@ -5,8 +7,8 @@
 #define READ(pin)  digitalRead(pin)
 
 
-#define SDA   5
-#define SCL   4
+#define SDA_PIN   5
+#define SCL_PIN   4
 
 #define RELE1  0
 #define RELE2  2
@@ -50,3 +52,4 @@ bool IsRebooted(void);
 void BlinkLed(short pin);
 void CheckEvents(void);
 void delayms(short ms);
+#endif

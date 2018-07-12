@@ -1,3 +1,5 @@
+#ifndef BAND_H
+#define BAND_H
 #define INVALID_BAND_VALUE 	99
 
 enum
@@ -33,3 +35,4 @@ void SetBandInvalid(void);
 void SaveBandValues(short WichItem);
 void ReadBandValues(short WichItem);
 bool SetTimeBand(void);
+#endif

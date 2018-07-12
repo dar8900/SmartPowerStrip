@@ -2,7 +2,7 @@
 #include "SmartPowerStrip.h"
 #include "I2CNano.h"
 
-#define 	CHAR_FROM_NANO	   11
+#define 	CHAR_FROM_NANO	    9
 #define 	FIRST_ENERGY_CHAR	2
 
 // short ButtonVal = NO_PRESS;
@@ -12,7 +12,6 @@ short CheckButtons()
 {
 	short ButtonPress = NO_PRESS;
 	ReadButton(&ButtonPress);
-	// delayms(20);
 	return ButtonPress;
 }
 
@@ -25,24 +24,31 @@ String EnergyValueStr()
 
 void ReadButton(short *ButtonVal)
 {
-	char ReadInfo;
+	short ReadInfo;
+	Wire.beginTransmission(ARDUINO_ADDR);
+	Wire.write(BUTTON);
+	Wire.endTransmission();
+	delay(1);
 	Wire.requestFrom(ARDUINO_ADDR, 1);
-   	ReadInfo = Wire.read();
+	while(Wire.available())
+	{
+   		ReadInfo = Wire.read();
+	}
 	switch (ReadInfo)
 	{
-		case '0':
+		case 0:
 			*ButtonVal = BUTTON_UP;
 			break;
-		case '1':
+		case 1:
 			*ButtonVal = BUTTON_DOWN;
 			break;
-		case '2':
+		case 2:
 			*ButtonVal = BUTTON_LEFT;
 			break;
-		case '3':
+		case 3:
 			*ButtonVal = BUTTON_SET;
 			break;
-		case '4':
+		case 4:
 			*ButtonVal = NO_PRESS;
 			break;
 		default:
@@ -50,17 +56,48 @@ void ReadButton(short *ButtonVal)
 	}
 }
 
+// void ReadButton(short *ButtonVal)
+// {
+	// short ReadInfo;
+	// Wire.requestFrom(ARDUINO_ADDR, 1);
+   	// ReadInfo = Wire.read();
+	// switch (ReadInfo)
+	// {
+		// case '0':
+			// *ButtonVal = BUTTON_UP;
+			// break;
+		// case '1':
+			// *ButtonVal = BUTTON_DOWN;
+			// break;
+		// case '2':
+			// *ButtonVal = BUTTON_LEFT;
+			// break;
+		// case '3':
+			// *ButtonVal = BUTTON_SET;
+			// break;
+		// case '4':
+			// *ButtonVal = NO_PRESS;
+			// break;
+		// default:
+			// break;	
+	// }
+// }
+
 void ReadEnergy(String *EnergyStr)
 {
 	char ReadInfo[40];
 	short TotChar = 0;
+	Wire.beginTransmission(ARDUINO_ADDR);
+	Wire.write(ENERGY);
+	Wire.endTransmission();
+	delay(1);
 	// short EnergyChars = FIRST_ENERGY_CHAR;
 	Wire.requestFrom(ARDUINO_ADDR, CHAR_FROM_NANO);
 	while(Wire.available())
 	{
    		ReadInfo[TotChar] = Wire.read();
-		if(TotChar >= 2)
-			*EnergyStr += String(ReadInfo[TotChar]);
+		// if(TotChar >= 2)
+		*EnergyStr += String(ReadInfo[TotChar]);
  		TotChar++;
 	}
 	// while(EnergyChars < TotChar)

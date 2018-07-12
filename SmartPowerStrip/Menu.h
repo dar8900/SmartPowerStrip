@@ -1,3 +1,5 @@
+#ifndef MENU_H
+#define MENU_H
 #define MAIN_SCREEN_TIMER_DEFAULT	6000
 #define DELAY_CLIENT_CONNECTION 	  60
 
@@ -85,3 +87,4 @@ bool TurnOffWifi(void);
 bool ChangeUdmEnergy(void);
 void ScreenTimerRefresh(void);
 
+#endif

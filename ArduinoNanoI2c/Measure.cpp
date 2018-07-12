@@ -18,30 +18,35 @@ float   	PowerMeasure;
 
 String		EnergyStr;
 
+const uint16_t SimWave[10] =
+{
+	210, 
+	367,
+	587,
+	698,
+	1000,
+	987,
+	862,
+	347,
+	999,
+	1023,
+}; 
+
 static float CalcCurrent()
 {
 	float Current = 0.0;
 	float mVolt = 0.0;
 	uint16_t ReadedValue = 0;
-	uint32_t RmsAnalog = 0;
+	uint8_t TmpCnt = 0;
 	
 	for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 80 ms (4 periodi di rete a 50 Hz)
 	{	
-		//ReadedValue = analogRead(A0);
-		ReadedValue = 900;
+		if((TmpCnt % 10) == 0)
+			TmpCnt = 0;
+		Current += (0.049 * SimWave[TmpCnt] - 25.0) / N_CAMPIONI_CORRENTE;
 		delayMicroseconds(100);
-		if(ReadedValue < ZERO_CURRENT_ANALOG_VALUE)
-		{
-			ReadedValue = (1023 - ReadedValue);
-		}
-		RmsAnalog += (ReadedValue * ReadedValue);
+		TmpCnt++;
 	}
-	RmsAnalog /= N_CAMPIONI_CORRENTE;
-	mVolt = sqrt(RmsAnalog);
-	// Serial.println(mVolt);
-	// delay(500);
-	mVolt = (mVolt * 5.0) / 1023.0; // Conversione per uscita analogica
-	Current = (mVolt / MV_PER_A);  // Conversione da mVolt ad Ampere
 	return Current;
 }
 
@@ -51,7 +56,6 @@ void CalcEnergy() // 200ms c.a.
 	float 	CurrentCalculated;
 #ifdef REAL_MEASURE
 	CurrentCalculated = CalcCurrent();
-	// Serial.println(CurrentCalculated);
 	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
 #endif
 	for(int cnt = 0; cnt < N_CAMPIONI_ENERGIA; cnt++)
@@ -69,5 +73,5 @@ void EnergyValueSec()
 {
 	EnergyMeasured += (EnergyAcc / N_CAMPIONI_ENERGIA);	
 	EnergyAcc = 0.0;
-	EnergyStr = String(EnergyMeasured / 3600.0); // Invio la stringa già formattata per W/h
+	EnergyStr = String(EnergyMeasured); // Invio la stringa già formattata per W/h
 }

@@ -37,20 +37,42 @@ static bool ChekButtons()
 		ButtonPress = BUTTON_SET;
 		Press = true;
 	}
-	else
-	{
-		ButtonPress = NO_PRESS;
-		Press = false;
-	}
-	ButtonStr = String(ButtonPress);
+	// else
+	// {
+		// ButtonPress = NO_PRESS;
+		// Press = false;
+	// }
+	// ButtonStr = String(ButtonPress);
 	return Press;
+}
+
+// static void SendInfo()
+// {
+	// String InfoStr = ButtonStr + " " + EnergyStr;
+	// Wire.write(InfoStr.c_str());
+	// ButtonPress = NO_PRESS;
+// }
+
+short WichData = 0;
+static void WichInfo()
+{
+	while(Wire.available())
+	{
+   		WichData = Wire.read();
+	}
 }
 
 static void SendInfo()
 {
-	String InfoStr = ButtonStr + " " + EnergyStr;
-	Wire.write(InfoStr.c_str());
-	ButtonPress = NO_PRESS;
+	if(WichData == BUTTON)
+	{
+   		Wire.write(ButtonPress);
+		ButtonPress = NO_PRESS;
+	}
+	else
+	{
+		Wire.write(EnergyStr.c_str());
+	}
 }
 
 static void BlinkLed(short pin)
@@ -69,6 +91,7 @@ void setup()
 	pinMode(LEFT, INPUT);
 	pinMode(SET, INPUT);
 	pinMode(BUTTON_LED, OUTPUT);
+	Wire.onReceive(WichInfo);
 	Wire.onRequest(SendInfo);
 }
 

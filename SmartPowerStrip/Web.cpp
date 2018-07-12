@@ -13,7 +13,7 @@
 
 #include "WebHandleFunctions.h"
 
-#define TIMER_SCAN_WIFI		200 // circa 16s
+#define TIMER_SCAN_WIFI		7500 // circa 16 s
 
 extern FLAGS Flag;
 extern RELE Rele[];
@@ -29,12 +29,12 @@ uint16_t TimerScanWifi = TIMER_SCAN_WIFI;
 
 const WIFI_LIST MyNetworkList[] =
 {
-	{"No Conn."     , "password"					, "NoConn" 					},
-	{"Dario Cell"	, "dari9299"					, "DEO DOOM"				},
-	{"Wifi Nonna"	, "Kyr2FGdVynR9ejUE"			, "TP-LINK_Extender_2.4GHz" },
-	{"Camera mia"	, "dariolinorobby198919611962"	, "ZIXEL"					},
-	{"Salotto Casa"	, "Kyr2FGdVynR9ejUE"			, "TIM-56878495"			},
-	{"Camera Grande", "Kyr2FGdVynR9ejUE"			, "TIM-56878495_EXT"		},
+	{"No Conn."     , "password"							, "NoConn" 					},
+	{"Dario Cell"	, "dari9299"							, "DEO DOOM"				},
+	{"Wifi Nonna"	, "robbylinodario196219611989"			, "TIM-89557989_EXT_NONN"   },
+	{"Camera mia"	, "dariolinorobby198919611962"			, "ZIXEL"					},
+	{"Salotto Casa"	, "robbylinodario196219611989"			, "TIM-56878495"			},
+	{"Camera Grande", "robbylinodario196219611989"			, "TIM-56878495_EXT"		},
 };
 
 

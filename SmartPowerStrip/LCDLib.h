@@ -1,3 +1,5 @@
+#ifndef LCD_LIB_H
+#define LCD_LIB_H
 #include <LiquidCrystal_I2C.h> // Libreria LCD I2C
 #include <Arduino.h>
 
@@ -31,3 +33,4 @@ void LCDDisplayOn(void);
 void LCDDisplayOff(void);
 void LCDBlink(void);
 void LCDNoBlink(void);
+#endif

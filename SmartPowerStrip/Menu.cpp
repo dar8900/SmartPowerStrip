@@ -56,9 +56,9 @@ const DELAY_TIMER_S TimerDalays[]
 
 const UDM_ENERGY_MENU UdmEnergyScale[MAX_UDM_ITEM] = 
 {
-	{1.0,    "Wh" },
-	{60.0,   "Wm" },
-	{3600.0, "Ws" },	
+	{3600.0,    "Wh" },
+	{60.0  ,   "Wm" },
+	{1.0  , "Ws" },	
 };
 
 static const String ONOFF[] = {"Off", "On"};
@@ -863,6 +863,7 @@ bool ShowEnergy()
 				ExitShowEnergy = true;
 				if(!Flag.IsDisplayOn)
 				{
+					TimerDisplay = 3000;
 					LCDDisplayOn();
 					Flag.IsDisplayOn = true;
 				}
@@ -1187,13 +1188,15 @@ bool ChangeUdmEnergy()
 				{
 					ClearLCD();
 					LCDPrintString(TWO, CENTER_ALIGN, "Settato!");
-					EepromUpdate(UDM_ENERGY_ADDR, UdmEnergyItem);
+					WriteMemory(UDM_ENERGY_ADDR, UdmEnergyItem);
+					delay(DELAY_INFO_MSG);
 				}
 				else
 				{
 					ClearLCD();
 					LCDPrintString(TWO, CENTER_ALIGN, "Uguale a prima");
-					EepromUpdate(UDM_ENERGY_ADDR, UdmEnergyItem);					
+					EepromUpdate(UDM_ENERGY_ADDR, UdmEnergyItem);
+					delay(DELAY_INFO_MSG);					
 				}
 				ExitChangeUdm = true;
 				break;

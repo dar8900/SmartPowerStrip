@@ -94,8 +94,8 @@ uint8_t EmptyIcon[]
 FLAGS Flag;
 short EnterSetup;
 
-String VersionValue = "1.7";
-String VersionDate = "9/07/18";
+String VersionValue = "1.8";
+String VersionDate = "12/07/18";
 
 void BlinkLed(short pin)
 {
@@ -159,7 +159,7 @@ void setup()
 	pinMode(BUTTON_LED, OUTPUT);
 
 	short FirstStart = 0;
-	Wire.begin(SDA, SCL); // Inizializza I2C per NodeMCU
+	Wire.begin(SDA_PIN, SCL_PIN); // Inizializza I2C per NodeMCU
 	EepromInit();
 	LCDInit();
 	RTCInit();

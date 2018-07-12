@@ -1,10 +1,12 @@
+#ifndef TIME_LIB_H
+#define TIME_LIB_H
 #define SEC_IN_DAY		   86400
 #define SEC_IN_HOUR 		3600
 #define SEC_IN_MINUTE 	      60
 #define SEC_IN_31_GG 	 2678400
 #define HOUR_IN_DAY			  23
 #define MINUTE_IN_HOUR 	      59
-#define WHILE_LOOP_DELAY	  40
+#define WHILE_LOOP_DELAY	  30
 
 
 #define PRESENT_DAY_HOUR_MINUTE_SECOND ((PresentTime.day * SEC_IN_DAY) + (PresentTime.hour * SEC_IN_HOUR) + (PresentTime.minute * SEC_IN_MINUTE) + PresentTime.second)
@@ -38,3 +40,4 @@ bool ChangeTime(void);
 void TimeAdjust(short Hour, short Minute, short Day, short Month, short Year);
 void ShowDateTime(short Row);
 void TakePresentTime(void);
+#endif

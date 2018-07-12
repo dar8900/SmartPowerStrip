@@ -1,3 +1,5 @@
+#ifndef WEB_H
+#define WEB_H
 #define REQ_BUF_SZ   60
 
 typedef enum
@@ -31,3 +33,4 @@ void WebServerInit(void);
 void WebClient(void);
 void WifiConnectionChoice(short *WifiListItem, String *NomeWifi);
 void WifiScanForSignal(void);
+#endif
