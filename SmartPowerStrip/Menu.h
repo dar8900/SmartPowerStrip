@@ -69,6 +69,13 @@ typedef struct
 	String UdmStr;
 }UDM_ENERGY_MENU;
 
+typedef struct
+{
+	uint32_t RangeValue;
+	float 	 FormatFactor;
+	char     Prefix;
+}FORMAT_ENERGY;
+
 // bool SetupInterrupt(void);
 bool CheckYesNo(void);
 void MenuInit(void);

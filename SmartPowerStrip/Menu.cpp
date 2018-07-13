@@ -61,7 +61,36 @@ const UDM_ENERGY_MENU UdmEnergyScale[MAX_UDM_ITEM] =
 	{1.0  , "Ws" },	
 };
 
+const FORMAT_ENERGY TabFormat[] = 
+{
+	{1000,             0.001, 'k'},
+	{10000,           0.0001, 'k'},
+	{100000,         0.00001, 'k'},
+	{1000000,       0.000001, 'M'},
+	{10000000,     0.0000001, 'M'},
+	{100000000,   0.00000001, 'M'},
+	{1000000000, 0.000000001, 'G'},
+};
+
+
 static const String ONOFF[] = {"Off", "On"};
+
+static uint8_t SearchFormatRange(float ValueToFormat)
+{
+	uint8_t TabLenght = 7;
+	uint8_t Range = 0;
+	for(Range = 0; Range < TabLenght; Range++)
+	{
+		if(Range == TabLenght - 1)
+			break;
+		if(ValueToFormat > (float)TabFormat[Range].RangeValue && ValueToFormat < (float)TabFormat[Range + 1].RangeValue)
+		{
+			break;
+		}
+		return Range;
+	}
+	
+}
 
 void MenuInit()
 {
@@ -801,12 +830,13 @@ bool HelpInfo()
 bool ShowEnergy()
 {
 	uint16_t TimerDisplay = 3000; // 60s con delay 10ms
+	uint8_t FormatRange = 0;
 	short TimerRefreshEnergy = TIMER_REFRESH_ENERGY; 
 	short ButtonPress = NO_PRESS;
 	short UdmEnergy = 0;
 	String EnergyStr;
 	float EnergyScaled = 0.0;
-	bool ExitShowEnergy = false;
+	bool ExitShowEnergy = false, FormatEnergy = false;
 	ReadMemory(UDM_ENERGY_ADDR, 1, &UdmEnergy);
 	ClearLCD();
 	if(!Flag.IsDisplayOn)
@@ -817,32 +847,41 @@ bool ShowEnergy()
 	while(!ExitShowEnergy)
 	{
 		LCDPrintString(TWO, CENTER_ALIGN, "Energia Misurata:");
-		if(Flag.IsDisplayOn)
+		if(TimerRefreshEnergy == TIMER_REFRESH_ENERGY)
 		{
-			if(TimerRefreshEnergy == TIMER_REFRESH_ENERGY)
+			ClearLCDLine(THREE);
+			EnergyStr = EnergyValueStr();
+			switch(UdmEnergy)
 			{
-				ClearLCDLine(THREE);
-				EnergyStr = EnergyValueStr();
-				switch(UdmEnergy)
-				{
-					case WATT_MINUTO:
-						EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
-						EnergyStr = String(EnergyScaled);
-						break;
-					case WATT_SECONDO:
-						EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
-						EnergyStr = String(EnergyScaled);
-						break;
-					case WATT_ORA:
-						EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
-						EnergyStr = String(EnergyScaled);
-						break;
-					default:
-						break;
-				}
-				EnergyStr +=  " " + UdmEnergyScale[UdmEnergy].UdmStr;
-				LCDPrintString(THREE, CENTER_ALIGN, EnergyStr);
+				case WATT_MINUTO:
+					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+					EnergyStr = String(EnergyScaled);
+					break;
+				case WATT_SECONDO:
+					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+					EnergyStr = String(EnergyScaled);
+					break;
+				case WATT_ORA:
+					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+					if(EnergyScaled > 999.0)
+					{
+						FormatEnergy = true;
+						FormatRange = SearchFormatRange(EnergyScaled);
+						EnergyScaled *= TabFormat[FormatRange].FormatFactor;
+					}
+					EnergyStr = String(EnergyScaled);
+					break;
+				default:
+					break;
 			}
+			if(FormatEnergy)
+			{
+				EnergyStr +=  " " + String(TabFormat[FormatRange].Prefix) + UdmEnergyScale[UdmEnergy].UdmStr;
+				FormatEnergy = false;
+			}
+			else
+				EnergyStr +=  " " + UdmEnergyScale[UdmEnergy].UdmStr;
+			LCDPrintString(THREE, CENTER_ALIGN, EnergyStr);
 		}
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
