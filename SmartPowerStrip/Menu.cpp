@@ -8,7 +8,7 @@
 #include "Band.h"
 #include "Rele.h"
 
-#define  TIMER_REFRESH_ENERGY	15
+#define  TIMER_REFRESH_MEASURE	30
 
 extern TIME_DATE_FORMAT PresentTime;
 extern BAND_FORMAT Band;
@@ -28,7 +28,7 @@ const MENU_VOICES MainMenuItems[]
 	{ChangeTimeBand	,	"Cambio Banda"		},
 	{WifiConnect	,	"Connetti WiFi"		},
 	{HelpInfo		,	"Help e Info"		},
-	{ShowEnergy		,	"Energia"   		},
+	{ShowMeasures	,	"Misure"   		    },
 	{WiFiInfo		,	"Wifi Info"			},
 	{AssignReleTimer,	"Assegna Timer"		},
 	{Setup       	,	"Impostazioni"    	},
@@ -63,13 +63,19 @@ const UDM_ENERGY_MENU UdmEnergyScale[MAX_UDM_ITEM] =
 
 const FORMAT_ENERGY TabFormat[] = 
 {
-	{1000,             0.001, 'k'},
-	{10000,            0.001, 'k'},
-	{100000,           0.001, 'k'},
-	{1000000,       0.000001, 'M'},
-	{10000000,      0.000001, 'M'},
-	{100000000,     0.000001, 'M'},
-	{1000000000, 0.000000001, 'G'},
+	{0.001,             1000, "m"},
+	{0.01,              1000, "m"},
+	{0.1,               1000, "m"},	
+	{1,                    1,  ""},
+	{10,                   1,  ""},
+	{100,                  1,  ""},
+	{1000,             0.001, "k"},
+	{10000,            0.001, "k"},
+	{100000,           0.001, "k"},
+	{1000000,       0.000001, "M"},
+	{10000000,      0.000001, "M"},
+	{100000000,     0.000001, "M"},
+	{1000000000, 0.000000001, "G"},
 };
 
 
@@ -83,7 +89,7 @@ static uint8_t SearchFormatRange(float ValueToFormat)
 	{
 		if(Range == TabLenght - 1)
 			break;
-		if(ValueToFormat > (float)TabFormat[Range].RangeValue && ValueToFormat < (float)TabFormat[Range + 1].RangeValue)
+		if(ValueToFormat > TabFormat[Range].RangeValue && ValueToFormat < TabFormat[Range + 1].RangeValue)
 		{
 			break;
 		}
@@ -827,15 +833,17 @@ bool HelpInfo()
 	return true;
 }
 
-bool ShowEnergy()
+bool ShowMeasures()
 {
 	uint16_t TimerDisplay = 3000; // 60s con delay 10ms
 	uint8_t FormatRange = 0;
-	short TimerRefreshEnergy = TIMER_REFRESH_ENERGY; 
+	short TimerRefreshMeasure = TIMER_REFRESH_MEASURE; 
 	short ButtonPress = NO_PRESS;
 	short UdmEnergy = 0;
 	String EnergyStr;
+	String CurrentStr;
 	float EnergyScaled = 0.0;
+	float CurrentScaled = 0.0;
 	bool ExitShowEnergy = false, FormatEnergy = false;
 	ReadMemory(UDM_ENERGY_ADDR, 1, &UdmEnergy);
 	ClearLCD();
@@ -846,42 +854,45 @@ bool ShowEnergy()
 	}
 	while(!ExitShowEnergy)
 	{
-		LCDPrintString(TWO, CENTER_ALIGN, "Energia Misurata:");
-		if(TimerRefreshEnergy == TIMER_REFRESH_ENERGY)
+		LCDPrintString(ONE, CENTER_ALIGN, "Corrente Misurata:");
+		LCDPrintString(THREE, CENTER_ALIGN, "Energia Misurata:");
+		if(TimerRefreshMeasure == TIMER_REFRESH_MEASURE)
 		{
-			ClearLCDLine(THREE);
+			ClearLCDLine(TWO);
+			ClearLCDLine(FOUR);
+			CurrentStr = CurrentValueStr();
 			EnergyStr = EnergyValueStr();
+			CurrentScaled = CurrentStr.toFloat();
+			FormatRange = SearchFormatRange(CurrentScaled);
+			CurrentScaled *= TabFormat[FormatRange].FormatFactor;
+			CurrentStr = String(CurrentScaled);
+			CurrentStr += " " + TabFormat[FormatRange].Prefix + "A";
 			switch(UdmEnergy)
 			{
 				case WATT_MINUTO:
 					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+					FormatRange = SearchFormatRange(EnergyScaled);
+					EnergyScaled *= TabFormat[FormatRange].FormatFactor;
 					EnergyStr = String(EnergyScaled);
 					break;
 				case WATT_SECONDO:
 					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
+					FormatRange = SearchFormatRange(EnergyScaled);
+					EnergyScaled *= TabFormat[FormatRange].FormatFactor;
 					EnergyStr = String(EnergyScaled);
 					break;
 				case WATT_ORA:
 					EnergyScaled = ((EnergyStr.toFloat()) / UdmEnergyScale[UdmEnergy].UdmValue);
-					if(EnergyScaled > 999.0)
-					{
-						FormatEnergy = true;
-						FormatRange = SearchFormatRange(EnergyScaled);
-						EnergyScaled *= TabFormat[FormatRange].FormatFactor;
-					}
+					FormatRange = SearchFormatRange(EnergyScaled);
+					EnergyScaled *= TabFormat[FormatRange].FormatFactor;
 					EnergyStr = String(EnergyScaled);
 					break;
 				default:
 					break;
 			}
-			if(FormatEnergy)
-			{
-				EnergyStr +=  " " + String(TabFormat[FormatRange].Prefix) + UdmEnergyScale[UdmEnergy].UdmStr;
-				FormatEnergy = false;
-			}
-			else
-				EnergyStr +=  " " + UdmEnergyScale[UdmEnergy].UdmStr;
-			LCDPrintString(THREE, CENTER_ALIGN, EnergyStr);
+			EnergyStr +=  " " + TabFormat[FormatRange].Prefix + UdmEnergyScale[UdmEnergy].UdmStr;
+			LCDPrintString(TWO, CENTER_ALIGN, CurrentStr);
+			LCDPrintString(FOUR, CENTER_ALIGN, EnergyStr);
 		}
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
@@ -915,10 +926,10 @@ bool ShowEnergy()
 			LCDDisplayOff();
 			Flag.IsDisplayOn = false;
 		}
-		TimerRefreshEnergy--;
-		if(TimerRefreshEnergy == 0)
+		TimerRefreshMeasure--;
+		if(TimerRefreshMeasure == 0)
 		{
-			TimerRefreshEnergy = TIMER_REFRESH_ENERGY;
+			TimerRefreshMeasure = TIMER_REFRESH_MEASURE;
 		}
 		delay(10);
 	}

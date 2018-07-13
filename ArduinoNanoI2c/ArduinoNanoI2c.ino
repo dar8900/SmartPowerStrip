@@ -5,10 +5,12 @@
 
 
 short ButtonPress = NO_PRESS;
-short TickSecond;
+short TickSecond = 0;
+short WichData = 0;
+// uint32_t TimeExec;
 
-String ButtonStr;
 extern String		EnergyStr;
+extern String		CurrentStr;
 
 static bool ChekButtons()
 {
@@ -37,23 +39,9 @@ static bool ChekButtons()
 		ButtonPress = BUTTON_SET;
 		Press = true;
 	}
-	// else
-	// {
-		// ButtonPress = NO_PRESS;
-		// Press = false;
-	// }
-	// ButtonStr = String(ButtonPress);
 	return Press;
 }
 
-// static void SendInfo()
-// {
-	// String InfoStr = ButtonStr + " " + EnergyStr;
-	// Wire.write(InfoStr.c_str());
-	// ButtonPress = NO_PRESS;
-// }
-
-short WichData = 0;
 static void WichInfo()
 {
 	while(Wire.available())
@@ -64,14 +52,20 @@ static void WichInfo()
 
 static void SendInfo()
 {
-	if(WichData == BUTTON)
+	switch(WichData)
 	{
-   		Wire.write(ButtonPress);
-		ButtonPress = NO_PRESS;
-	}
-	else
-	{
-		Wire.write(EnergyStr.c_str());
+		case BUTTON:
+			Wire.write(ButtonPress);
+			ButtonPress = NO_PRESS;
+			break;
+		case ENERGY:
+			Wire.write(EnergyStr.c_str());
+			break;
+		case CURRENT:
+			Wire.write(CurrentStr.c_str());
+			break;
+		default:
+			break;
 	}
 }
 
@@ -94,8 +88,6 @@ void setup()
 	Wire.onReceive(WichInfo);
 	Wire.onRequest(SendInfo);
 }
-
-uint32_t TimeExec;
 
 void loop() 
 {

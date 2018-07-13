@@ -17,12 +17,15 @@ typedef enum
 typedef enum
 {
 	BUTTON = 0,
-	ENERGY
+	ENERGY,
+	CURRENT
 }I2C_WRITE_READ;
 
 short CheckButtons(void);
 String EnergyValueStr(void);
+String CurrentValueStr(void);
 void ReadButton(short *ButtonVal);
 void ReadEnergy(String *EnergyStr);
+void ReadCurrent(String *CurrentStr);
 // void ReadFromNano(short WhatRead);
 #endif

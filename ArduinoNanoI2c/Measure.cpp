@@ -5,6 +5,7 @@
 
 #define REAL_MEASURE		
 
+float 			  CurrentCalculated;
 float 		      EnergyMeasured;
 static float      EnergyAcc;
 
@@ -17,6 +18,7 @@ float   	PowerMeasure;
 #endif
 
 String		EnergyStr;
+String		CurrentStr;
 
 const uint16_t SimWave[10] =
 {
@@ -53,7 +55,6 @@ static float CalcCurrent()
 
 void CalcEnergy() // 200ms c.a.
 {
-	float 	CurrentCalculated;
 #ifdef REAL_MEASURE
 	CurrentCalculated = CalcCurrent();
 	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
@@ -74,4 +75,5 @@ void EnergyValueSec()
 	EnergyMeasured += (EnergyAcc / N_CAMPIONI_ENERGIA);	
 	EnergyAcc = 0.0;
 	EnergyStr = String(EnergyMeasured); // Invio la stringa già formattata per W/h
+	CurrentStr = String(CurrentCalculated);
 }

@@ -26,5 +26,6 @@ enum
 enum
 {
 	BUTTON = 0,
-	ENERGY
+	ENERGY,
+	CURRENT
 };

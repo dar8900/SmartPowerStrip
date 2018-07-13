@@ -71,9 +71,9 @@ typedef struct
 
 typedef struct
 {
-	uint32_t RangeValue;
+	float    RangeValue;
 	float 	 FormatFactor;
-	char     Prefix;
+	String   Prefix;
 }FORMAT_ENERGY;
 
 // bool SetupInterrupt(void);
@@ -86,7 +86,7 @@ bool ManualRele(void);
 bool ChangeTimeBand(void);
 bool WifiConnect(void);
 bool HelpInfo(void);
-bool ShowEnergy(void);
+bool ShowMeasures(void);
 bool WiFiInfo(void);
 bool AssignReleTimer(void);
 bool ChangeTimerDisplay(void);

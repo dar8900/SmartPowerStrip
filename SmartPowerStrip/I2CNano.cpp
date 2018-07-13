@@ -19,6 +19,13 @@ String EnergyValueStr()
 	return EnergyStr;	
 }
 
+String CurrentValueStr()
+{
+	String CurrentStr;
+	ReadCurrent(&CurrentStr);
+	return CurrentStr;	
+}
+
 void ReadButton(short *ButtonVal)
 {
 	short ReadInfo;
@@ -56,7 +63,7 @@ void ReadButton(short *ButtonVal)
 
 void ReadEnergy(String *EnergyStr)
 {
-	char ReadInfo[40];
+	char ReadInfo[15];
 	short TotChar = 0;
 	Wire.beginTransmission(ARDUINO_ADDR);
 	Wire.write(ENERGY);
@@ -71,3 +78,19 @@ void ReadEnergy(String *EnergyStr)
 	}	
 }
 
+void ReadCurrent(String *CurrentStr)
+{
+	char ReadInfo[10];
+	short TotChar = 0;
+	Wire.beginTransmission(ARDUINO_ADDR);
+	Wire.write(CURRENT);
+	Wire.endTransmission();
+	delay(1);
+	Wire.requestFrom(ARDUINO_ADDR, 5);
+	while(Wire.available())
+	{
+   		ReadInfo[TotChar] = Wire.read();
+		*CurrentStr += String(ReadInfo[TotChar]);
+ 		TotChar++;
+	}	
+}
