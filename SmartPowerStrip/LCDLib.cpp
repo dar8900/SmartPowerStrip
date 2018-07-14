@@ -64,19 +64,13 @@ void LcdTimeWrite(int Time2Write)
 // Utilizzano un oggetto di tipo LCD
 void LCDPrintString(short row, short col, String string)
 {
-  if(row > MAX_LCD_ROW || string.length() > 20 || ((col + string.length() > 20) && col != CENTER_ALIGN))
+  if(row > MAX_LCD_ROW || string.length() > 20 )
   {
 	lcd_main.clear();
 	if(string.length() > 20)
 	{
 		col = CENTER_ALIGN;
 		string = "STRING TOO BIG";
-	}
-	else if(row > MAX_LCD_ROW)
-	{
-		col = CENTER_ALIGN;
-		row = 3;
-		string = "OVER DIMENSION";
 	}
 	else
 	{

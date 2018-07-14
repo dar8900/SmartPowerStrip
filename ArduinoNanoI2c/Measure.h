@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #define 	TENSIONE_LINEA	230.0
-#define 	MV_PER_A		100
+#define 	MV_PER_A		100.0
 #define 	SENSOR_NOISE	11
 #define 	MIN_CURRENT		(SENSOR_NOISE/MV_PER_A)
 #define 	ZERO_CURRENT_ANALOG_VALUE	512

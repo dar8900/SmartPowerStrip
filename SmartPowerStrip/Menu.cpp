@@ -63,19 +63,19 @@ const UDM_ENERGY_MENU UdmEnergyScale[MAX_UDM_ITEM] =
 
 const FORMAT_ENERGY TabFormat[] = 
 {
-	{0.001,             1000, "m"},
-	{0.01,              1000, "m"},
-	{0.1,               1000, "m"},	
-	{1,                    1,  ""},
-	{10,                   1,  ""},
-	{100,                  1,  ""},
-	{1000,             0.001, "k"},
-	{10000,            0.001, "k"},
-	{100000,           0.001, "k"},
-	{1000000,       0.000001, "M"},
-	{10000000,      0.000001, "M"},
-	{100000000,     0.000001, "M"},
-	{1000000000, 0.000000001, "G"},
+	{0.001,             1000.0, "m"},
+	{0.01,              1000.0, "m"},
+	{0.1,               1000.0, "m"},	
+	{1.0,                    1,  ""},
+	{10.0,                   1,  ""},
+	{100.0,                  1,  ""},
+	{1000.0,             0.001, "k"},
+	{10000.0,            0.001, "k"},
+	{100000.0,           0.001, "k"},
+	{1000000.0,       0.000001, "M"},
+	{10000000.0,      0.000001, "M"},
+	{100000000.0,     0.000001, "M"},
+	{1000000000.0, 0.000000001, "G"},
 };
 
 
@@ -83,7 +83,7 @@ static const String ONOFF[] = {"Off", "On"};
 
 static uint8_t SearchFormatRange(float ValueToFormat)
 {
-	uint8_t TabLenght = 7;
+	uint8_t TabLenght = 13;
 	uint8_t Range = 0;
 	for(Range = 0; Range < TabLenght; Range++)
 	{
@@ -93,9 +93,8 @@ static uint8_t SearchFormatRange(float ValueToFormat)
 		{
 			break;
 		}
-		return Range;
 	}
-	
+	return Range;
 }
 
 void MenuInit()
