@@ -24,8 +24,8 @@ typedef enum
 short CheckButtons(void);
 String EnergyValueStr(void);
 String CurrentValueStr(void);
+String ReadMeasure(short WichInfo);
 void ReadButton(short *ButtonVal);
-void ReadEnergy(String *EnergyStr);
-void ReadCurrent(String *CurrentStr);
-// void ReadFromNano(short WhatRead);
+// void ReadEnergy(String *EnergyStr);
+// void ReadCurrent(String *CurrentStr);
 #endif

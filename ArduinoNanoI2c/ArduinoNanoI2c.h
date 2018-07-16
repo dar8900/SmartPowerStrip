@@ -2,7 +2,7 @@
 #define  ON(pin)   digitalWrite(pin, HIGH)
 #define ARDUINO_ADDR	0x08
 
-#define MAIN_DELAY	100
+#define MAIN_DELAY	200
 // #define SECOND_TICK	 (1000/MAIN_DELAY)
 
 typedef enum
@@ -27,5 +27,6 @@ enum
 {
 	BUTTON = 0,
 	ENERGY,
-	CURRENT
+	CURRENT,
+	NO_DATA
 };

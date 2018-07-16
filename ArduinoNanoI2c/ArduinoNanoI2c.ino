@@ -6,7 +6,7 @@
 
 short ButtonPress = NO_PRESS;
 short TickSecond = 0;
-short WichData = 0;
+short WichData = NO_DATA;
 // uint32_t TimeExec;
 
 extern String		EnergyStr;
@@ -67,6 +67,7 @@ static void SendInfo()
 		default:
 			break;
 	}
+	WichData = NO_DATA;
 }
 
 static void BlinkLed(short pin)

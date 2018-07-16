@@ -14,16 +14,12 @@ short CheckButtons()
 
 String EnergyValueStr()
 {
-	String EnergyStr;
-	ReadEnergy(&EnergyStr);
-	return EnergyStr;	
+	return ReadMeasure(ENERGY);	
 }
 
 String CurrentValueStr()
 {
-	String CurrentStr;
-	ReadCurrent(&CurrentStr);
-	return CurrentStr;	
+	return ReadMeasure(CURRENT);
 }
 
 void ReadButton(short *ButtonVal)
@@ -60,37 +56,55 @@ void ReadButton(short *ButtonVal)
 	}
 }
 
-
-void ReadEnergy(String *EnergyStr)
+String ReadMeasure(short WichInfo)
 {
+	String InfoStr;
 	char ReadInfo[15];
 	short TotChar = 0;
 	Wire.beginTransmission(ARDUINO_ADDR);
-	Wire.write(ENERGY);
+	Wire.write(WichInfo);
 	Wire.endTransmission();
 	delay(1);
 	Wire.requestFrom(ARDUINO_ADDR, CHAR_FROM_NANO);
 	while(Wire.available())
 	{
    		ReadInfo[TotChar] = Wire.read();
-		*EnergyStr += String(ReadInfo[TotChar]);
+		InfoStr += String(ReadInfo[TotChar]);
  		TotChar++;
 	}	
+	return InfoStr;
 }
 
-void ReadCurrent(String *CurrentStr)
-{
-	char ReadInfo[10];
-	short TotChar = 0;
-	Wire.beginTransmission(ARDUINO_ADDR);
-	Wire.write(CURRENT);
-	Wire.endTransmission();
-	delay(1);
-	Wire.requestFrom(ARDUINO_ADDR, 5);
-	while(Wire.available())
-	{
-   		ReadInfo[TotChar] = Wire.read();
-		*CurrentStr += String(ReadInfo[TotChar]);
- 		TotChar++;
-	}	
-}
+// void ReadEnergy(String *EnergyStr)
+// {
+	// char ReadInfo[15];
+	// short TotChar = 0;
+	// Wire.beginTransmission(ARDUINO_ADDR);
+	// Wire.write(ENERGY);
+	// Wire.endTransmission();
+	// delay(1);
+	// Wire.requestFrom(ARDUINO_ADDR, CHAR_FROM_NANO);
+	// while(Wire.available())
+	// {
+   		// ReadInfo[TotChar] = Wire.read();
+		// *EnergyStr += String(ReadInfo[TotChar]);
+ 		// TotChar++;
+	// }	
+// }
+
+// void ReadCurrent(String *CurrentStr)
+// {
+	// char ReadInfo[10];
+	// short TotChar = 0;
+	// Wire.beginTransmission(ARDUINO_ADDR);
+	// Wire.write(CURRENT);
+	// Wire.endTransmission();
+	// delay(1);
+	// Wire.requestFrom(ARDUINO_ADDR, 5);
+	// while(Wire.available())
+	// {
+   		// ReadInfo[TotChar] = Wire.read();
+		// *CurrentStr += String(ReadInfo[TotChar]);
+ 		// TotChar++;
+	// }	
+// }
