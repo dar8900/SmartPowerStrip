@@ -2,7 +2,7 @@
 #define  ON(pin)   digitalWrite(pin, HIGH)
 #define ARDUINO_ADDR	0x08
 
-#define MAIN_DELAY	200
+#define MAIN_DELAY	100
 // #define SECOND_TICK	 (1000/MAIN_DELAY)
 
 typedef enum

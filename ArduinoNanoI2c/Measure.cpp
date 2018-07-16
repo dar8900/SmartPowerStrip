@@ -3,22 +3,16 @@
 
 
 
-#define REAL_MEASURE		
+		
 
 float 			  CurrentCalculated;
 float 		      EnergyMeasured;
 static float      EnergyAcc;
+static uint16_t   EnergyAccCnt;
+float   	      PowerMeasure;
 
-#ifndef REAL_MEASURE
-static const float PowerMeasureTEST = TENSIONE_LINEA * 0.5;
-#endif
-
-#ifdef REAL_MEASURE
-float   	PowerMeasure;
-#endif
-
-String		EnergyStr;
-String		CurrentStr;
+String		      EnergyStr;
+String		      CurrentStr;
 
 const uint16_t SimWave[10] =
 {
@@ -37,55 +31,71 @@ const uint16_t SimWave[10] =
 static float CalcCurrent()
 {
 	float Current = 0.0;
+	uint32_t CurrentAcc = 0;
 	float mVolt = 0.0;
-	uint16_t ReadedValue = 0;
+	uint16_t ReadedValue = 0, AdcOffset = 515;
 	uint8_t TmpCnt = 0;
 	uint16_t MaxVal = 0, MinVal = 1023;
 	
-	for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 80 ms (4 periodi di rete a 50 Hz)
+	for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 100 ms (4 periodi di rete a 50 Hz)
 	{	
-		ReadedValue = analogRead(A0);
-       // see if you have a new maxValue
-       if (ReadedValue > MaxVal) 
-       {
-           /*record the maximum sensor value*/
-           MaxVal = ReadedValue;
-       }
-       if (ReadedValue < MinVal) 
-       {
-           /*record the maximum sensor value*/
-           MinVal = ReadedValue;
-       }
+		ReadedValue = (analogRead(A0) - AdcOffset);
+		CurrentAcc += (uint32_t)(ReadedValue * ReadedValue);		
 	}
-	mVolt = ((MaxVal - MinVal) * 5.0) / 1023.0;
-	mVolt = (mVolt / 2.0) * 0.707;
-	Current = (mVolt * 1000.0) / MV_PER_A;
+	mVolt = ((sqrt((float)CurrentAcc / (float)N_CAMPIONI_CORRENTE))) * 0.0048;
+	Current = (mVolt / 100.0) * 1000.0;
+	
+	// mVolt = ((MaxVal - MinVal) * 5.0) / 1023.0;
+	// mVolt = (mVolt / 2.0) * 0.707;
+	// Current = (mVolt * 1000.0) / MV_PER_A;
 
 	return Current;
 }
 
+// static float CalcCurrent()
+// {
+	// float Current = 0.0;
+	// float mVolt = 0.0;
+	// uint16_t ReadedValue = 0;
+	// uint8_t TmpCnt = 0;
+	// uint16_t MaxVal = 0, MinVal = 1023;
+	
+	// for(int cnt = 0; cnt < N_CAMPIONI_CORRENTE; cnt++) // legge per 80 ms (4 periodi di rete a 50 Hz)
+	// {	
+		// ReadedValue = analogRead(A0);
+       // // see if you have a new maxValue
+       // if (ReadedValue > MaxVal) 
+       // {
+           // /*record the maximum sensor value*/
+           // MaxVal = ReadedValue;
+       // }
+       // if (ReadedValue < MinVal) 
+       // {
+           // /*record the maximum sensor value*/
+           // MinVal = ReadedValue;
+       // }
+	// }
+	// mVolt = ((MaxVal - MinVal) * 5.0) / 1023.0;
+	// mVolt = (mVolt / 2.0) * 0.707;
+	// Current = (mVolt * 1000.0) / MV_PER_A;
 
-void CalcEnergy() // 200ms c.a.
+	// return Current;
+// }
+
+
+void CalcEnergy() // 100ms ca
 {
-#ifdef REAL_MEASURE
 	CurrentCalculated = CalcCurrent();
-	PowerMeasure = CurrentCalculated * TENSIONE_LINEA;
-#endif
-	for(int cnt = 0; cnt < N_CAMPIONI_ENERGIA; cnt++)
-	{
-#ifndef REAL_MEASURE
-		EnergyAcc += PowerMeasureTEST;
-#else
-		EnergyAcc += PowerMeasure;
-#endif
-		delay(3);
-	}
+	PowerMeasure = CurrentCalculated * (float)TENSIONE_LINEA;
+	EnergyAcc += PowerMeasure;
+	EnergyAccCnt++;
 }
 
 void EnergyValueSec()
 {
-	EnergyMeasured += (EnergyAcc / N_CAMPIONI_ENERGIA);	
+	EnergyMeasured += (EnergyAcc / (float)EnergyAccCnt);	
+	EnergyAccCnt = 0;
 	EnergyAcc = 0.0;
-	EnergyStr = String(EnergyMeasured); // Invio la stringa già formattata per W/h
+	EnergyStr = String(EnergyMeasured); // Invio la stringa formattata in W/s
 	CurrentStr = String(CurrentCalculated);
 }
