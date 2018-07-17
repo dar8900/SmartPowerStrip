@@ -114,6 +114,8 @@ void WifiInit()
 			{
 				LCDShowPopUp("Connesso!");
 				HostnameExtended += String(Hostname);
+				LCDPrintString(ONE, LEFT_ALIGN, "IP:");
+				LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
 				LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
 				LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
 				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
@@ -168,6 +170,8 @@ void WifiInit()
 			{
 				LCDShowPopUp("Connesso!");
 				HostnameExtended += String(Hostname);
+				LCDPrintString(ONE, LEFT_ALIGN, "IP:");
+				LCDPrintString(ONE, RIGHT_ALIGN, WifiIP());
 				LCDPrintString(TWO, CENTER_ALIGN, "Hostname: ");
 				LCDPrintString(THREE, CENTER_ALIGN, HostnameExtended);
 				LCDPrintString(FOUR, LEFT_ALIGN, "Segnale:");
@@ -189,6 +193,47 @@ void WifiInit()
 		}
 	}
 	return;
+}
+
+bool WPSConnection()
+{
+	bool WpsSuccess = false;
+	short NumbPoint = 0;
+	WiFi.mode(WIFI_STA);
+	WpsSuccess = WiFi.beginWPSConfig();
+	delay(3000);
+	ClearLCD();
+	if(WpsSuccess)
+	{
+		while (WiFi.status() != WL_CONNECTED)
+		{
+			TakePresentTime();
+			TakeReleTime();
+			delay(500);
+			if(NumbPoint > 19)
+			{
+				NumbPoint = 0;
+				ClearLCDLine(2);
+			}
+			LCDPrintString(THREE, 0 + NumbPoint, ".");
+			NumbPoint++;
+		}
+		Flag.WifiActive = true;
+		LCDShowPopUp("Connesso");
+		LCDPrintString(TWO, LEFT_ALIGN, "IP:");
+		LCDPrintString(TWO, RIGHT_ALIGN, WifiIP());
+		delay(DELAY_INFO_MSG);
+		ClearLCD();
+	}
+	else
+	{
+		LCDPrintString(ONE, CENTER_ALIGN, "Configurazione WPS");
+		LCDPrintString(TWO, CENTER_ALIGN, "fallita");
+		delay(DELAY_INFO_MSG);
+		Flag.WifiActive = false;
+		ClearLCD();
+	}
+	return WpsSuccess;
 }
 
 String GetWifiSignalPower()

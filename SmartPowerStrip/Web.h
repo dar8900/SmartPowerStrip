@@ -23,6 +23,7 @@ typedef struct
 extern const WIFI_LIST MyNetworkList[];
 
 void WifiInit(void);
+bool WPSConnection(void);
 void WifiDisconnect(void);
 void WifiTurnOff(void);
 String GetWifiSignalPower(void);

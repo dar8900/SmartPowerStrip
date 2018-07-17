@@ -638,7 +638,8 @@ bool ChangeTimeBand()
 
 bool WifiConnect()
 {
-	bool WifiDisconnectChoice = false;
+	bool WifiDisconnectChoice = false, WpsChoice = false, WpsConfStart = false, WpsSuccess = false;
+	short ButtonPress = NO_PRESS;
 	if(Flag.WifiActive)
 	{
 		ClearLCD();
@@ -654,8 +655,51 @@ bool WifiConnect()
 	}
 	else
 	{
-		WifiInit();
-		WebServerInit();
+		ClearLCD();
+		LCDPrintString(TWO, CENTER_ALIGN, "Connettere tramite");
+		LCDPrintString(THREE, CENTER_ALIGN, "WPS?");
+		delay(DELAY_INFO_MSG);
+		WpsChoice = CheckYesNo();
+		if(WpsChoice)
+		{
+			ClearLCD();
+			LCDPrintString(ONE, CENTER_ALIGN, "Premere il");
+			LCDPrintString(TWO, CENTER_ALIGN, "pulsante WPS");
+			LCDPrintString(THREE, CENTER_ALIGN, "sul router");
+			delay(DELAY_INFO_MSG);
+			ClearLCD();
+			LCDPrintString(ONE, CENTER_ALIGN, "Premere Ok");
+			LCDPrintString(TWO, CENTER_ALIGN, "per partire con");
+			LCDPrintString(THREE, CENTER_ALIGN, "la configurazione");
+			while(!WpsConfStart)
+			{
+				ButtonPress = CheckButtons();
+				switch (ButtonPress)
+				{
+					case BUTTON_UP:
+					case BUTTON_DOWN:
+					case BUTTON_LEFT:
+					default:
+						break;
+					case BUTTON_SET:
+						WpsConfStart = true;
+						break;
+				}
+				delay(WHILE_LOOP_DELAY);
+			}
+			WpsSuccess = WPSConnection();
+		}
+		else
+		{
+			WifiInit();
+		}
+		if(!WpsChoice)
+			WebServerInit();
+		else
+		{
+			if(WpsSuccess)
+				WebServerInit();
+		}
 	}
 	return true;
 }
