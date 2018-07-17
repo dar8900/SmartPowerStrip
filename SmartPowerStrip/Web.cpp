@@ -195,10 +195,61 @@ void WifiInit()
 	return;
 }
 
+static void AssignSsid()
+{
+	short ButtonPress = NO_PRESS;
+	short WifiListItem = DARIO_CELL;
+	bool ExitAssignSsid = false;
+	ClearLCD();
+	while(!ExitAssignSsid)
+	{
+		TakePresentTime();
+		TakeReleTime();
+		LCDPrintString(ONE, CENTER_ALIGN, "Assegna il nome");
+		LCDPrintString(TWO, CENTER_ALIGN, "alla nuova rete");
+		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+		ButtonPress = CheckButtons();
+		switch(ButtonPress)
+		{
+			case BUTTON_UP:
+				if(WifiListItem > DARIO_CELL)
+					WifiListItem--;
+				else
+					WifiListItem = MAX_WIFI_ITEM - 1;
+				ClearLCDLine(THREE);
+				break;
+			case BUTTON_DOWN:
+				if(WifiListItem < MAX_WIFI_ITEM - 1)
+					WifiListItem++;
+				else
+					WifiListItem = DARIO_CELL;
+				ClearLCDLine(THREE);
+				break;
+			case BUTTON_LEFT:
+				break;
+			case BUTTON_SET:
+				ClearLCD();
+				LCDPrintString(TWO, CENTER_ALIGN, "Settato");
+				WriteMemory(WIFI_SSID_ADDR, WifiListItem);
+				// MyNetworkList[WifiListItem].RealSsid = WiFi.SSID().c_str();
+				delay(DELAY_INFO_MSG);
+				ClearLCD();
+				ExitAssignSsid = true;
+				break;
+			default:
+				break;
+		}
+		delay(WHILE_LOOP_DELAY);
+	}
+	
+}
+
+
 bool WPSConnection()
 {
-	bool WpsSuccess = false;
+	bool WpsSuccess = false, FindSsid = false;
 	short NumbPoint = 0;
+	short WifiListItem = NO_CONN;
 	WiFi.mode(WIFI_STA);
 	WpsSuccess = WiFi.beginWPSConfig();
 	delay(3000);
@@ -222,7 +273,26 @@ bool WPSConnection()
 		LCDShowPopUp("Connesso");
 		LCDPrintString(TWO, LEFT_ALIGN, "IP:");
 		LCDPrintString(TWO, RIGHT_ALIGN, WifiIP());
-		delay(DELAY_INFO_MSG);
+		for(WifiListItem = DARIO_CELL; WifiListItem < MAX_WIFI_ITEM; WifiListItem++)
+		{
+			if(String(MyNetworkList[WifiListItem].RealSsid) == WiFi.SSID())
+			{
+				FindSsid = true;
+				break;
+			}
+		}
+		LCDPrintString(THREE, CENTER_ALIGN, "SSID:");
+		if(FindSsid)
+		{
+			LCDPrintString(FOUR, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			delay(DELAY_INFO_MSG);
+		}
+		else
+		{
+			LCDPrintString(FOUR, CENTER_ALIGN, "Sconosciuto");
+			delay(DELAY_INFO_MSG);
+			AssignSsid();
+		}
 		ClearLCD();
 	}
 	else

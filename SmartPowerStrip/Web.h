@@ -16,8 +16,8 @@ typedef enum
 typedef struct
 {
 	String Ssid;
-	const char* Password;
-	const char* RealSsid;
+	char* Password;
+	char* RealSsid;
 }WIFI_LIST;
 
 extern const WIFI_LIST MyNetworkList[];

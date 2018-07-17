@@ -651,7 +651,6 @@ bool WifiConnect()
 		ClearLCD();
 		if(WifiDisconnectChoice)
 			WifiDisconnect();
-
 	}
 	else
 	{
@@ -673,6 +672,7 @@ bool WifiConnect()
 			LCDPrintString(THREE, CENTER_ALIGN, "la configurazione");
 			while(!WpsConfStart)
 			{
+				CheckEvents();
 				ButtonPress = CheckButtons();
 				switch (ButtonPress)
 				{
@@ -687,7 +687,9 @@ bool WifiConnect()
 				}
 				delay(WHILE_LOOP_DELAY);
 			}
+			ClearLCD();
 			WpsSuccess = WPSConnection();
+			CheckEvents();
 		}
 		else
 		{
