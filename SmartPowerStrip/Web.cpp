@@ -82,7 +82,9 @@ void WifiConfInit()
 					WifiConfigItem++;
 				else
 					WifiConfigItem = WPS;
-				break;			
+				break;
+			case BUTTON_LEFT:
+				break;
 		}
 		delay(WHILE_LOOP_DELAY);
 	}
