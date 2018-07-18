@@ -658,7 +658,9 @@ bool WifiConnect()
 		LCDPrintString(TWO, CENTER_ALIGN, "Connettere tramite");
 		LCDPrintString(THREE, CENTER_ALIGN, "WPS?");
 		delay(DELAY_INFO_MSG);
-		// WpsChoice = CheckYesNo();
+#ifdef WPS_CONNECTION
+		WpsChoice = CheckYesNo();
+#endif
 		if(WpsChoice)
 		{
 			ClearLCD();

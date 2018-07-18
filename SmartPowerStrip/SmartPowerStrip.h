@@ -41,6 +41,7 @@ typedef struct
 	bool IsBandSetted;
 	bool WifiActive;
 	bool WifiReconnect;
+	bool WpsConfigSelected;
 	bool ClientConnected;
 	bool AllReleDown;
 	bool AllReleUp;
