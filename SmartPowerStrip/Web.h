@@ -13,11 +13,12 @@ typedef enum
 	MAX_WIFI_ITEM
 }WIFI_LIST_ITEM;
 
+
 typedef struct
 {
-	String Ssid;
-	char* Password;
-	char* RealSsid;
+	String WifiName;
+	const char* Password;
+	const char* RealSsid;
 }WIFI_LIST;
 
 extern const WIFI_LIST MyNetworkList[];

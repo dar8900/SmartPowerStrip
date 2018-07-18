@@ -39,6 +39,8 @@ typedef enum
 #define TIMER_BACKLIGHT_ADDR				   21
 #define UDM_ENERGY_ADDR				           22
 
+#define WIFI_WPS_NAME_ADDR					   23	
+
 #define FLAG_VALUE_ADDR					 	   50
 #define NUMBER_REG_BACKLIGHT				   51	
 

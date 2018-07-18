@@ -14,6 +14,7 @@
 #include "WebHandleFunctions.h"
 
 #define TIMER_SCAN_WIFI		7500 // circa 16 s
+#define MAX_NETWORK_NAME	4
 
 extern FLAGS Flag;
 extern RELE Rele[];
@@ -32,11 +33,20 @@ const WIFI_LIST MyNetworkList[] =
 	{"No Conn."     , "password"							, "NoConn" 					},
 	{"Dario Cell"	, "dari9299"							, "DEO DOOM"				},
 	{"Wifi Nonna"	, "robbylinodario196219611989"			, "TIM-89557989_EXT_NONN"   },
-	{"Camera mia"	, "dariolinorobby198919611962"			, "ZIXEL"					},
-	{"Salotto Casa"	, "robbylinodario196219611989"			, "TIM-56878495"			},
-	{"Camera Grande", "robbylinodario196219611989"			, "TIM-56878495_EXT"		},
+	{"Camera mia"	, "dariolinorobby198919611962"			, "WIFI-56878495"			},
+	{"Salotto Casa"	, "robbylinodario196219611989"			, "TIM-90914475"			},
+	{"Camera Grande", "robbylinodario196219611989"			, "TIM-90914475_RPT"		},
 };
 
+
+const String NetworkName[]
+{
+	"Dario Cell"	,
+	"Wifi Nonna"	,
+	"Camera mia"	,
+	"Salotto Casa"	,
+	"Camera Grande" ,
+};
 
 
 void WifiInit()
@@ -56,7 +66,7 @@ void WifiInit()
 	{
 		LCDPrintString(ONE, CENTER_ALIGN, "Vuoi riconnettere");
 		LCDPrintString(TWO, CENTER_ALIGN, "la rete:");
-		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[OldWifiItem].Ssid);
+		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[OldWifiItem].WifiName);
 		if(CheckYesNo())
 		{
 			WifiListItem = OldWifiItem;
@@ -81,7 +91,7 @@ void WifiInit()
 			WiFi.hostname(Hostname);
 			WiFi.begin(MyNetworkList[WifiListItem].RealSsid, MyNetworkList[WifiListItem].Password);
 			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
-			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].WifiName);
 			while (WiFi.status() != WL_CONNECTED)
 			{
 				TakePresentTime();
@@ -139,7 +149,7 @@ void WifiInit()
 			WiFi.hostname(Hostname);
 			WiFi.begin(MyNetworkList[WifiListItem].RealSsid, MyNetworkList[WifiListItem].Password);
 			LCDPrintString(ONE, CENTER_ALIGN, "Connettendo a:");
-			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].WifiName);
 			while (WiFi.status() != WL_CONNECTED)
 			{
 				delay(500);
@@ -207,22 +217,22 @@ static void AssignSsid()
 		TakeReleTime();
 		LCDPrintString(ONE, CENTER_ALIGN, "Assegna il nome");
 		LCDPrintString(TWO, CENTER_ALIGN, "alla nuova rete");
-		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+		LCDPrintString(THREE, CENTER_ALIGN, NetworkName[WifiListItem]);
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
 		{
 			case BUTTON_UP:
-				if(WifiListItem > DARIO_CELL)
+				if(WifiListItem > 0)
 					WifiListItem--;
 				else
-					WifiListItem = MAX_WIFI_ITEM - 1;
+					WifiListItem = MAX_NETWORK_NAME;
 				ClearLCDLine(THREE);
 				break;
 			case BUTTON_DOWN:
-				if(WifiListItem < MAX_WIFI_ITEM - 1)
+				if(WifiListItem < MAX_NETWORK_NAME)
 					WifiListItem++;
 				else
-					WifiListItem = DARIO_CELL;
+					WifiListItem = 0;
 				ClearLCDLine(THREE);
 				break;
 			case BUTTON_LEFT:
@@ -230,7 +240,7 @@ static void AssignSsid()
 			case BUTTON_SET:
 				ClearLCD();
 				LCDPrintString(TWO, CENTER_ALIGN, "Settato");
-				WriteMemory(WIFI_SSID_ADDR, WifiListItem);
+				WriteMemory(WIFI_WPS_NAME_ADDR, WifiListItem);
 				// MyNetworkList[WifiListItem].RealSsid = WiFi.SSID().c_str();
 				delay(DELAY_INFO_MSG);
 				ClearLCD();
@@ -284,7 +294,7 @@ bool WPSConnection()
 		LCDPrintString(THREE, CENTER_ALIGN, "SSID:");
 		if(FindSsid)
 		{
-			LCDPrintString(FOUR, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			LCDPrintString(FOUR, CENTER_ALIGN, MyNetworkList[WifiListItem].WifiName);
 			delay(DELAY_INFO_MSG);
 		}
 		else
@@ -390,7 +400,7 @@ void WifiScanForSignal()
 		{
 			ClearLCDLine(TWO);
 			LCDPrintString(ONE, CENTER_ALIGN, "La rete");
-			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].Ssid);
+			LCDPrintString(TWO, CENTER_ALIGN, MyNetworkList[WifiListItem].WifiName);
 			LCDPrintString(THREE, CENTER_ALIGN, "risulta spenta.");
 			LCDPrintString(FOUR, CENTER_ALIGN, "Ne cerco un'altra");
 			delay(DELAY_INFO_MSG);
@@ -470,7 +480,7 @@ void WifiDisconnect()
 	ReadMemory(WIFI_SSID_ADDR, 1, &WifiItemSsid);
 	LCDPrintString(ONE, CENTER_ALIGN, "Disconnesso");
 	LCDPrintString(TWO, CENTER_ALIGN, "dalla rete:");
-	LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[WifiItemSsid].Ssid);
+	LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[WifiItemSsid].WifiName);
 	WiFi.disconnect();
 	server.close();
 	Flag.WifiActive = false;
@@ -501,7 +511,7 @@ void WifiConnectionChoice(short *WifiListItem, String *NomeWifi)
 	{
 		LCDPrintString(ONE, CENTER_ALIGN, "Scegli a quale rete");
 		LCDPrintString(TWO, CENTER_ALIGN, "connettersi:");
-		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[ListItem].Ssid);
+		LCDPrintString(THREE, CENTER_ALIGN, MyNetworkList[ListItem].WifiName);
 		ButtonPress = CheckButtons();
 		switch(ButtonPress)
 		{
